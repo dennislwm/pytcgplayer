@@ -518,20 +518,42 @@ def process_streaming(self, input_file: Path):
 
 ## Large Codebase Analysis
 
-When analyzing large codebases or multiple files that might exceed context limits, use the Gemini CLI command:
+When analyzing large codebases or multiple files that might exceed context limits, use the llm CLI command:
 
 ```bash
-# Analyze codebase architecture
-gemini -p "@src/ Summarize the architecture of this code base"
+# From app directory (cd app/)
+# Analyze codebase architecture using file content injection
+llm "Here is Python code: $(cat main.py common/processor.py common/csv_writer.py | head -300)
 
-# Analyze specific patterns or functionality
-gemini -p "@app/ @tests/ Analyze the testing patterns and coverage"
+Summarize the architecture of this code base"
+
+# Analyze specific patterns or functionality  
+llm "Here are test files: $(cat tests/*_test.py | head -200)
+
+Analyze the testing patterns and coverage in this codebase"
 
 # Review configuration and setup files
-gemini -p "@*.yml @*.json @Makefile Review the project configuration"
+llm "Here are config files: $(cat Makefile make.sh ../CLAUDE.md | head -100)
+
+Review the project configuration and setup"
 
 # Performance analysis
-gemini -p "@app/ Identify potential performance bottlenecks across the codebase"
+llm "Here is the codebase: $(cat common/*.py | head -500)
+
+Identify potential performance bottlenecks across the codebase"
+
+# With specific model that supports attachments (like Claude or GPT-4)
+llm "Analyze code architecture and design patterns" -m claude-3-5-sonnet-20241022 -a main.py -a common/processor.py
+
+# Process files individually for detailed analysis
+llm "Here is a Python module: $(cat common/processor.py)
+
+Analyze this processor module for performance bottlenecks"
+
+# Using system prompts for focused analysis
+llm "Here is web client code: $(cat common/web_client.py)
+
+Analyze this code for performance issues" -s "You are a performance expert. Focus on identifying bottlenecks and optimization opportunities."
 ```
 
 This approach is particularly useful for:
@@ -540,3 +562,61 @@ This approach is particularly useful for:
 - Reviewing configuration across multiple files
 - Getting high-level summaries without hitting context limits
 - Identifying optimization opportunities
+
+### **Example Analysis Output**
+
+The llm CLI provides comprehensive analysis similar to senior developer code reviews. For example, when analyzing project configuration:
+
+**Strengths Identified:**
+- ✅ **Modern tooling**: pipenv for dependency management with consistent environments
+- ✅ **Organized workflow**: Logical grouping of Makefile commands into clear categories
+- ✅ **Self-documenting**: Built-in help system with detailed command descriptions
+- ✅ **Environment validation**: Automated checks for required tools and variables
+
+**Improvement Opportunities:**
+- 🔄 **Dependency simplification**: Consider streamlining pipenv + pipreqs approach
+- 🔄 **Error handling**: Add confirmations for destructive operations
+- 🔄 **CI/CD integration**: Automate testing and deployment workflows
+- 📝 **Documentation enhancement**: Central README to complement Makefile documentation
+
+This demonstrates the llm CLI's effectiveness for **architectural assessment**, **configuration review**, and **development workflow analysis**, providing actionable insights for project improvement.
+
+## **Git Commit Message Generation**
+
+Use the llm CLI to generate conventional commit messages based on actual code changes:
+
+```bash
+# Generate commit message from git diff
+llm "Here are the git changes made to the project:
+
+$(git diff)
+
+Suggest a concise git commit message in one line that follows conventional commit format (type(scope): description)"
+
+# For staged changes only
+llm "Here are the staged changes:
+
+$(git diff --cached)
+
+Suggest a conventional commit message that accurately describes these changes"
+
+# With more context about the changes
+llm "Here are the changes and context:
+
+Changes: $(git diff --stat)
+Files modified: $(git diff --name-only)
+Detailed diff: $(git diff | head -100)
+
+Generate a commit message that follows conventional commits format and captures the essence of these changes"
+```
+
+**Example Output:**
+```
+feat(docs): update analysis instructions and examples for llm CLI usage
+```
+
+This approach ensures commit messages are:
+- ✅ **Contextually accurate** based on actual code changes
+- ✅ **Conventionally formatted** following standard commit message patterns  
+- ✅ **Descriptive** of the specific modifications made
+- ✅ **Consistent** with project standards and best practices
