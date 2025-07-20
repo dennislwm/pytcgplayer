@@ -586,34 +586,36 @@ This demonstrates the llm CLI's effectiveness for **architectural assessment**, 
 Use the llm CLI to generate conventional commit messages based on actual code changes:
 
 ```bash
-# Generate commit message from git diff
-llm "Here are the git changes made to the project:
+# Generate commit message from git diff (for unstaged changes)
+llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD -- app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py)"
 
-$(git diff)
+# For staged changes only  
+llm "Generate a conventional commit message in one line for the following git changes: $(git diff --cached)"
 
-Suggest a concise git commit message in one line that follows conventional commit format (type(scope): description)"
+# For all changes (staged and unstaged)
+llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD)"
 
-# For staged changes only
-llm "Here are the staged changes:
-
-$(git diff --cached)
-
-Suggest a conventional commit message that accurately describes these changes"
-
-# With more context about the changes
-llm "Here are the changes and context:
-
-Changes: $(git diff --stat)
-Files modified: $(git diff --name-only)
-Detailed diff: $(git diff | head -100)
-
-Generate a commit message that follows conventional commits format and captures the essence of these changes"
+# With file-specific focus
+llm "Generate a conventional commit message in one line for these specific changes: $(git diff HEAD -- filename.py)"
 ```
 
-**Example Output:**
+**Example Workflow:**
+```bash
+# 1. Make code changes to fix CSV sorting and error handling
+# 2. Generate commit message from changes
+llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD -- app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py)"
+
+# Output: fix: sort data before writing to CSV and normalize error rows in processor
+
+# 3. Stage and commit with generated message
+git add app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py
+git commit -m "fix: sort data before writing to CSV and normalize error rows in processor"
 ```
-feat(docs): update analysis instructions and examples for llm CLI usage
-```
+
+**Standard Output Format:**
+- **Type**: fix, feat, docs, style, refactor, test, chore
+- **Scope**: Optional - component or module affected  
+- **Description**: Concise summary of changes in imperative mood
 
 This approach ensures commit messages are:
 - ✅ **Contextually accurate** based on actual code changes
