@@ -26,7 +26,7 @@ class CsvWriter:
         self.logger.info(f"Successfully wrote CSV file: {output_file}")
     
     def write_unique(self, data: List[Dict], output_file: Path, key_columns: List[str] = None) -> None:
-        """Write data to CSV, avoiding duplicates based on key columns"""
+        """Write data to CSV, updating duplicates based on key columns"""
         self.logger.info(f"Writing {len(data)} rows to {output_file} (checking for duplicates)")
         
         if not data:
@@ -38,28 +38,46 @@ class CsvWriter:
             key_columns = ['set', 'type', 'period', 'name', 'date']
         
         # Read existing data if file exists
-        existing_keys = set()
         existing_data = []
+        existing_key_to_index = {}
         
         if output_file.exists():
             self.logger.debug(f"Reading existing data from {output_file}")
             existing_data = self._read_existing_csv(output_file)
-            existing_keys = self._extract_keys(existing_data, key_columns)
+            existing_key_to_index = self._create_key_index(existing_data, key_columns)
             self.logger.info(f"Found {len(existing_data)} existing records")
         
-        # Filter out duplicates
+        # Process new data - add new records or update existing ones
         new_data = []
-        duplicate_count = 0
+        updated_count = 0
+        added_count = 0
+        processed_keys = set()
         
         for row in data:
             row_key = self._create_key(row, key_columns)
-            if row_key not in existing_keys:
-                new_data.append(row)
-                existing_keys.add(row_key)  # Add to set to avoid duplicates within new data
+            
+            # Skip if we've already processed this key in the current dataset
+            if row_key in processed_keys:
+                continue
+            processed_keys.add(row_key)
+            
+            if row_key in existing_key_to_index:
+                # Update existing record
+                existing_index = existing_key_to_index[row_key]
+                old_holofoil = existing_data[existing_index].get('holofoil_price', '')
+                old_volume = existing_data[existing_index].get('volume', '')
+                
+                existing_data[existing_index]['holofoil_price'] = row.get('holofoil_price', '')
+                existing_data[existing_index]['volume'] = row.get('volume', '')
+                
+                self.logger.debug(f"Updated record {row_key}: holofoil {old_holofoil} → {row.get('holofoil_price', '')}, volume {old_volume} → {row.get('volume', '')}")
+                updated_count += 1
             else:
-                duplicate_count += 1
+                # Add new record
+                new_data.append(row)
+                added_count += 1
         
-        self.logger.info(f"Filtered out {duplicate_count} duplicates, writing {len(new_data)} new records")
+        self.logger.info(f"Updated {updated_count} existing records, adding {added_count} new records")
         
         # Combine existing and new data
         all_data = existing_data + new_data
@@ -73,9 +91,9 @@ class CsvWriter:
                 writer.writeheader()
                 writer.writerows(all_data)
             
-            self.logger.info(f"Successfully wrote {len(all_data)} total rows ({len(new_data)} new) to {output_file}")
+            self.logger.info(f"Successfully wrote {len(all_data)} total rows ({added_count} new, {updated_count} updated) to {output_file}")
         else:
-            self.logger.warning("No data to write after filtering")
+            self.logger.warning("No data to write after processing")
     
     def _read_existing_csv(self, file_path: Path) -> List[Dict]:
         """Read existing CSV data"""
@@ -102,3 +120,11 @@ class CsvWriter:
         except Exception as e:
             self.logger.warning(f"Failed to create key for row: {e}")
             return tuple()
+    
+    def _create_key_index(self, data: List[Dict], key_columns: List[str]) -> Dict[Tuple, int]:
+        """Create a mapping from unique keys to their index in the data list"""
+        key_to_index = {}
+        for index, row in enumerate(data):
+            key = self._create_key(row, key_columns)
+            key_to_index[key] = index
+        return key_to_index
