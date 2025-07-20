@@ -1,3 +1,14 @@
 set,type,period,name,url
-SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
+SV01,Card,3M,Gardevoir ex 245,https://r.jina.ai/https://www.tcgplayer.com/product/486623/pokemon-sv01-scarlet-and-violet-base-set-gardevoir-ex-245-198?page=1&Language=English
+SV02,Card,3M,Magikarp 203,https://r.jina.ai/https://www.tcgplayer.com/product/497606/pokemon-sv02-paldea-evolved-magikarp-203-193?page=1&Language=English
+SV03,Card,3M,Charizard ex 223,https://r.jina.ai/https://www.tcgplayer.com/product/509980/pokemon-sv03-obsidian-flames-charizard-ex-223-197?page=1&Language=English
+SV03.5,Card,3M,Charizard ex 199,https://r.jina.ai/https://www.tcgplayer.com/product/517045/pokemon-sv-scarlet-and-violet-151-charizard-ex-199-165?page=1&Language=English
+SV04,Card,3M,Groudon 199,https://r.jina.ai/https://www.tcgplayer.com/product/523880/pokemon-sv04-paradox-rift-groudon-199-182?page=1&Language=English
+SV04.5,Card,3M,Mew ex 232,https://r.jina.ai/https://www.tcgplayer.com/product/534919/pokemon-sv-paldean-fates-mew-ex-232-091?page=1&Language=English
+SV05,Card,3M,Raging Bolt ex 208,https://r.jina.ai/https://www.tcgplayer.com/product/542929/pokemon-sv05-temporal-forces-raging-bolt-ex-208-162?page=1&Language=English
+SV06,Card,3M,Greninja ex 214,https://r.jina.ai/https://www.tcgplayer.com/product/550258/pokemon-sv06-twilight-masquerade-greninja-ex-214-167?page=1&Language=English
+SV06.5,Card,3M,Fezandipiti ex 092,https://r.jina.ai/https://www.tcgplayer.com/product/560403/pokemon-sv-shrouded-fable-fezandipiti-ex-092-064?page=1&Language=English
+SV07,Card,3M,Squirtle 148,https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English
 SV08,Card,3M,Pikachu ex 238,https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English
+SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
+SV09,Card,3M,Lillies Clefairy ex 184,https://r.jina.ai/https://www.tcgplayer.com/product/623611/pokemon-sv09-journey-together-lillies-clefairy-ex-184-159?page=1&Language=English

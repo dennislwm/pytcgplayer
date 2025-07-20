@@ -99,10 +99,10 @@ SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/produc
 
 **Output CSV format (Normalized price history):**
 ```csv
-set,type,period,name,date,holofoil_price,additional_price
-SV08.5,Card,3M,Umbreon ex 161,4/20 to 4/22,"$1,451.66",$0.00
-SV08.5,Card,3M,Umbreon ex 161,4/23 to 4/25,"$1,451.66",$0.00
-SV08.5,Card,3M,Umbreon ex 161,4/26 to 4/28,"$1,451.66",$0.00
+set,type,period,name,date,holofoil_price,volume
+SV08.5,Card,3M,Umbreon ex 161,4/20 to 4/22,"$1,451.66",0
+SV08.5,Card,3M,Umbreon ex 161,4/23 to 4/25,"$1,451.66",0
+SV08.5,Card,3M,Umbreon ex 161,4/26 to 4/28,"$1,451.66",0
 ...
 ```
 
@@ -139,10 +139,10 @@ make demo             # Run demonstration scripts
 **Command Categories:**
 
 1. **Environment Management**: `pipenv_new`, `install_deps`, `pipenv_shell`
-2. **Application Execution**: `run`, `run_verbose`, `help_app`, `sample`, `sample_basic`  
+2. **Application Execution**: `run`, `run_verbose`, `help_app`, `sample`  
 3. **Testing & Quality**: `test`, `test_verbose`
 4. **Demo & Examples**: `demo`, `demo_clean`
-5. **Utilities**: `clean`, `pipenv_freeze`, `check_json`, `pipenv_venv`, `help`
+5. **Utilities**: `pipenv_freeze`, `check_json`, `pipenv_venv`, `help`
 
 ## Development Patterns
 
@@ -204,6 +204,7 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
 - **Logging**: Test logs written to `logs/test.log` with DEBUG level
 - **Setup**: Each test class initializes logging in `setup_class()` method
 - **Mocking**: Uses `requests-mock` for HTTP request testing
+- **Data Format**: Tests updated to expect `volume` column with integer values instead of `additional_price` currency strings
 
 ### Dependencies
 Current dependencies (automatically managed by pipenv):
@@ -336,6 +337,7 @@ The application now uses a centralized data directory structure:
 **Output Data (`data/output.csv`):**
 - Normalized price history with one row per price record
 - Includes all original metadata plus extracted price data
+- `volume` column contains integer values (converted from currency strings like "$1.00" → 1)
 - Generated with idempotent duplicate prevention
 - Safe for repeated processing and automation
 
