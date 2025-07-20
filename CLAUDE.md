@@ -415,6 +415,107 @@ Updated 390 existing records, adding 0 new records
 Updated 350 existing records, adding 40 new records
 ```
 
+## Performance Analysis and Future Optimizations
+
+The application currently performs well for its intended use case, but several optimization opportunities exist for future enhancement if higher throughput or larger datasets become requirements:
+
+### **Performance Bottlenecks Identified**
+
+#### **1. Synchronous HTTP Requests (Highest Impact)**
+**Current State**: Sequential processing with 1-second delays between requests
+- Processing 13 URLs requires ~13+ seconds minimum
+- Each request blocks the entire application thread
+- Rate limiting delays are necessary but limit throughput
+
+**Optimization Opportunity**: Async/await implementation
+```python
+# Potential async implementation
+async def _process_rows_concurrent(self, rows: List[Dict]) -> List[Dict]:
+    async with aiohttp.ClientSession() as session:
+        semaphore = asyncio.Semaphore(3)  # Control concurrency
+        tasks = [self._process_single_row(session, semaphore, row) for row in rows]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+    return [r for r in results if not isinstance(r, Exception)]
+```
+**Expected Impact**: Reduce processing time from ~13+ seconds to ~2-3 seconds
+
+#### **2. CSV File I/O Inefficiency (High Impact for Large Datasets)**
+**Current State**: Reads entire CSV file on every write operation
+- O(n) complexity that grows with dataset size
+- Currently manageable with 390+ rows but will scale poorly
+
+**Optimization Opportunity**: Append-only or indexed approach
+```python
+# Potential optimized approach
+def write_unique_streaming(self, data: List[Dict], output_file: Path):
+    # Use SQLite index or file-based key tracking
+    # Only read metadata, not full data
+    pass
+```
+**Expected Impact**: Constant-time writes regardless of file size
+
+#### **3. Markdown Processing (Medium Impact)**
+**Current State**: Multiple regex operations scan entire content
+- Sequential string processing for large TCGPlayer responses
+- Multiple O(n) operations on same content
+
+**Optimization Opportunity**: Combined regex patterns
+```python
+# Potential optimization
+COMBINED_PATTERN = re.compile(r'(```.*?```)|(^#{1,6}\s*)|(`[^`]*`)', re.DOTALL | re.MULTILINE)
+def _extract_text_optimized(self, content: str) -> str:
+    return COMBINED_PATTERN.sub('', content)  # Single pass
+```
+**Expected Impact**: 30-50% reduction in markdown processing time
+
+#### **4. Memory Usage (Future Scalability)**
+**Current State**: Loads entire datasets into memory
+- All CSV data stored in memory during processing
+- Works fine for current dataset sizes
+
+**Optimization Opportunity**: Streaming/generator approach
+```python
+# Potential streaming implementation
+def process_streaming(self, input_file: Path):
+    with open(input_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            yield self._process_single_row(row)
+```
+**Expected Impact**: Constant memory usage regardless of dataset size
+
+### **Optimization Priority Roadmap**
+
+**Phase 1 - Concurrency (10x+ Performance Gain)**
+- Implement async/await for HTTP requests
+- Add semaphore-controlled concurrency 
+- Maintain rate limiting within async context
+- **Target**: Process 13 URLs in ~2-3 seconds vs current ~13+ seconds
+
+**Phase 2 - I/O Optimization (Scalability)**
+- Implement append-only CSV writing with indexing
+- Add streaming data processing capabilities
+- **Target**: Handle 10,000+ records without performance degradation
+
+**Phase 3 - Processing Efficiency (Polish)**
+- Combine regex operations in markdown parser
+- Optimize string currency conversion
+- Cache redundant computations
+- **Target**: 20-30% reduction in CPU usage
+
+### **Implementation Considerations**
+
+**When to Optimize:**
+- Processing >50 URLs regularly (async HTTP becomes critical)
+- Output CSV files >10,000 rows (I/O optimization needed)
+- Memory constraints or resource limitations (streaming required)
+- High-frequency automated processing (all optimizations beneficial)
+
+**Current Performance Profile:**
+- **Suitable for**: Manual runs, small-medium datasets, development workflows
+- **Limitations**: Large batch processing, high-frequency automation
+- **Strengths**: Reliable, well-tested, clear error handling
+
 ## Large Codebase Analysis
 
 When analyzing large codebases or multiple files that might exceed context limits, use the Gemini CLI command:
@@ -428,6 +529,9 @@ gemini -p "@app/ @tests/ Analyze the testing patterns and coverage"
 
 # Review configuration and setup files
 gemini -p "@*.yml @*.json @Makefile Review the project configuration"
+
+# Performance analysis
+gemini -p "@app/ Identify potential performance bottlenecks across the codebase"
 ```
 
 This approach is particularly useful for:
@@ -435,3 +539,4 @@ This approach is particularly useful for:
 - Analyzing large test suites
 - Reviewing configuration across multiple files
 - Getting high-level summaries without hitting context limits
+- Identifying optimization opportunities
