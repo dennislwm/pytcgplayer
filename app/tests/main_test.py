@@ -57,7 +57,7 @@ class TestMain:
         
         # Verify mocks were called
         mock_processor_instance.process.assert_called_once_with(sample_csv_file)
-        mock_writer_instance.write.assert_called_once()
+        mock_writer_instance.write_unique.assert_called_once()
     
     @patch('main.CsvProcessor')
     @patch('main.CsvWriter')
@@ -89,7 +89,7 @@ class TestMain:
         
         # Verbose mode should still work (logging level change is internal)
         mock_processor_instance.process.assert_called_once()
-        mock_writer_instance.write.assert_called_once()
+        mock_writer_instance.write_unique.assert_called_once()
     
     @patch('main.CsvProcessor')
     @patch('main.CsvWriter')
@@ -108,7 +108,7 @@ class TestMain:
         
         # Short verbose flag should work
         mock_processor_instance.process.assert_called_once()
-        mock_writer_instance.write.assert_called_once()
+        mock_writer_instance.write_unique.assert_called_once()
     
     def test_main_invalid_arguments(self, runner):
         result = runner.invoke(main, ['--invalid-flag'])

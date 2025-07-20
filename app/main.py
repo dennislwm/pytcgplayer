@@ -48,7 +48,7 @@ def main():
     
     try:
         results = processor.process(args.input_file)
-        writer.write(results, args.output_file)
+        writer.write_unique(results, args.output_file)
         logger.info(f"Processing complete. Output saved to: {args.output_file}")
     except Exception as e:
         logger.error(f"Processing failed: {e}")

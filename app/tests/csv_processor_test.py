@@ -119,3 +119,138 @@ class TestCsvProcessor:
         assert processor.results == result
         assert all('content' in row for row in result)
         assert all(row['content'] == "Test Content" for row in result)
+    
+    def test_tcgplayer_url_detection(self, csv_processor):
+        """Test TCGPlayer URL detection"""
+        assert csv_processor._is_tcgplayer_url("https://www.tcgplayer.com/product/123") is True
+        assert csv_processor._is_tcgplayer_url("https://r.jina.ai/https://www.tcgplayer.com/product/123") is True
+        assert csv_processor._is_tcgplayer_url("https://TCGPLAYER.COM/product/123") is True
+        assert csv_processor._is_tcgplayer_url("https://example.com") is False
+        assert csv_processor._is_tcgplayer_url("https://google.com") is False
+    
+    def test_calculate_price_trend_insufficient_data(self, csv_processor):
+        """Test price trend calculation with insufficient data"""
+        # Empty data
+        result = csv_processor._calculate_price_trend([])
+        assert result == 'insufficient_data'
+        
+        # Single data point
+        price_data = [{'date': '7/16 to 7/18', 'holofoil': '$1,088.28', 'price': '$0.00'}]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'insufficient_data'
+    
+    def test_calculate_price_trend_upward(self, csv_processor):
+        """Test price trend calculation for upward trend"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$1,200.00', 'price': '$0.00'},  # newest
+            {'date': '7/13 to 7/15', 'holofoil': '$1,150.00', 'price': '$0.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$1,000.00', 'price': '$0.00'}   # oldest
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'up_20.0%'
+    
+    def test_calculate_price_trend_downward(self, csv_processor):
+        """Test price trend calculation for downward trend"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$800.00', 'price': '$0.00'},   # newest
+            {'date': '7/13 to 7/15', 'holofoil': '$900.00', 'price': '$0.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$1,000.00', 'price': '$0.00'}  # oldest
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'down_20.0%'
+    
+    def test_calculate_price_trend_stable(self, csv_processor):
+        """Test price trend calculation for stable prices"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$1,020.00', 'price': '$0.00'},  # newest
+            {'date': '7/13 to 7/15', 'holofoil': '$1,010.00', 'price': '$0.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$1,000.00', 'price': '$0.00'}   # oldest
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'stable_2.0%'
+    
+    def test_calculate_price_trend_with_commas(self, csv_processor):
+        """Test price trend calculation with comma-formatted prices"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$1,200.00', 'price': '$0.00'},  # newest
+            {'date': '7/10 to 7/12', 'holofoil': '$1,000.00', 'price': '$0.00'}   # oldest
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'up_20.0%'
+    
+    def test_calculate_price_trend_invalid_data(self, csv_processor):
+        """Test price trend calculation with invalid price data"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': 'invalid', 'price': '$0.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$1,000.00', 'price': '$0.00'}
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'calculation_error'
+    
+    def test_calculate_price_trend_zero_baseline(self, csv_processor):
+        """Test price trend calculation with zero baseline price"""
+        price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$100.00', 'price': '$0.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$0.00', 'price': '$0.00'}
+        ]
+        result = csv_processor._calculate_price_trend(price_data)
+        assert result == 'no_baseline'
+    
+    @patch('common.processor.WebClient')
+    @patch('common.processor.MarkdownParser')
+    def test_tcgplayer_normalized_output(self, mock_markdown, mock_web_client, csv_processor):
+        """Test TCGPlayer URL generates normalized price history rows"""
+        # Setup mocks
+        mock_web_instance = Mock()
+        mock_markdown_instance = Mock()
+        mock_web_client.return_value = mock_web_instance
+        mock_markdown.return_value = mock_markdown_instance
+        
+        mock_web_instance.fetch.return_value = "# Test Content"
+        mock_markdown_instance.parse.return_value = "Test Content"
+        
+        # Mock price history data
+        mock_price_data = [
+            {'date': '7/16 to 7/18', 'holofoil': '$1,200.00', 'price': '$0.00'},
+            {'date': '7/13 to 7/15', 'holofoil': '$1,150.00', 'price': '$1.00'},
+            {'date': '7/10 to 7/12', 'holofoil': '$1,100.00', 'price': '$2.00'}
+        ]
+        mock_markdown_instance.parse_price_history_data.return_value = mock_price_data
+        
+        # Create test data with TCGPlayer URL
+        test_data = [{
+            'set': 'SV08.5',
+            'type': 'Card', 
+            'period': '3M',
+            'name': 'Test Card',
+            'url': 'https://www.tcgplayer.com/product/123'
+        }]
+        
+        # Create processor with mocked dependencies
+        processor = CsvProcessor()
+        processor.web_client = mock_web_instance
+        processor.markdown_parser = mock_markdown_instance
+        
+        result = processor._process_rows(test_data)
+        
+        # Should have 3 normalized rows (one for each price record)
+        assert len(result) == 3
+        
+        # Check first normalized row
+        assert result[0]['set'] == 'SV08.5'
+        assert result[0]['type'] == 'Card'
+        assert result[0]['period'] == '3M'
+        assert result[0]['name'] == 'Test Card'
+        assert result[0]['date'] == '7/16 to 7/18'
+        assert result[0]['holofoil_price'] == '$1,200.00'
+        assert result[0]['volume'] == 0
+        
+        # Check second normalized row
+        assert result[1]['date'] == '7/13 to 7/15'
+        assert result[1]['holofoil_price'] == '$1,150.00'
+        assert result[1]['volume'] == 1
+        
+        # Check third normalized row
+        assert result[2]['date'] == '7/10 to 7/12'
+        assert result[2]['holofoil_price'] == '$1,100.00'
+        assert result[2]['volume'] == 2

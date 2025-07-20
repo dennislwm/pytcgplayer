@@ -1,4 +1,4 @@
-.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose install_deps help_app sample
+.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose install_deps help_app sample demo demo_clean help
 
 default: pipenv_shell
 
@@ -38,23 +38,69 @@ test_verbose:
 	@source make.sh && check_env
 	PYTHONPATH=. pipenv run pytest tests/ -v -s --log-cli-level INFO --log-cli-format "[%(filename)s:%(lineno)s - def %(funcName)s()] %(levelname)s %(message)s"
 
-# Run the application with sample data
+# Run the application with input data
 run:
 	@source make.sh && check_env
-	pipenv run python main.py sample.csv output.csv
+	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv
 
 # Run the application with verbose logging
 run_verbose:
 	@source make.sh && check_env
-	pipenv run python main.py sample.csv output.csv --verbose
+	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
 
 # Show application help
 help_app:
 	pipenv run python main.py --help
 
-# Create sample CSV file for testing
+# Create input CSV file for testing (current format with TCGPlayer data)
 sample:
-	@echo "url,name" > sample.csv
-	@echo "https://httpbin.org/json,Test JSON API" >> sample.csv
-	@echo "https://httpbin.org/html,Test HTML Page" >> sample.csv
-	@echo "Sample CSV created: sample.csv"
+	@echo "set,type,period,name,url" > data/input.csv
+	@echo "SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English" >> data/input.csv
+	@echo "Input CSV created: data/input.csv"
+
+# Run demo scripts
+demo:
+	@echo "Running price extraction demo..."
+	cd demo && python3 demo_price_extraction.py
+	@echo ""
+	@echo "Running idempotent functionality demo..."
+	cd demo && python3 demo_idempotent.py
+
+# Clean demo output files
+demo_clean:
+	@echo "Cleaning demo output files..."
+	rm -f demo/demo_*.csv demo/idempotent_*.csv demo/extracted_*.csv
+	rm -rf demo/logs/
+	@echo "Demo files cleaned"
+
+
+# Show all available targets
+help:
+	@echo "Available Make targets:"
+	@echo ""
+	@echo "Environment Management:"
+	@echo "  pipenv_new      - Create new pipenv environment with Python 3.13"
+	@echo "  install_deps    - Install all required dependencies"
+	@echo "  pipenv_shell    - Activate virtual environment (default target)"
+	@echo "  pipenv_venv     - Show virtual environment path"
+	@echo ""
+	@echo "Application Execution:"
+	@echo "  run             - Run application with sample data"
+	@echo "  run_verbose     - Run application with verbose logging"
+	@echo "  sample          - Create sample CSV with TCGPlayer data"
+	@echo ""
+	@echo "  help_app        - Show application command-line help"
+	@echo ""
+	@echo "Testing & Quality:"
+	@echo "  test            - Run all tests (74 tests)"
+	@echo "  test_verbose    - Run tests with verbose output"
+	@echo ""
+	@echo "Demo & Examples:"
+	@echo "  demo            - Run both demo scripts"
+	@echo "  demo_clean      - Clean demo output files"
+	@echo ""
+	@echo "Utilities:"
+	@echo ""
+	@echo "  pipenv_freeze   - Generate requirements.txt"
+	@echo "  check_json      - Validate JSON schema (if config files exist)"
+	@echo "  help            - Show this help message"

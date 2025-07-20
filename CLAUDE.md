@@ -78,20 +78,32 @@ https://httpbin.org/html,Test HTML Page
 
 **Command execution:**
 ```bash
-$ pipenv run python main.py sample.csv output.csv --verbose
-2025-07-20 11:50:26 - common.processor - INFO - [processor.py:18] - Processing file: sample.csv
-2025-07-20 11:50:26 - common.processor - INFO - [processor.py:26] - Reading CSV file: sample.csv
-2025-07-20 11:50:26 - common.processor - INFO - [processor.py:32] - Read 2 rows
-2025-07-20 11:50:26 - common.processor - INFO - [processor.py:36] - Processing rows...
-2025-07-20 11:50:27 - common.csv_writer - INFO - [csv_writer.py:26] - Successfully wrote CSV file: output.csv
-2025-07-20 11:50:27 - __main__ - INFO - [main.py:52] - Processing complete. Output saved to: output.csv
+$ PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:18] - Processing file: data/input.csv
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:26] - Reading CSV file: data/input.csv
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:40] - Read 1 rows
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:44] - Processing rows...
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:62] - Extracted 30 price history records for row 1
+2025-07-20 18:28:00 - common.processor - INFO - [processor.py:94] - Processed 30 rows
+2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:30] - Writing 30 rows to data/output.csv (checking for duplicates)
+2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:62] - Filtered out 0 duplicates, writing 30 new records
+2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:76] - Successfully wrote 30 total rows (30 new) to data/output.csv
+2025-07-20 18:28:00 - __main__ - INFO - [main.py:52] - Processing complete. Output saved to: data/output.csv
 ```
 
-**Output CSV format:**
+**Input CSV format (TCGPlayer data):**
 ```csv
-url,name,content
-https://httpbin.org/json,Test JSON API,"{ ""slideshow"": { ""author"": ""Yours Truly"", ... }}"
-https://httpbin.org/html,Test HTML Page,"<html><head><title>Herman Melville - Moby-Dick</title>..."
+set,type,period,name,url
+SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
+```
+
+**Output CSV format (Normalized price history):**
+```csv
+set,type,period,name,date,holofoil_price,additional_price
+SV08.5,Card,3M,Umbreon ex 161,4/20 to 4/22,"$1,451.66",$0.00
+SV08.5,Card,3M,Umbreon ex 161,4/23 to 4/25,"$1,451.66",$0.00
+SV08.5,Card,3M,Umbreon ex 161,4/26 to 4/28,"$1,451.66",$0.00
+...
 ```
 
 ### Make Commands Workflow
@@ -101,31 +113,36 @@ https://httpbin.org/html,Test HTML Page,"<html><head><title>Herman Melville - Mo
 # 1. Setup environment and dependencies
 make pipenv_new && make install_deps
 
-# 2. Create test data and run application  
+# 2. Create input data and run application with verbose output
 make sample && make run_verbose
 
-# 3. Run comprehensive test suite
+# 3. Run comprehensive test suite (74 tests)
 make test
 
-# 4. View application help
-make help_app
+# 4. Run demo scripts to see full functionality
+make demo
+
+# 5. View all available commands
+make help
 ```
 
 **Development Workflow:**
 ```bash
 # Daily development cycle
 make                    # Activate environment
-make sample            # Create fresh test data
-make run_verbose       # Test application with logging
-make test             # Verify all tests pass (50/50)
+make sample            # Create fresh input data (data/input.csv)
+make run_verbose       # Test application with logging (outputs to data/output.csv)
+make test             # Verify all tests pass (74/74)
+make demo             # Run demonstration scripts
 ```
 
 **Command Categories:**
 
 1. **Environment Management**: `pipenv_new`, `install_deps`, `pipenv_shell`
-2. **Application Execution**: `run`, `run_verbose`, `help_app`, `sample`  
+2. **Application Execution**: `run`, `run_verbose`, `help_app`, `sample`, `sample_basic`  
 3. **Testing & Quality**: `test`, `test_verbose`
-4. **Utilities**: `pipenv_freeze`, `check_json`, `pipenv_venv`
+4. **Demo & Examples**: `demo`, `demo_clean`
+5. **Utilities**: `clean`, `pipenv_freeze`, `check_json`, `pipenv_venv`, `help`
 
 ## Development Patterns
 
@@ -154,6 +171,16 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
     │   ├── web_client_test.py       # Tests for WebClient
     │   ├── markdown_parser_test.py  # Tests for MarkdownParser
     │   └── main_test.py             # Tests for CLI main function
+    ├── demo/                    # Demo scripts and sample files
+    │   ├── README.md            # Demo documentation and usage instructions
+    │   ├── demo_price_extraction.py    # Price history extraction demonstration
+    │   ├── demo_idempotent.py          # Idempotent functionality demonstration
+    │   ├── response_01.md              # Sample TCGPlayer response data
+    │   └── *.csv                       # Demo output files and test data
+    ├── data/                    # Application input and output files  
+    │   ├── input.csv            # Input CSV with TCGPlayer URLs and metadata
+    │   ├── output.csv           # Normalized price history data (generated)
+    │   └── *.csv                # Other generated CSV files
     └── logs/                    # Generated log files (created automatically)
         ├── app.log              # Application execution logs
         └── test.log             # Test execution logs
@@ -164,10 +191,12 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
 - **app/**: All application code and development tools
 - **app/common/**: Reusable modules following single responsibility principle
 - **app/tests/**: Comprehensive unit tests matching the 13pyledger pattern
+- **app/demo/**: Demonstration scripts and sample files with documentation
+- **app/data/**: Application output and generated CSV files
 - **logs/**: Auto-generated directory for centralized logging output
 
 ### Testing Requirements
-- **Test Suite**: 50 comprehensive unit tests with 100% pass rate
+- **Test Suite**: 74 comprehensive unit tests with 100% pass rate
 - **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, Main CLI)
 - **Environment**: Requires `TCGPLAYER_API_TOKEN` environment variable
 - **Framework**: pytest with centralized logging via AppLogger
@@ -246,6 +275,81 @@ class TestMyClass:
 The application requires:
 - `TCGPLAYER_API_TOKEN` environment variable for API access
 - Use `source make.sh && check_env` to validate all required environment variables and CLI tools
+
+## Demo Scripts and Examples
+
+The `app/demo/` directory contains comprehensive demonstrations of the application's capabilities:
+
+### Available Demos
+
+1. **Price History Extraction (`demo_price_extraction.py`)**
+   - Demonstrates TCGPlayer price history table extraction
+   - Shows normalized CSV output format
+   - Uses real sample data from `response_01.md`
+   
+2. **Idempotent Functionality (`demo_idempotent.py`)**
+   - Proves application can be run multiple times safely
+   - Shows duplicate detection and prevention
+   - Demonstrates automated workflow compatibility
+
+### Running Demos
+
+```bash
+# Navigate to demo directory
+cd app/demo
+
+# Run price extraction demo
+python3 demo_price_extraction.py
+
+# Run idempotent functionality demo  
+python3 demo_idempotent.py
+```
+
+### Demo Features
+
+**Price Extraction Demo:**
+- Extracts 30+ price history records from sample TCGPlayer data
+- Generates normalized CSV with metadata (set, type, period, name, date, prices)
+- Shows complete end-to-end extraction process with logging
+
+**Idempotent Demo:**
+- **Run 1**: Creates 30 new records from `data/input.csv` to demo output file
+- **Run 2**: Detects all 30 as duplicates, writes 0 new records
+- **Run 3**: Confirms consistent behavior, still 0 new records
+- Proves safe automation for scheduled/recurring tasks
+
+### Sample Data
+
+- **`response_01.md`**: Real TCGPlayer product page content (Umbreon ex card)
+- **Output files**: Various `.csv` files showing different output formats
+- **Complete documentation**: See `app/demo/README.md` for detailed usage
+
+### Data Organization
+
+The application now uses a centralized data directory structure:
+
+**Input Data (`data/input.csv`):**
+- Contains TCGPlayer URLs with metadata (set, type, period, name)
+- Created automatically with `make sample`
+- Tracks multiple trading cards or products
+
+**Output Data (`data/output.csv`):**
+- Normalized price history with one row per price record
+- Includes all original metadata plus extracted price data
+- Generated with idempotent duplicate prevention
+- Safe for repeated processing and automation
+
+**Data Workflow:**
+```bash
+# Create fresh input data
+make sample                     # Creates data/input.csv
+
+# Process and generate output  
+make run_verbose               # Processes data/input.csv → data/output.csv
+
+# Verify idempotent behavior
+make run                       # Re-running detects duplicates, no new data added
+```
 
 ## Large Codebase Analysis
 

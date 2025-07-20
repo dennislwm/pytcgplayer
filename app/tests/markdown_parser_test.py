@@ -159,3 +159,119 @@ Final paragraph."""
         assert "`" not in result
         assert "[" not in result
         assert "```" not in result
+    
+    def test_extract_price_history_table_empty_content(self, markdown_parser):
+        result = markdown_parser.extract_price_history_table("")
+        assert result is None
+    
+    def test_extract_price_history_table_no_table(self, markdown_parser):
+        content = "This content has no price history table."
+        result = markdown_parser.extract_price_history_table(content)
+        assert result is None
+    
+    def test_extract_price_history_table_valid_table(self, markdown_parser):
+        content = """
+Some other content here.
+
+| Date | Holofoil |
+| --- | --- |
+| 4/20 to 4/22 | $1,451.66 | $0.00 |
+| 4/23 to 4/25 | $1,451.66 | $0.00 |
+| 4/26 to 4/28 | $1,451.66 | $0.00 |
+
+More content after table.
+"""
+        result = markdown_parser.extract_price_history_table(content)
+        assert result is not None
+        assert "| Date | Holofoil |" in result
+        assert "| 4/20 to 4/22 | $1,451.66 | $0.00 |" in result
+        assert "| 4/23 to 4/25 | $1,451.66 | $0.00 |" in result
+        assert "| 4/26 to 4/28 | $1,451.66 | $0.00 |" in result
+        assert "Some other content" not in result
+        assert "More content after" not in result
+    
+    def test_extract_price_history_table_case_insensitive(self, markdown_parser):
+        content = """
+| date | holofoil |
+| --- | --- |
+| 4/20 to 4/22 | $1,451.66 | $0.00 |
+"""
+        result = markdown_parser.extract_price_history_table(content)
+        assert result is not None
+        assert "date" in result.lower()
+        assert "holofoil" in result.lower()
+    
+    def test_extract_price_history_table_with_extra_spaces(self, markdown_parser):
+        content = """
+|   Date   |   Holofoil   |
+|   ---    |    ---       |
+|  4/20 to 4/22  |  $1,451.66  |  $0.00  |
+"""
+        result = markdown_parser.extract_price_history_table(content)
+        assert result is not None
+        assert "Date" in result
+        assert "Holofoil" in result
+        assert "4/20 to 4/22" in result
+    
+    def test_extract_price_history_table_too_small(self, markdown_parser):
+        content = """
+| Date | Holofoil |
+| --- | --- |
+"""
+        result = markdown_parser.extract_price_history_table(content)
+        assert result is None  # Too small - no data rows
+    
+    def test_parse_price_history_data_empty_content(self, markdown_parser):
+        result = markdown_parser.parse_price_history_data("")
+        assert result == []
+    
+    def test_parse_price_history_data_no_table(self, markdown_parser):
+        content = "No table here"
+        result = markdown_parser.parse_price_history_data(content)
+        assert result == []
+    
+    def test_parse_price_history_data_valid_table(self, markdown_parser):
+        content = """
+| Date | Holofoil |
+| --- | --- |
+| 4/20 to 4/22 | $1,451.66 | $0.00 |
+| 4/23 to 4/25 | $1,451.66 | $0.00 |
+| 4/26 to 4/28 | $1,451.66 | $0.00 |
+"""
+        result = markdown_parser.parse_price_history_data(content)
+        assert len(result) == 3
+        
+        # Check first row
+        assert result[0]['date'] == '4/20 to 4/22'
+        assert result[0]['holofoil'] == '$1,451.66'
+        assert result[0]['price'] == '$0.00'
+        
+        # Check second row
+        assert result[1]['date'] == '4/23 to 4/25'
+        assert result[1]['holofoil'] == '$1,451.66'
+        assert result[1]['price'] == '$0.00'
+        
+        # Check third row
+        assert result[2]['date'] == '4/26 to 4/28'
+        assert result[2]['holofoil'] == '$1,451.66'
+        assert result[2]['price'] == '$0.00'
+    
+    def test_parse_price_history_data_with_missing_cells(self, markdown_parser):
+        content = """
+| Date | Holofoil |
+| --- | --- |
+| 4/20 to 4/22 | $1,451.66 |
+| 4/23 to 4/25 |  |
+"""
+        result = markdown_parser.parse_price_history_data(content)
+        assert len(result) == 2
+        
+        # First row with missing price
+        assert result[0]['date'] == '4/20 to 4/22'
+        assert result[0]['holofoil'] == '$1,451.66'
+        assert result[0]['price'] == ''
+        
+        # Second row with missing holofoil
+        assert result[1]['date'] == '4/23 to 4/25'
+        assert result[1]['holofoil'] == ''
+        assert result[1]['price'] == ''

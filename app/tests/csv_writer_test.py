@@ -169,3 +169,131 @@ class TestCsvWriter:
         
         with pytest.raises(FileNotFoundError):
             csv_writer.write(test_data, nonexistent_path)
+    
+    def test_write_unique_new_file(self, csv_writer, tmp_path):
+        """Test writing unique data to a new file"""
+        test_file = tmp_path / "unique_test.csv"
+        
+        data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/1 to 1/3', 'holofoil_price': '$100.00', 'additional_price': '$0.00'},
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/4 to 1/6', 'holofoil_price': '$105.00', 'additional_price': '$1.00'}
+        ]
+        
+        csv_writer.write_unique(data, test_file)
+        
+        assert test_file.exists()
+        
+        # Read and verify content
+        with open(test_file, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+        
+        assert len(rows) == 2
+        assert rows[0]['name'] == 'Test Card'
+        assert rows[0]['date'] == '1/1 to 1/3'
+        assert rows[1]['date'] == '1/4 to 1/6'
+    
+    def test_write_unique_existing_file_no_duplicates(self, csv_writer, tmp_path):
+        """Test writing unique data when no duplicates exist"""
+        test_file = tmp_path / "unique_existing.csv"
+        
+        # Create initial data
+        initial_data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/1 to 1/3', 'holofoil_price': '$100.00', 'additional_price': '$0.00'}
+        ]
+        csv_writer.write(initial_data, test_file)
+        
+        # Add new unique data
+        new_data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/4 to 1/6', 'holofoil_price': '$105.00', 'additional_price': '$1.00'}
+        ]
+        csv_writer.write_unique(new_data, test_file)
+        
+        # Verify combined data
+        with open(test_file, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+        
+        assert len(rows) == 2
+        assert rows[0]['date'] == '1/1 to 1/3'
+        assert rows[1]['date'] == '1/4 to 1/6'
+    
+    def test_write_unique_existing_file_with_duplicates(self, csv_writer, tmp_path):
+        """Test writing unique data when duplicates exist"""
+        test_file = tmp_path / "unique_duplicates.csv"
+        
+        # Create initial data
+        initial_data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/1 to 1/3', 'holofoil_price': '$100.00', 'additional_price': '$0.00'},
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/4 to 1/6', 'holofoil_price': '$105.00', 'additional_price': '$1.00'}
+        ]
+        csv_writer.write(initial_data, test_file)
+        
+        # Try to add data with duplicates and one new entry
+        new_data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/1 to 1/3', 'holofoil_price': '$100.00', 'additional_price': '$0.00'},  # Duplicate
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/7 to 1/9', 'holofoil_price': '$110.00', 'additional_price': '$2.00'}   # New
+        ]
+        csv_writer.write_unique(new_data, test_file)
+        
+        # Verify only unique data was added
+        with open(test_file, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+        
+        assert len(rows) == 3  # 2 original + 1 new
+        dates = [row['date'] for row in rows]
+        assert '1/1 to 1/3' in dates
+        assert '1/4 to 1/6' in dates
+        assert '1/7 to 1/9' in dates
+    
+    def test_write_unique_custom_key_columns(self, csv_writer, tmp_path):
+        """Test writing unique data with custom key columns"""
+        test_file = tmp_path / "unique_custom_keys.csv"
+        
+        # Create initial data
+        initial_data = [
+            {'id': '1', 'name': 'Test', 'value': '100'},
+            {'id': '2', 'name': 'Test2', 'value': '200'}
+        ]
+        csv_writer.write(initial_data, test_file)
+        
+        # Add data with same id (should be duplicate) and new id
+        new_data = [
+            {'id': '1', 'name': 'Test', 'value': '150'},  # Same id, different value - should be duplicate
+            {'id': '3', 'name': 'Test3', 'value': '300'}  # New id
+        ]
+        
+        csv_writer.write_unique(new_data, test_file, key_columns=['id'])
+        
+        # Verify only new id was added
+        with open(test_file, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+        
+        assert len(rows) == 3
+        ids = [row['id'] for row in rows]
+        assert '1' in ids
+        assert '2' in ids
+        assert '3' in ids
+    
+    def test_write_unique_empty_data(self, csv_writer, tmp_path):
+        """Test writing empty data to existing file"""
+        test_file = tmp_path / "unique_empty.csv"
+        
+        # Create initial data
+        initial_data = [
+            {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Card', 'date': '1/1 to 1/3', 'holofoil_price': '$100.00', 'additional_price': '$0.00'}
+        ]
+        csv_writer.write(initial_data, test_file)
+        
+        # Try to add empty data
+        csv_writer.write_unique([], test_file)
+        
+        # Verify original data is unchanged
+        with open(test_file, 'r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+        
+        assert len(rows) == 1
+        assert rows[0]['name'] == 'Test Card'
