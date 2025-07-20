@@ -83,13 +83,16 @@ class CsvWriter:
         all_data = existing_data + new_data
         
         if all_data:
-            # Write all data (existing + new)
+            # Sort all data by fingerprint for consistent output order
+            all_data_sorted = sorted(all_data, key=lambda row: self._create_key(row, key_columns))
+            
+            # Write all data (existing + new) in sorted order
             with open(output_file, 'w', newline='', encoding='utf-8') as file:
-                fieldnames = all_data[0].keys()
+                fieldnames = all_data_sorted[0].keys()
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 
                 writer.writeheader()
-                writer.writerows(all_data)
+                writer.writerows(all_data_sorted)
             
             self.logger.info(f"Successfully wrote {len(all_data)} total rows ({added_count} new, {updated_count} updated) to {output_file}")
         else:

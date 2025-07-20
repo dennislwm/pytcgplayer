@@ -1,250 +1,188 @@
 set,type,period,name,date,holofoil_price,volume
-SV08.5,Card,3M,Umbreon ex 161,4/20 to 4/22,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,4/23 to 4/25,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,4/26 to 4/28,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,4/29 to 5/1,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,5/2 to 5/4,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,5/5 to 5/7,"$1,432.45",1
-SV08.5,Card,3M,Umbreon ex 161,5/8 to 5/10,"$1,422.85",0
-SV08.5,Card,3M,Umbreon ex 161,5/11 to 5/13,"$1,422.85",0
-SV08.5,Card,3M,Umbreon ex 161,5/14 to 5/16,"$1,422.85",0
-SV08.5,Card,3M,Umbreon ex 161,5/17 to 5/19,"$1,422.85",0
-SV08.5,Card,3M,Umbreon ex 161,5/20 to 5/22,"$1,422.85",0
-SV08.5,Card,3M,Umbreon ex 161,5/23 to 5/25,"$1,382.54",2
-SV08.5,Card,3M,Umbreon ex 161,5/26 to 5/28,"$1,374.24",0
-SV08.5,Card,3M,Umbreon ex 161,5/29 to 5/31,"$1,374.24",0
-SV08.5,Card,3M,Umbreon ex 161,6/1 to 6/3,"$1,361.77",1
-SV08.5,Card,3M,Umbreon ex 161,6/4 to 6/6,"$1,305.29",1
-SV08.5,Card,3M,Umbreon ex 161,6/7 to 6/9,"$1,305.29",0
-SV08.5,Card,3M,Umbreon ex 161,6/10 to 6/12,"$1,250.55",2
-SV08.5,Card,3M,Umbreon ex 161,6/13 to 6/15,"$1,250.55",0
-SV08.5,Card,3M,Umbreon ex 161,6/16 to 6/18,"$1,237.66",1
-SV08.5,Card,3M,Umbreon ex 161,6/19 to 6/21,"$1,231.22",0
-SV08.5,Card,3M,Umbreon ex 161,6/22 to 6/24,"$1,231.22",0
-SV08.5,Card,3M,Umbreon ex 161,6/25 to 6/27,"$1,226.08",1
-SV08.5,Card,3M,Umbreon ex 161,6/28 to 6/30,"$1,215.81",0
-SV08.5,Card,3M,Umbreon ex 161,7/1 to 7/3,"$1,215.81",0
-SV08.5,Card,3M,Umbreon ex 161,7/4 to 7/6,"$1,200.15",1
-SV08.5,Card,3M,Umbreon ex 161,7/7 to 7/9,"$1,174.52",3
-SV08.5,Card,3M,Umbreon ex 161,7/10 to 7/12,"$1,134.61",2
-SV08.5,Card,3M,Umbreon ex 161,7/13 to 7/15,"$1,115.91",0
-SV08.5,Card,3M,Umbreon ex 161,7/16 to 7/18,"$1,088.28",0
-SV08,Card,3M,Pikachu ex 238,4/21 to 4/23,$401.63,0
-SV08,Card,3M,Pikachu ex 238,4/24 to 4/26,$401.63,0
-SV08,Card,3M,Pikachu ex 238,4/27 to 4/29,$389.88,2
-SV08,Card,3M,Pikachu ex 238,4/30 to 5/2,$385.15,1
-SV08,Card,3M,Pikachu ex 238,5/3 to 5/5,$374.79,1
-SV08,Card,3M,Pikachu ex 238,5/6 to 5/8,$374.79,0
-SV08,Card,3M,Pikachu ex 238,5/9 to 5/11,$374.79,0
-SV08,Card,3M,Pikachu ex 238,5/12 to 5/14,$352.40,9
-SV08,Card,3M,Pikachu ex 238,5/15 to 5/17,$317.47,0
-SV08,Card,3M,Pikachu ex 238,5/18 to 5/20,$313.34,1
-SV08,Card,3M,Pikachu ex 238,5/21 to 5/23,$311.27,0
-SV08,Card,3M,Pikachu ex 238,5/24 to 5/26,$299.95,2
-SV08,Card,3M,Pikachu ex 238,5/27 to 5/29,$293.45,1
-SV08,Card,3M,Pikachu ex 238,5/30 to 6/1,$286.17,1
-SV08,Card,3M,Pikachu ex 238,6/2 to 6/4,$286.17,0
-SV08,Card,3M,Pikachu ex 238,6/5 to 6/7,$281.92,1
-SV08,Card,3M,Pikachu ex 238,6/8 to 6/10,$280.55,0
-SV08,Card,3M,Pikachu ex 238,6/11 to 6/13,$277.81,0
-SV08,Card,3M,Pikachu ex 238,6/14 to 6/16,$277.81,0
-SV08,Card,3M,Pikachu ex 238,6/17 to 6/19,$276.55,1
-SV08,Card,3M,Pikachu ex 238,6/20 to 6/22,$271.90,1
-SV08,Card,3M,Pikachu ex 238,6/23 to 6/25,$269.60,1
-SV08,Card,3M,Pikachu ex 238,6/26 to 6/28,$270.10,0
-SV08,Card,3M,Pikachu ex 238,6/29 to 7/1,$268.91,1
-SV08,Card,3M,Pikachu ex 238,7/2 to 7/4,$268.91,0
-SV08,Card,3M,Pikachu ex 238,7/5 to 7/7,$268.91,0
-SV08,Card,3M,Pikachu ex 238,7/8 to 7/10,$263.87,2
-SV08,Card,3M,Pikachu ex 238,7/11 to 7/13,$261.43,1
-SV08,Card,3M,Pikachu ex 238,7/14 to 7/16,$259.43,1
-SV08,Card,3M,Pikachu ex 238,7/17 to 7/19,$259.43,0
-SV01,Card,3M,Gardevoir ex 245,4/22 to 4/24,$46.01,0
-SV01,Card,3M,Gardevoir ex 245,4/25 to 4/27,$46.62,4
-SV01,Card,3M,Gardevoir ex 245,4/28 to 4/30,$47.03,4
-SV01,Card,3M,Gardevoir ex 245,5/1 to 5/3,$47.51,3
-SV01,Card,3M,Gardevoir ex 245,5/4 to 5/6,$47.91,2
-SV01,Card,3M,Gardevoir ex 245,5/7 to 5/9,$47.79,2
-SV01,Card,3M,Gardevoir ex 245,5/10 to 5/12,$47.30,3
-SV01,Card,3M,Gardevoir ex 245,5/13 to 5/15,$46.29,9
-SV01,Card,3M,Gardevoir ex 245,5/16 to 5/18,$45.69,5
-SV01,Card,3M,Gardevoir ex 245,5/19 to 5/21,$45.44,0
-SV01,Card,3M,Gardevoir ex 245,5/22 to 5/24,$44.14,5
-SV01,Card,3M,Gardevoir ex 245,5/25 to 5/27,$43.75,1
-SV01,Card,3M,Gardevoir ex 245,5/28 to 5/30,$43.41,4
-SV01,Card,3M,Gardevoir ex 245,5/31 to 6/2,$43.38,0
-SV01,Card,3M,Gardevoir ex 245,6/3 to 6/5,$43.19,2
-SV01,Card,3M,Gardevoir ex 245,6/6 to 6/8,$41.96,4
-SV01,Card,3M,Gardevoir ex 245,6/9 to 6/11,$40.41,5
-SV01,Card,3M,Gardevoir ex 245,6/12 to 6/14,$40.10,5
-SV01,Card,3M,Gardevoir ex 245,6/15 to 6/17,$40.53,1
-SV01,Card,3M,Gardevoir ex 245,6/18 to 6/20,$40.36,2
-SV01,Card,3M,Gardevoir ex 245,6/21 to 6/23,$40.09,3
-SV01,Card,3M,Gardevoir ex 245,6/24 to 6/26,$39.88,5
-SV01,Card,3M,Gardevoir ex 245,6/27 to 6/29,$40.10,7
-SV01,Card,3M,Gardevoir ex 245,6/30 to 7/2,$40.34,1
-SV01,Card,3M,Gardevoir ex 245,7/3 to 7/5,$40.42,2
-SV01,Card,3M,Gardevoir ex 245,7/6 to 7/8,$39.94,6
-SV01,Card,3M,Gardevoir ex 245,7/9 to 7/11,$39.80,2
-SV01,Card,3M,Gardevoir ex 245,7/12 to 7/14,$39.88,1
-SV01,Card,3M,Gardevoir ex 245,7/15 to 7/17,$39.73,3
-SV01,Card,3M,Gardevoir ex 245,7/18 to 7/20,$39.73,0
-SV02,Card,3M,Magikarp 203,4/22 to 4/24,$151.76,0
-SV02,Card,3M,Magikarp 203,4/25 to 4/27,$156.41,0
-SV02,Card,3M,Magikarp 203,4/28 to 4/30,$156.20,1
-SV02,Card,3M,Magikarp 203,5/1 to 5/3,$155.78,0
-SV02,Card,3M,Magikarp 203,5/4 to 5/6,$155.78,0
-SV02,Card,3M,Magikarp 203,5/7 to 5/9,$155.78,0
-SV02,Card,3M,Magikarp 203,5/10 to 5/12,$155.78,0
-SV02,Card,3M,Magikarp 203,5/13 to 5/15,$154.23,2
-SV02,Card,3M,Magikarp 203,5/16 to 5/18,$153.84,1
-SV02,Card,3M,Magikarp 203,5/19 to 5/21,$154.02,1
-SV02,Card,3M,Magikarp 203,5/22 to 5/24,$154.02,0
-SV02,Card,3M,Magikarp 203,5/25 to 5/27,$153.41,1
-SV02,Card,3M,Magikarp 203,5/28 to 5/30,$154.85,0
-SV02,Card,3M,Magikarp 203,5/31 to 6/2,$155.60,2
-SV02,Card,3M,Magikarp 203,6/3 to 6/5,$154.97,1
-SV02,Card,3M,Magikarp 203,6/6 to 6/8,$154.20,0
-SV02,Card,3M,Magikarp 203,6/9 to 6/11,$154.20,0
-SV02,Card,3M,Magikarp 203,6/12 to 6/14,$153.65,1
-SV02,Card,3M,Magikarp 203,6/15 to 6/17,$153.10,1
-SV02,Card,3M,Magikarp 203,6/18 to 6/20,$152.27,1
-SV02,Card,3M,Magikarp 203,6/21 to 6/23,$151.67,0
-SV02,Card,3M,Magikarp 203,6/24 to 6/26,$151.67,0
-SV02,Card,3M,Magikarp 203,6/27 to 6/29,$150.81,2
-SV02,Card,3M,Magikarp 203,6/30 to 7/2,$150.48,0
-SV02,Card,3M,Magikarp 203,7/3 to 7/5,$150.48,0
-SV02,Card,3M,Magikarp 203,7/6 to 7/8,$150.95,1
-SV02,Card,3M,Magikarp 203,7/9 to 7/11,$151.90,0
-SV02,Card,3M,Magikarp 203,7/12 to 7/14,$152.46,1
-SV02,Card,3M,Magikarp 203,7/15 to 7/17,$153.04,1
-SV02,Card,3M,Magikarp 203,7/18 to 7/20,$153.04,0
-SV03,Card,3M,Charizard ex 223,4/21 to 4/23,$55.61,2
-SV03,Card,3M,Charizard ex 223,4/24 to 4/26,$55.51,0
-SV03,Card,3M,Charizard ex 223,4/27 to 4/29,$54.11,3
-SV03,Card,3M,Charizard ex 223,4/30 to 5/2,$52.47,1
-SV03,Card,3M,Charizard ex 223,5/3 to 5/5,$52.11,0
-SV03,Card,3M,Charizard ex 223,5/6 to 5/8,$51.56,2
-SV03,Card,3M,Charizard ex 223,5/9 to 5/11,$50.98,2
-SV03,Card,3M,Charizard ex 223,5/12 to 5/14,$50.27,3
-SV03,Card,3M,Charizard ex 223,5/15 to 5/17,$50.00,1
-SV03,Card,3M,Charizard ex 223,5/18 to 5/20,$50.13,0
-SV03,Card,3M,Charizard ex 223,5/21 to 5/23,$50.13,0
-SV03,Card,3M,Charizard ex 223,5/24 to 5/26,$50.13,0
-SV03,Card,3M,Charizard ex 223,5/27 to 5/29,$50.13,0
-SV03,Card,3M,Charizard ex 223,5/30 to 6/1,$49.82,1
-SV03,Card,3M,Charizard ex 223,6/2 to 6/4,$48.93,0
-SV03,Card,3M,Charizard ex 223,6/5 to 6/7,$48.93,0
-SV03,Card,3M,Charizard ex 223,6/8 to 6/10,$48.58,1
-SV03,Card,3M,Charizard ex 223,6/11 to 6/13,$48.41,0
-SV03,Card,3M,Charizard ex 223,6/14 to 6/16,$48.17,1
-SV03,Card,3M,Charizard ex 223,6/17 to 6/19,$47.69,0
-SV03,Card,3M,Charizard ex 223,6/20 to 6/22,$47.68,3
-SV03,Card,3M,Charizard ex 223,6/23 to 6/25,$47.57,0
-SV03,Card,3M,Charizard ex 223,6/26 to 6/28,$47.83,4
-SV03,Card,3M,Charizard ex 223,6/29 to 7/1,$47.33,2
-SV03,Card,3M,Charizard ex 223,7/2 to 7/4,$47.33,0
-SV03,Card,3M,Charizard ex 223,7/5 to 7/7,$47.43,2
-SV03,Card,3M,Charizard ex 223,7/8 to 7/10,$47.54,2
-SV03,Card,3M,Charizard ex 223,7/11 to 7/13,$47.82,0
-SV03,Card,3M,Charizard ex 223,7/14 to 7/16,$47.85,1
-SV03,Card,3M,Charizard ex 223,7/17 to 7/19,$47.85,0
-SV03.5,Card,3M,Charizard ex 199,4/22 to 4/24,$207.06,0
-SV03.5,Card,3M,Charizard ex 199,4/25 to 4/27,$201.69,7
-SV03.5,Card,3M,Charizard ex 199,4/28 to 4/30,$198.95,3
-SV03.5,Card,3M,Charizard ex 199,5/1 to 5/3,$198.36,3
-SV03.5,Card,3M,Charizard ex 199,5/4 to 5/6,$198.58,1
-SV03.5,Card,3M,Charizard ex 199,5/7 to 5/9,$198.34,3
-SV03.5,Card,3M,Charizard ex 199,5/10 to 5/12,$196.95,5
-SV03.5,Card,3M,Charizard ex 199,5/13 to 5/15,$193.96,13
-SV03.5,Card,3M,Charizard ex 199,5/16 to 5/18,$193.34,3
-SV03.5,Card,3M,Charizard ex 199,5/19 to 5/21,$191.82,2
-SV03.5,Card,3M,Charizard ex 199,5/22 to 5/24,$191.58,3
-SV03.5,Card,3M,Charizard ex 199,5/25 to 5/27,$191.65,2
-SV03.5,Card,3M,Charizard ex 199,5/28 to 5/30,$192.54,6
-SV03.5,Card,3M,Charizard ex 199,5/31 to 6/2,$192.57,1
-SV03.5,Card,3M,Charizard ex 199,6/3 to 6/5,$192.32,2
-SV03.5,Card,3M,Charizard ex 199,6/6 to 6/8,$191.22,2
-SV03.5,Card,3M,Charizard ex 199,6/9 to 6/11,$187.67,4
-SV03.5,Card,3M,Charizard ex 199,6/12 to 6/14,$184.33,3
-SV03.5,Card,3M,Charizard ex 199,6/15 to 6/17,$180.34,7
-SV03.5,Card,3M,Charizard ex 199,6/18 to 6/20,$176.15,5
-SV03.5,Card,3M,Charizard ex 199,6/21 to 6/23,$173.08,3
-SV03.5,Card,3M,Charizard ex 199,6/24 to 6/26,$172.02,2
-SV03.5,Card,3M,Charizard ex 199,6/27 to 6/29,$171.21,2
-SV03.5,Card,3M,Charizard ex 199,6/30 to 7/2,$170.17,4
-SV03.5,Card,3M,Charizard ex 199,7/3 to 7/5,$169.15,7
-SV03.5,Card,3M,Charizard ex 199,7/6 to 7/8,$167.71,5
-SV03.5,Card,3M,Charizard ex 199,7/9 to 7/11,$166.75,22
-SV03.5,Card,3M,Charizard ex 199,7/12 to 7/14,$168.16,5
-SV03.5,Card,3M,Charizard ex 199,7/15 to 7/17,$169.96,5
-SV03.5,Card,3M,Charizard ex 199,7/18 to 7/20,$169.96,0
-SV04,Card,3M,Groudon 199,4/22 to 4/24,$84.43,0
-SV04,Card,3M,Groudon 199,4/25 to 4/27,$83.12,2
-SV04,Card,3M,Groudon 199,4/28 to 4/30,$81.32,3
-SV04,Card,3M,Groudon 199,5/1 to 5/3,$78.39,6
-SV04,Card,3M,Groudon 199,5/4 to 5/6,$74.75,2
-SV04,Card,3M,Groudon 199,5/7 to 5/9,$73.55,2
-SV04,Card,3M,Groudon 199,5/10 to 5/12,$73.10,0
-SV04,Card,3M,Groudon 199,5/13 to 5/15,$72.38,1
-SV04,Card,3M,Groudon 199,5/16 to 5/18,$71.35,2
-SV04,Card,3M,Groudon 199,5/19 to 5/21,$70.76,3
-SV04,Card,3M,Groudon 199,5/22 to 5/24,$70.57,0
-SV04,Card,3M,Groudon 199,5/25 to 5/27,$70.42,1
-SV04,Card,3M,Groudon 199,5/28 to 5/30,$69.38,2
-SV04,Card,3M,Groudon 199,5/31 to 6/2,$69.06,1
-SV04,Card,3M,Groudon 199,6/3 to 6/5,$68.69,2
-SV04,Card,3M,Groudon 199,6/6 to 6/8,$68.66,0
-SV04,Card,3M,Groudon 199,6/9 to 6/11,$68.51,1
-SV04,Card,3M,Groudon 199,6/12 to 6/14,$67.88,2
-SV04,Card,3M,Groudon 199,6/15 to 6/17,$67.76,0
-SV04,Card,3M,Groudon 199,6/18 to 6/20,$67.65,1
-SV04,Card,3M,Groudon 199,6/21 to 6/23,$67.42,0
-SV04,Card,3M,Groudon 199,6/24 to 6/26,$67.15,2
-SV04,Card,3M,Groudon 199,6/27 to 6/29,$66.45,2
-SV04,Card,3M,Groudon 199,6/30 to 7/2,$66.22,1
-SV04,Card,3M,Groudon 199,7/3 to 7/5,$66.14,0
-SV04,Card,3M,Groudon 199,7/6 to 7/8,$64.68,6
-SV04,Card,3M,Groudon 199,7/9 to 7/11,$63.62,4
-SV04,Card,3M,Groudon 199,7/12 to 7/14,$63.01,3
-SV04,Card,3M,Groudon 199,7/15 to 7/17,$62.15,3
-SV04,Card,3M,Groudon 199,7/18 to 7/20,$62.15,0
-SV04.5,Card,3M,Mew ex 232,4/21 to 4/23,$356.41,1
-SV04.5,Card,3M,Mew ex 232,4/24 to 4/26,$352.81,2
-SV04.5,Card,3M,Mew ex 232,4/27 to 4/29,$351.01,0
-SV04.5,Card,3M,Mew ex 232,4/30 to 5/2,$351.01,0
-SV04.5,Card,3M,Mew ex 232,5/3 to 5/5,$347.47,1
-SV04.5,Card,3M,Mew ex 232,5/6 to 5/8,$337.30,3
-SV04.5,Card,3M,Mew ex 232,5/9 to 5/11,$325.27,4
-SV04.5,Card,3M,Mew ex 232,5/12 to 5/14,$315.32,4
-SV04.5,Card,3M,Mew ex 232,5/15 to 5/17,$308.63,0
-SV04.5,Card,3M,Mew ex 232,5/18 to 5/20,$308.63,0
-SV04.5,Card,3M,Mew ex 232,5/21 to 5/23,$308.63,0
-SV04.5,Card,3M,Mew ex 232,5/24 to 5/26,$308.63,0
-SV04.5,Card,3M,Mew ex 232,5/27 to 5/29,$308.47,1
-SV04.5,Card,3M,Mew ex 232,5/30 to 6/1,$304.96,2
-SV04.5,Card,3M,Mew ex 232,6/2 to 6/4,$299.53,1
-SV04.5,Card,3M,Mew ex 232,6/5 to 6/7,$298.43,0
-SV04.5,Card,3M,Mew ex 232,6/8 to 6/10,$296.23,0
-SV04.5,Card,3M,Mew ex 232,6/11 to 6/13,$293.26,3
-SV04.5,Card,3M,Mew ex 232,6/14 to 6/16,$292.45,0
-SV04.5,Card,3M,Mew ex 232,6/17 to 6/19,$292.45,0
-SV04.5,Card,3M,Mew ex 232,6/20 to 6/22,$291.65,1
-SV04.5,Card,3M,Mew ex 232,6/23 to 6/25,$290.05,0
-SV04.5,Card,3M,Mew ex 232,6/26 to 6/28,$290.05,0
-SV04.5,Card,3M,Mew ex 232,6/29 to 7/1,$288.52,1
-SV04.5,Card,3M,Mew ex 232,7/2 to 7/4,$285.25,3
-SV04.5,Card,3M,Mew ex 232,7/5 to 7/7,$284.03,2
-SV04.5,Card,3M,Mew ex 232,7/8 to 7/10,$284.32,0
-SV04.5,Card,3M,Mew ex 232,7/11 to 7/13,$284.13,1
-SV04.5,Card,3M,Mew ex 232,7/14 to 7/16,$284.99,4
-SV04.5,Card,3M,Mew ex 232,7/17 to 7/19,$284.99,0
+SV01,Card,3M,Gardevoir ex 245,4/20 to 4/22,$49.73,12
+SV01,Card,3M,Gardevoir ex 245,4/23 to 4/25,$50.14,27
+SV01,Card,3M,Gardevoir ex 245,4/26 to 4/28,$50.38,10
+SV01,Card,3M,Gardevoir ex 245,4/29 to 5/1,$49.79,11
+SV01,Card,3M,Gardevoir ex 245,5/11 to 5/13,$42.86,17
+SV01,Card,3M,Gardevoir ex 245,5/14 to 5/16,$45.50,57
+SV01,Card,3M,Gardevoir ex 245,5/17 to 5/19,$44.71,17
+SV01,Card,3M,Gardevoir ex 245,5/2 to 5/4,$49.27,10
+SV01,Card,3M,Gardevoir ex 245,5/20 to 5/22,$43.98,21
+SV01,Card,3M,Gardevoir ex 245,5/23 to 5/25,$41.00,16
+SV01,Card,3M,Gardevoir ex 245,5/26 to 5/28,$41.21,16
+SV01,Card,3M,Gardevoir ex 245,5/29 to 5/31,$40.37,18
+SV01,Card,3M,Gardevoir ex 245,5/5 to 5/7,$48.02,15
+SV01,Card,3M,Gardevoir ex 245,5/8 to 5/10,$46.26,16
+SV01,Card,3M,Gardevoir ex 245,6/1 to 6/3,$40.98,15
+SV01,Card,3M,Gardevoir ex 245,6/10 to 6/12,$41.49,18
+SV01,Card,3M,Gardevoir ex 245,6/13 to 6/15,$43.56,16
+SV01,Card,3M,Gardevoir ex 245,6/16 to 6/18,$42.38,19
+SV01,Card,3M,Gardevoir ex 245,6/19 to 6/21,$41.09,16
+SV01,Card,3M,Gardevoir ex 245,6/22 to 6/24,$41.11,13
+SV01,Card,3M,Gardevoir ex 245,6/25 to 6/27,$41.38,11
+SV01,Card,3M,Gardevoir ex 245,6/28 to 6/30,$41.15,13
+SV01,Card,3M,Gardevoir ex 245,6/4 to 6/6,$40.36,16
+SV01,Card,3M,Gardevoir ex 245,6/7 to 6/9,$39.95,13
+SV01,Card,3M,Gardevoir ex 245,7/1 to 7/3,$40.86,6
+SV01,Card,3M,Gardevoir ex 245,7/10 to 7/12,$41.23,12
+SV01,Card,3M,Gardevoir ex 245,7/13 to 7/15,$41.94,21
+SV01,Card,3M,Gardevoir ex 245,7/16 to 7/18,$42.26,12
+SV01,Card,3M,Gardevoir ex 245,7/4 to 7/6,$40.94,25
+SV01,Card,3M,Gardevoir ex 245,7/7 to 7/9,$41.23,8
+SV02,Card,3M,Magikarp 203,4/20 to 4/22,$213.31,3
+SV02,Card,3M,Magikarp 203,4/23 to 4/25,$210.26,5
+SV02,Card,3M,Magikarp 203,4/26 to 4/28,$206.52,4
+SV02,Card,3M,Magikarp 203,4/29 to 5/1,$198.88,14
+SV02,Card,3M,Magikarp 203,5/11 to 5/13,$186.80,8
+SV02,Card,3M,Magikarp 203,5/14 to 5/16,$190.31,44
+SV02,Card,3M,Magikarp 203,5/17 to 5/19,$191.07,10
+SV02,Card,3M,Magikarp 203,5/2 to 5/4,$196.29,4
+SV02,Card,3M,Magikarp 203,5/20 to 5/22,$190.47,10
+SV02,Card,3M,Magikarp 203,5/23 to 5/25,$190.99,16
+SV02,Card,3M,Magikarp 203,5/26 to 5/28,$191.98,6
+SV02,Card,3M,Magikarp 203,5/29 to 5/31,$192.33,3
+SV02,Card,3M,Magikarp 203,5/5 to 5/7,$194.61,3
+SV02,Card,3M,Magikarp 203,5/8 to 5/10,$191.19,4
+SV02,Card,3M,Magikarp 203,6/1 to 6/3,$194.54,12
+SV02,Card,3M,Magikarp 203,6/10 to 6/12,$193.84,8
+SV02,Card,3M,Magikarp 203,6/13 to 6/15,$198.89,19
+SV02,Card,3M,Magikarp 203,6/16 to 6/18,$208.47,26
+SV02,Card,3M,Magikarp 203,6/19 to 6/21,$210.96,7
+SV02,Card,3M,Magikarp 203,6/22 to 6/24,$211.75,4
+SV02,Card,3M,Magikarp 203,6/25 to 6/27,$221.36,13
+SV02,Card,3M,Magikarp 203,6/28 to 6/30,$231.50,8
+SV02,Card,3M,Magikarp 203,6/4 to 6/6,$191.86,12
+SV02,Card,3M,Magikarp 203,6/7 to 6/9,$192.29,19
+SV02,Card,3M,Magikarp 203,7/1 to 7/3,$234.97,3
+SV02,Card,3M,Magikarp 203,7/10 to 7/12,$233.09,6
+SV02,Card,3M,Magikarp 203,7/13 to 7/15,$235.40,6
+SV02,Card,3M,Magikarp 203,7/16 to 7/18,$235.40,0
+SV02,Card,3M,Magikarp 203,7/4 to 7/6,$236.56,12
+SV02,Card,3M,Magikarp 203,7/7 to 7/9,$233.41,5
+SV03,Card,3M,Charizard ex 223,4/20 to 4/22,$55.41,25
+SV03,Card,3M,Charizard ex 223,4/23 to 4/25,$55.35,18
+SV03,Card,3M,Charizard ex 223,4/26 to 4/28,$53.99,30
+SV03,Card,3M,Charizard ex 223,4/29 to 5/1,$57.17,85
+SV03,Card,3M,Charizard ex 223,5/11 to 5/13,$54.89,21
+SV03,Card,3M,Charizard ex 223,5/14 to 5/16,$58.78,101
+SV03,Card,3M,Charizard ex 223,5/17 to 5/19,$58.63,44
+SV03,Card,3M,Charizard ex 223,5/2 to 5/4,$58.24,18
+SV03,Card,3M,Charizard ex 223,5/20 to 5/22,$57.79,17
+SV03,Card,3M,Charizard ex 223,5/23 to 5/25,$56.34,26
+SV03,Card,3M,Charizard ex 223,5/26 to 5/28,$57.11,14
+SV03,Card,3M,Charizard ex 223,5/29 to 5/31,$56.03,27
+SV03,Card,3M,Charizard ex 223,5/5 to 5/7,$54.26,28
+SV03,Card,3M,Charizard ex 223,5/8 to 5/10,$56.74,12
+SV03,Card,3M,Charizard ex 223,6/1 to 6/3,$55.70,26
+SV03,Card,3M,Charizard ex 223,6/10 to 6/12,$56.14,34
+SV03,Card,3M,Charizard ex 223,6/13 to 6/15,$57.64,14
+SV03,Card,3M,Charizard ex 223,6/16 to 6/18,$55.44,21
+SV03,Card,3M,Charizard ex 223,6/19 to 6/21,$54.65,33
+SV03,Card,3M,Charizard ex 223,6/22 to 6/24,$58.48,32
+SV03,Card,3M,Charizard ex 223,6/25 to 6/27,$58.24,14
+SV03,Card,3M,Charizard ex 223,6/28 to 6/30,$58.65,23
+SV03,Card,3M,Charizard ex 223,6/4 to 6/6,$54.22,26
+SV03,Card,3M,Charizard ex 223,6/7 to 6/9,$57.95,23
+SV03,Card,3M,Charizard ex 223,7/1 to 7/3,$56.58,21
+SV03,Card,3M,Charizard ex 223,7/10 to 7/12,$59.62,25
+SV03,Card,3M,Charizard ex 223,7/13 to 7/15,$59.49,17
+SV03,Card,3M,Charizard ex 223,7/16 to 7/18,$59.06,16
+SV03,Card,3M,Charizard ex 223,7/4 to 7/6,$57.18,23
+SV03,Card,3M,Charizard ex 223,7/7 to 7/9,$59.62,27
+SV03.5,Card,3M,Charizard ex 199,4/22 to 4/24,$211.16,39
+SV03.5,Card,3M,Charizard ex 199,4/25 to 4/27,$209.31,13
+SV03.5,Card,3M,Charizard ex 199,4/28 to 4/30,$207.91,9
+SV03.5,Card,3M,Charizard ex 199,5/1 to 5/3,$203.30,21
+SV03.5,Card,3M,Charizard ex 199,5/10 to 5/12,$194.56,28
+SV03.5,Card,3M,Charizard ex 199,5/13 to 5/15,$205.76,80
+SV03.5,Card,3M,Charizard ex 199,5/16 to 5/18,$208.98,11
+SV03.5,Card,3M,Charizard ex 199,5/19 to 5/21,$211.57,19
+SV03.5,Card,3M,Charizard ex 199,5/22 to 5/24,$208.42,17
+SV03.5,Card,3M,Charizard ex 199,5/25 to 5/27,$204.48,16
+SV03.5,Card,3M,Charizard ex 199,5/28 to 5/30,$207.69,37
+SV03.5,Card,3M,Charizard ex 199,5/31 to 6/2,$204.05,15
+SV03.5,Card,3M,Charizard ex 199,5/4 to 5/6,$197.76,13
+SV03.5,Card,3M,Charizard ex 199,5/7 to 5/9,$194.55,12
+SV03.5,Card,3M,Charizard ex 199,6/12 to 6/14,$184.32,19
+SV03.5,Card,3M,Charizard ex 199,6/15 to 6/17,$183.66,53
+SV03.5,Card,3M,Charizard ex 199,6/18 to 6/20,$190.86,15
+SV03.5,Card,3M,Charizard ex 199,6/21 to 6/23,$185.79,30
+SV03.5,Card,3M,Charizard ex 199,6/24 to 6/26,$184.20,9
+SV03.5,Card,3M,Charizard ex 199,6/27 to 6/29,$181.80,21
+SV03.5,Card,3M,Charizard ex 199,6/3 to 6/5,$197.95,13
+SV03.5,Card,3M,Charizard ex 199,6/30 to 7/2,$180.09,48
+SV03.5,Card,3M,Charizard ex 199,6/6 to 6/8,$196.93,34
+SV03.5,Card,3M,Charizard ex 199,6/9 to 6/11,$186.37,30
+SV03.5,Card,3M,Charizard ex 199,7/12 to 7/14,$192.01,25
+SV03.5,Card,3M,Charizard ex 199,7/15 to 7/17,$193.26,13
+SV03.5,Card,3M,Charizard ex 199,7/18 to 7/20,$193.26,0
+SV03.5,Card,3M,Charizard ex 199,7/3 to 7/5,$185.42,33
+SV03.5,Card,3M,Charizard ex 199,7/6 to 7/8,$188.72,14
+SV03.5,Card,3M,Charizard ex 199,7/9 to 7/11,$188.86,37
+SV04,Card,3M,Groudon 199,4/20 to 4/22,$82.43,5
+SV04,Card,3M,Groudon 199,4/23 to 4/25,$81.54,6
+SV04,Card,3M,Groudon 199,4/26 to 4/28,$79.35,9
+SV04,Card,3M,Groudon 199,4/29 to 5/1,$77.61,12
+SV04,Card,3M,Groudon 199,5/11 to 5/13,$73.57,7
+SV04,Card,3M,Groudon 199,5/14 to 5/16,$71.08,52
+SV04,Card,3M,Groudon 199,5/17 to 5/19,$71.77,21
+SV04,Card,3M,Groudon 199,5/2 to 5/4,$76.21,4
+SV04,Card,3M,Groudon 199,5/20 to 5/22,$72.72,19
+SV04,Card,3M,Groudon 199,5/23 to 5/25,$74.08,16
+SV04,Card,3M,Groudon 199,5/26 to 5/28,$72.11,23
+SV04,Card,3M,Groudon 199,5/29 to 5/31,$73.31,6
+SV04,Card,3M,Groudon 199,5/5 to 5/7,$77.51,9
+SV04,Card,3M,Groudon 199,5/8 to 5/10,$75.92,7
+SV04,Card,3M,Groudon 199,6/1 to 6/3,$74.68,8
+SV04,Card,3M,Groudon 199,6/10 to 6/12,$73.69,7
+SV04,Card,3M,Groudon 199,6/13 to 6/15,$73.36,5
+SV04,Card,3M,Groudon 199,6/16 to 6/18,$73.32,8
+SV04,Card,3M,Groudon 199,6/19 to 6/21,$71.73,7
+SV04,Card,3M,Groudon 199,6/22 to 6/24,$70.45,5
+SV04,Card,3M,Groudon 199,6/25 to 6/27,$68.65,6
+SV04,Card,3M,Groudon 199,6/28 to 6/30,$67.64,13
+SV04,Card,3M,Groudon 199,6/4 to 6/6,$74.92,5
+SV04,Card,3M,Groudon 199,6/7 to 6/9,$73.35,29
+SV04,Card,3M,Groudon 199,7/1 to 7/3,$67.71,8
+SV04,Card,3M,Groudon 199,7/10 to 7/12,$68.89,18
+SV04,Card,3M,Groudon 199,7/13 to 7/15,$69.98,15
+SV04,Card,3M,Groudon 199,7/16 to 7/18,$70.76,3
+SV04,Card,3M,Groudon 199,7/4 to 7/6,$68.08,4
+SV04,Card,3M,Groudon 199,7/7 to 7/9,$68.07,20
+SV04.5,Card,3M,Mew ex 232,4/22 to 4/24,$319.90,26
+SV04.5,Card,3M,Mew ex 232,4/25 to 4/27,$316.87,8
+SV04.5,Card,3M,Mew ex 232,4/28 to 4/30,$317.89,45
+SV04.5,Card,3M,Mew ex 232,5/1 to 5/3,$320.13,5
+SV04.5,Card,3M,Mew ex 232,5/10 to 5/12,$305.42,3
+SV04.5,Card,3M,Mew ex 232,5/13 to 5/15,$302.80,22
+SV04.5,Card,3M,Mew ex 232,5/16 to 5/18,$302.37,5
+SV04.5,Card,3M,Mew ex 232,5/19 to 5/21,$302.61,5
+SV04.5,Card,3M,Mew ex 232,5/22 to 5/24,$302.24,11
+SV04.5,Card,3M,Mew ex 232,5/25 to 5/27,$300.89,3
+SV04.5,Card,3M,Mew ex 232,5/28 to 5/30,$300.31,1
+SV04.5,Card,3M,Mew ex 232,5/31 to 6/2,$298.67,8
+SV04.5,Card,3M,Mew ex 232,5/4 to 5/6,$311.27,9
+SV04.5,Card,3M,Mew ex 232,5/7 to 5/9,$306.34,5
+SV04.5,Card,3M,Mew ex 232,6/12 to 6/14,$296.12,2
+SV04.5,Card,3M,Mew ex 232,6/15 to 6/17,$296.14,4
+SV04.5,Card,3M,Mew ex 232,6/18 to 6/20,$294.71,3
+SV04.5,Card,3M,Mew ex 232,6/21 to 6/23,$290.59,6
+SV04.5,Card,3M,Mew ex 232,6/24 to 6/26,$292.03,13
+SV04.5,Card,3M,Mew ex 232,6/27 to 6/29,$297.75,24
+SV04.5,Card,3M,Mew ex 232,6/3 to 6/5,$298.14,2
+SV04.5,Card,3M,Mew ex 232,6/30 to 7/2,$299.53,9
+SV04.5,Card,3M,Mew ex 232,6/6 to 6/8,$298.62,8
+SV04.5,Card,3M,Mew ex 232,6/9 to 6/11,$292.04,4
+SV04.5,Card,3M,Mew ex 232,7/12 to 7/14,$319.59,25
+SV04.5,Card,3M,Mew ex 232,7/15 to 7/17,$338.56,8
+SV04.5,Card,3M,Mew ex 232,7/18 to 7/20,$338.56,0
+SV04.5,Card,3M,Mew ex 232,7/3 to 7/5,$298.63,8
+SV04.5,Card,3M,Mew ex 232,7/6 to 7/8,$297.96,8
+SV04.5,Card,3M,Mew ex 232,7/9 to 7/11,$303.75,21
 SV05,Card,3M,Raging Bolt ex 208,4/22 to 4/24,$93.48,6
 SV05,Card,3M,Raging Bolt ex 208,4/25 to 4/27,$92.71,3
 SV05,Card,3M,Raging Bolt ex 208,4/28 to 4/30,$91.70,3
 SV05,Card,3M,Raging Bolt ex 208,5/1 to 5/3,$90.95,5
-SV05,Card,3M,Raging Bolt ex 208,5/4 to 5/6,$89.05,8
-SV05,Card,3M,Raging Bolt ex 208,5/7 to 5/9,$84.69,14
 SV05,Card,3M,Raging Bolt ex 208,5/10 to 5/12,$82.96,5
 SV05,Card,3M,Raging Bolt ex 208,5/13 to 5/15,$82.12,52
 SV05,Card,3M,Raging Bolt ex 208,5/16 to 5/18,$82.17,11
@@ -253,58 +191,58 @@ SV05,Card,3M,Raging Bolt ex 208,5/22 to 5/24,$81.95,18
 SV05,Card,3M,Raging Bolt ex 208,5/25 to 5/27,$81.34,7
 SV05,Card,3M,Raging Bolt ex 208,5/28 to 5/30,$81.10,3
 SV05,Card,3M,Raging Bolt ex 208,5/31 to 6/2,$79.99,10
-SV05,Card,3M,Raging Bolt ex 208,6/3 to 6/5,$80.05,5
-SV05,Card,3M,Raging Bolt ex 208,6/6 to 6/8,$79.73,8
-SV05,Card,3M,Raging Bolt ex 208,6/9 to 6/11,$79.52,7
+SV05,Card,3M,Raging Bolt ex 208,5/4 to 5/6,$89.05,8
+SV05,Card,3M,Raging Bolt ex 208,5/7 to 5/9,$84.69,14
 SV05,Card,3M,Raging Bolt ex 208,6/12 to 6/14,$78.49,11
 SV05,Card,3M,Raging Bolt ex 208,6/15 to 6/17,$77.53,9
 SV05,Card,3M,Raging Bolt ex 208,6/18 to 6/20,$76.20,9
 SV05,Card,3M,Raging Bolt ex 208,6/21 to 6/23,$75.63,7
 SV05,Card,3M,Raging Bolt ex 208,6/24 to 6/26,$75.01,7
 SV05,Card,3M,Raging Bolt ex 208,6/27 to 6/29,$75.02,8
+SV05,Card,3M,Raging Bolt ex 208,6/3 to 6/5,$80.05,5
 SV05,Card,3M,Raging Bolt ex 208,6/30 to 7/2,$74.92,8
-SV05,Card,3M,Raging Bolt ex 208,7/3 to 7/5,$74.57,9
-SV05,Card,3M,Raging Bolt ex 208,7/6 to 7/8,$74.14,9
-SV05,Card,3M,Raging Bolt ex 208,7/9 to 7/11,$73.41,10
+SV05,Card,3M,Raging Bolt ex 208,6/6 to 6/8,$79.73,8
+SV05,Card,3M,Raging Bolt ex 208,6/9 to 6/11,$79.52,7
 SV05,Card,3M,Raging Bolt ex 208,7/12 to 7/14,$72.36,8
 SV05,Card,3M,Raging Bolt ex 208,7/15 to 7/17,$70.77,11
 SV05,Card,3M,Raging Bolt ex 208,7/18 to 7/20,$70.77,0
-SV06,Card,3M,Greninja ex 214,4/22 to 4/24,$300.33,0
-SV06,Card,3M,Greninja ex 214,4/25 to 4/27,$300.33,0
-SV06,Card,3M,Greninja ex 214,4/28 to 4/30,$300.33,0
-SV06,Card,3M,Greninja ex 214,5/1 to 5/3,$300.33,0
-SV06,Card,3M,Greninja ex 214,5/4 to 5/6,$300.33,0
-SV06,Card,3M,Greninja ex 214,5/7 to 5/9,$300.33,0
-SV06,Card,3M,Greninja ex 214,5/10 to 5/12,$300.33,0
-SV06,Card,3M,Greninja ex 214,5/13 to 5/15,$291.94,1
-SV06,Card,3M,Greninja ex 214,5/16 to 5/18,$287.75,0
-SV06,Card,3M,Greninja ex 214,5/19 to 5/21,$287.75,0
-SV06,Card,3M,Greninja ex 214,5/22 to 5/24,$287.75,0
-SV06,Card,3M,Greninja ex 214,5/25 to 5/27,$287.75,0
-SV06,Card,3M,Greninja ex 214,5/28 to 5/30,$287.75,0
-SV06,Card,3M,Greninja ex 214,5/31 to 6/2,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/3 to 6/5,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/6 to 6/8,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/9 to 6/11,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/12 to 6/14,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/15 to 6/17,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/18 to 6/20,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/21 to 6/23,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/24 to 6/26,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/27 to 6/29,$287.75,0
-SV06,Card,3M,Greninja ex 214,6/30 to 7/2,$287.75,0
-SV06,Card,3M,Greninja ex 214,7/3 to 7/5,$287.75,0
-SV06,Card,3M,Greninja ex 214,7/6 to 7/8,$287.75,0
-SV06,Card,3M,Greninja ex 214,7/9 to 7/11,$289.17,0
-SV06,Card,3M,Greninja ex 214,7/12 to 7/14,$289.17,0
-SV06,Card,3M,Greninja ex 214,7/15 to 7/17,$289.17,0
-SV06,Card,3M,Greninja ex 214,7/18 to 7/20,$289.17,0
+SV05,Card,3M,Raging Bolt ex 208,7/3 to 7/5,$74.57,9
+SV05,Card,3M,Raging Bolt ex 208,7/6 to 7/8,$74.14,9
+SV05,Card,3M,Raging Bolt ex 208,7/9 to 7/11,$73.41,10
+SV06,Card,3M,Greninja ex 214,4/22 to 4/24,$334.57,4
+SV06,Card,3M,Greninja ex 214,4/25 to 4/27,$326.00,4
+SV06,Card,3M,Greninja ex 214,4/28 to 4/30,$318.35,3
+SV06,Card,3M,Greninja ex 214,5/1 to 5/3,$315.73,2
+SV06,Card,3M,Greninja ex 214,5/10 to 5/12,$296.28,3
+SV06,Card,3M,Greninja ex 214,5/13 to 5/15,$294.77,28
+SV06,Card,3M,Greninja ex 214,5/16 to 5/18,$295.90,1
+SV06,Card,3M,Greninja ex 214,5/19 to 5/21,$295.64,3
+SV06,Card,3M,Greninja ex 214,5/22 to 5/24,$294.88,6
+SV06,Card,3M,Greninja ex 214,5/25 to 5/27,$295.28,0
+SV06,Card,3M,Greninja ex 214,5/28 to 5/30,$294.98,3
+SV06,Card,3M,Greninja ex 214,5/31 to 6/2,$291.71,2
+SV06,Card,3M,Greninja ex 214,5/4 to 5/6,$309.17,5
+SV06,Card,3M,Greninja ex 214,5/7 to 5/9,$299.56,6
+SV06,Card,3M,Greninja ex 214,6/12 to 6/14,$288.31,2
+SV06,Card,3M,Greninja ex 214,6/15 to 6/17,$283.50,9
+SV06,Card,3M,Greninja ex 214,6/18 to 6/20,$278.56,4
+SV06,Card,3M,Greninja ex 214,6/21 to 6/23,$276.27,5
+SV06,Card,3M,Greninja ex 214,6/24 to 6/26,$274.51,4
+SV06,Card,3M,Greninja ex 214,6/27 to 6/29,$272.49,2
+SV06,Card,3M,Greninja ex 214,6/3 to 6/5,$289.25,3
+SV06,Card,3M,Greninja ex 214,6/30 to 7/2,$269.86,3
+SV06,Card,3M,Greninja ex 214,6/6 to 6/8,$288.43,3
+SV06,Card,3M,Greninja ex 214,6/9 to 6/11,$286.80,3
+SV06,Card,3M,Greninja ex 214,7/12 to 7/14,$266.97,6
+SV06,Card,3M,Greninja ex 214,7/15 to 7/17,$265.97,3
+SV06,Card,3M,Greninja ex 214,7/18 to 7/20,$265.97,0
+SV06,Card,3M,Greninja ex 214,7/3 to 7/5,$267.64,4
+SV06,Card,3M,Greninja ex 214,7/6 to 7/8,$267.41,2
+SV06,Card,3M,Greninja ex 214,7/9 to 7/11,$267.84,8
 SV06.5,Card,3M,Fezandipiti ex 092,4/22 to 4/24,$48.29,6
 SV06.5,Card,3M,Fezandipiti ex 092,4/25 to 4/27,$48.56,4
 SV06.5,Card,3M,Fezandipiti ex 092,4/28 to 4/30,$49.05,5
 SV06.5,Card,3M,Fezandipiti ex 092,5/1 to 5/3,$49.18,3
-SV06.5,Card,3M,Fezandipiti ex 092,5/4 to 5/6,$49.13,11
-SV06.5,Card,3M,Fezandipiti ex 092,5/7 to 5/9,$48.62,12
 SV06.5,Card,3M,Fezandipiti ex 092,5/10 to 5/12,$48.34,3
 SV06.5,Card,3M,Fezandipiti ex 092,5/13 to 5/15,$47.67,24
 SV06.5,Card,3M,Fezandipiti ex 092,5/16 to 5/18,$47.26,6
@@ -313,69 +251,129 @@ SV06.5,Card,3M,Fezandipiti ex 092,5/22 to 5/24,$45.99,3
 SV06.5,Card,3M,Fezandipiti ex 092,5/25 to 5/27,$45.11,7
 SV06.5,Card,3M,Fezandipiti ex 092,5/28 to 5/30,$44.89,11
 SV06.5,Card,3M,Fezandipiti ex 092,5/31 to 6/2,$45.58,9
-SV06.5,Card,3M,Fezandipiti ex 092,6/3 to 6/5,$46.31,8
-SV06.5,Card,3M,Fezandipiti ex 092,6/6 to 6/8,$45.60,4
-SV06.5,Card,3M,Fezandipiti ex 092,6/9 to 6/11,$46.09,4
+SV06.5,Card,3M,Fezandipiti ex 092,5/4 to 5/6,$49.13,11
+SV06.5,Card,3M,Fezandipiti ex 092,5/7 to 5/9,$48.62,12
 SV06.5,Card,3M,Fezandipiti ex 092,6/12 to 6/14,$45.63,2
 SV06.5,Card,3M,Fezandipiti ex 092,6/15 to 6/17,$45.39,4
 SV06.5,Card,3M,Fezandipiti ex 092,6/18 to 6/20,$44.30,6
 SV06.5,Card,3M,Fezandipiti ex 092,6/21 to 6/23,$44.43,7
 SV06.5,Card,3M,Fezandipiti ex 092,6/24 to 6/26,$43.71,9
 SV06.5,Card,3M,Fezandipiti ex 092,6/27 to 6/29,$42.72,5
+SV06.5,Card,3M,Fezandipiti ex 092,6/3 to 6/5,$46.31,8
 SV06.5,Card,3M,Fezandipiti ex 092,6/30 to 7/2,$41.63,8
-SV06.5,Card,3M,Fezandipiti ex 092,7/3 to 7/5,$40.89,8
-SV06.5,Card,3M,Fezandipiti ex 092,7/6 to 7/8,$40.94,14
-SV06.5,Card,3M,Fezandipiti ex 092,7/9 to 7/11,$41.72,9
+SV06.5,Card,3M,Fezandipiti ex 092,6/6 to 6/8,$45.60,4
+SV06.5,Card,3M,Fezandipiti ex 092,6/9 to 6/11,$46.09,4
 SV06.5,Card,3M,Fezandipiti ex 092,7/12 to 7/14,$42.63,7
 SV06.5,Card,3M,Fezandipiti ex 092,7/15 to 7/17,$43.21,9
 SV06.5,Card,3M,Fezandipiti ex 092,7/18 to 7/20,$43.21,0
-SV07,Card,3M,Squirtle 148,4/20 to 4/22,$55.30,2
-SV07,Card,3M,Squirtle 148,4/23 to 4/25,$54.84,3
-SV07,Card,3M,Squirtle 148,4/26 to 4/28,$54.95,1
-SV07,Card,3M,Squirtle 148,4/29 to 5/1,$54.93,2
-SV07,Card,3M,Squirtle 148,5/2 to 5/4,$54.87,4
-SV07,Card,3M,Squirtle 148,5/5 to 5/7,$54.75,2
-SV07,Card,3M,Squirtle 148,5/8 to 5/10,$54.62,0
-SV07,Card,3M,Squirtle 148,5/11 to 5/13,$54.31,2
-SV07,Card,3M,Squirtle 148,5/14 to 5/16,$53.69,8
-SV07,Card,3M,Squirtle 148,5/17 to 5/19,$53.69,7
-SV07,Card,3M,Squirtle 148,5/20 to 5/22,$52.86,5
-SV07,Card,3M,Squirtle 148,5/23 to 5/25,$52.51,4
-SV07,Card,3M,Squirtle 148,5/26 to 5/28,$52.46,1
-SV07,Card,3M,Squirtle 148,5/29 to 5/31,$52.37,1
-SV07,Card,3M,Squirtle 148,6/1 to 6/3,$52.33,2
-SV07,Card,3M,Squirtle 148,6/4 to 6/6,$52.30,1
-SV07,Card,3M,Squirtle 148,6/7 to 6/9,$52.26,1
-SV07,Card,3M,Squirtle 148,6/10 to 6/12,$52.27,0
-SV07,Card,3M,Squirtle 148,6/13 to 6/15,$52.27,0
-SV07,Card,3M,Squirtle 148,6/16 to 6/18,$52.04,3
-SV07,Card,3M,Squirtle 148,6/19 to 6/21,$51.68,0
-SV07,Card,3M,Squirtle 148,6/22 to 6/24,$51.56,1
-SV07,Card,3M,Squirtle 148,6/25 to 6/27,$51.46,1
-SV07,Card,3M,Squirtle 148,6/28 to 6/30,$51.31,3
-SV07,Card,3M,Squirtle 148,7/1 to 7/3,$51.16,2
-SV07,Card,3M,Squirtle 148,7/4 to 7/6,$51.42,4
-SV07,Card,3M,Squirtle 148,7/7 to 7/9,$51.00,3
-SV07,Card,3M,Squirtle 148,7/10 to 7/12,$50.59,2
-SV07,Card,3M,Squirtle 148,7/13 to 7/15,$50.54,3
-SV07,Card,3M,Squirtle 148,7/16 to 7/18,$49.66,5
+SV06.5,Card,3M,Fezandipiti ex 092,7/3 to 7/5,$40.89,8
+SV06.5,Card,3M,Fezandipiti ex 092,7/6 to 7/8,$40.94,14
+SV06.5,Card,3M,Fezandipiti ex 092,7/9 to 7/11,$41.72,9
+SV07,Card,3M,Squirtle 148,4/20 to 4/22,$64.40,21
+SV07,Card,3M,Squirtle 148,4/23 to 4/25,$62.62,14
+SV07,Card,3M,Squirtle 148,4/26 to 4/28,$59.81,20
+SV07,Card,3M,Squirtle 148,4/29 to 5/1,$61.21,20
+SV07,Card,3M,Squirtle 148,5/11 to 5/13,$59.33,16
+SV07,Card,3M,Squirtle 148,5/14 to 5/16,$59.84,69
+SV07,Card,3M,Squirtle 148,5/17 to 5/19,$60.36,16
+SV07,Card,3M,Squirtle 148,5/2 to 5/4,$60.60,15
+SV07,Card,3M,Squirtle 148,5/20 to 5/22,$60.61,17
+SV07,Card,3M,Squirtle 148,5/23 to 5/25,$59.76,14
+SV07,Card,3M,Squirtle 148,5/26 to 5/28,$59.26,11
+SV07,Card,3M,Squirtle 148,5/29 to 5/31,$59.91,16
+SV07,Card,3M,Squirtle 148,5/5 to 5/7,$61.11,18
+SV07,Card,3M,Squirtle 148,5/8 to 5/10,$61.24,11
+SV07,Card,3M,Squirtle 148,6/1 to 6/3,$58.45,7
+SV07,Card,3M,Squirtle 148,6/10 to 6/12,$49.92,20
+SV07,Card,3M,Squirtle 148,6/13 to 6/15,$50.28,28
+SV07,Card,3M,Squirtle 148,6/16 to 6/18,$51.12,26
+SV07,Card,3M,Squirtle 148,6/19 to 6/21,$51.03,27
+SV07,Card,3M,Squirtle 148,6/22 to 6/24,$51.68,23
+SV07,Card,3M,Squirtle 148,6/25 to 6/27,$51.84,19
+SV07,Card,3M,Squirtle 148,6/28 to 6/30,$53.92,34
+SV07,Card,3M,Squirtle 148,6/4 to 6/6,$56.25,17
+SV07,Card,3M,Squirtle 148,6/7 to 6/9,$53.78,18
+SV07,Card,3M,Squirtle 148,7/1 to 7/3,$54.47,15
+SV07,Card,3M,Squirtle 148,7/10 to 7/12,$53.82,13
+SV07,Card,3M,Squirtle 148,7/13 to 7/15,$55.25,10
+SV07,Card,3M,Squirtle 148,7/16 to 7/18,$55.15,20
+SV07,Card,3M,Squirtle 148,7/4 to 7/6,$55.55,48
+SV07,Card,3M,Squirtle 148,7/7 to 7/9,$54.72,13
+SV08,Card,3M,Pikachu ex 238,4/22 to 4/24,$328.33,4
+SV08,Card,3M,Pikachu ex 238,4/25 to 4/27,$313.09,5
+SV08,Card,3M,Pikachu ex 238,4/28 to 4/30,$291.34,12
+SV08,Card,3M,Pikachu ex 238,5/1 to 5/3,$292.40,5
+SV08,Card,3M,Pikachu ex 238,5/10 to 5/12,$288.87,8
+SV08,Card,3M,Pikachu ex 238,5/13 to 5/15,$284.91,33
+SV08,Card,3M,Pikachu ex 238,5/16 to 5/18,$287.37,3
+SV08,Card,3M,Pikachu ex 238,5/19 to 5/21,$288.59,2
+SV08,Card,3M,Pikachu ex 238,5/22 to 5/24,$287.83,3
+SV08,Card,3M,Pikachu ex 238,5/25 to 5/27,$287.08,5
+SV08,Card,3M,Pikachu ex 238,5/28 to 5/30,$287.65,5
+SV08,Card,3M,Pikachu ex 238,5/31 to 6/2,$288.10,14
+SV08,Card,3M,Pikachu ex 238,5/4 to 5/6,$292.23,7
+SV08,Card,3M,Pikachu ex 238,5/7 to 5/9,$292.39,8
+SV08,Card,3M,Pikachu ex 238,6/12 to 6/14,$289.67,3
+SV08,Card,3M,Pikachu ex 238,6/15 to 6/17,$290.57,3
+SV08,Card,3M,Pikachu ex 238,6/18 to 6/20,$290.11,4
+SV08,Card,3M,Pikachu ex 238,6/21 to 6/23,$289.32,1
+SV08,Card,3M,Pikachu ex 238,6/24 to 6/26,$286.22,8
+SV08,Card,3M,Pikachu ex 238,6/27 to 6/29,$281.36,4
+SV08,Card,3M,Pikachu ex 238,6/3 to 6/5,$289.45,11
+SV08,Card,3M,Pikachu ex 238,6/30 to 7/2,$274.10,7
+SV08,Card,3M,Pikachu ex 238,6/6 to 6/8,$289.17,0
+SV08,Card,3M,Pikachu ex 238,6/9 to 6/11,$288.35,2
+SV08,Card,3M,Pikachu ex 238,7/12 to 7/14,$258.70,11
+SV08,Card,3M,Pikachu ex 238,7/15 to 7/17,$265.67,8
+SV08,Card,3M,Pikachu ex 238,7/18 to 7/20,$265.67,0
+SV08,Card,3M,Pikachu ex 238,7/3 to 7/5,$268.70,0
+SV08,Card,3M,Pikachu ex 238,7/6 to 7/8,$261.22,8
+SV08,Card,3M,Pikachu ex 238,7/9 to 7/11,$255.79,8
+SV08.5,Card,3M,Umbreon ex 161,4/21 to 4/23,"$1,420.34",8
+SV08.5,Card,3M,Umbreon ex 161,4/24 to 4/26,"$1,414.87",1
+SV08.5,Card,3M,Umbreon ex 161,4/27 to 4/29,"$1,397.93",10
+SV08.5,Card,3M,Umbreon ex 161,4/30 to 5/2,"$1,351.83",1
+SV08.5,Card,3M,Umbreon ex 161,5/12 to 5/14,"$1,294.81",9
+SV08.5,Card,3M,Umbreon ex 161,5/15 to 5/17,"$1,253.20",1
+SV08.5,Card,3M,Umbreon ex 161,5/18 to 5/20,"$1,250.27",0
+SV08.5,Card,3M,Umbreon ex 161,5/21 to 5/23,"$1,253.83",0
+SV08.5,Card,3M,Umbreon ex 161,5/24 to 5/26,"$1,238.50",3
+SV08.5,Card,3M,Umbreon ex 161,5/27 to 5/29,"$1,224.45",0
+SV08.5,Card,3M,Umbreon ex 161,5/3 to 5/5,"$1,346.10",1
+SV08.5,Card,3M,Umbreon ex 161,5/30 to 6/1,"$1,204.21",5
+SV08.5,Card,3M,Umbreon ex 161,5/6 to 5/8,"$1,320.51",4
+SV08.5,Card,3M,Umbreon ex 161,5/9 to 5/11,"$1,305.96",0
+SV08.5,Card,3M,Umbreon ex 161,6/11 to 6/13,"$1,162.95",0
+SV08.5,Card,3M,Umbreon ex 161,6/14 to 6/16,"$1,145.20",2
+SV08.5,Card,3M,Umbreon ex 161,6/17 to 6/19,"$1,076.52",12
+SV08.5,Card,3M,Umbreon ex 161,6/2 to 6/4,"$1,168.88",2
+SV08.5,Card,3M,Umbreon ex 161,6/20 to 6/22,"$1,059.02",2
+SV08.5,Card,3M,Umbreon ex 161,6/23 to 6/25,"$1,059.02",1
+SV08.5,Card,3M,Umbreon ex 161,6/26 to 6/28,"$1,040.28",4
+SV08.5,Card,3M,Umbreon ex 161,6/29 to 7/1,"$1,026.23",5
+SV08.5,Card,3M,Umbreon ex 161,6/5 to 6/7,"$1,176.35",2
+SV08.5,Card,3M,Umbreon ex 161,6/8 to 6/10,"$1,138.85",2
+SV08.5,Card,3M,Umbreon ex 161,7/11 to 7/13,"$1,007.70",3
+SV08.5,Card,3M,Umbreon ex 161,7/14 to 7/16,$983.63,5
+SV08.5,Card,3M,Umbreon ex 161,7/17 to 7/19,$983.63,0
+SV08.5,Card,3M,Umbreon ex 161,7/2 to 7/4,"$1,021.86",0
+SV08.5,Card,3M,Umbreon ex 161,7/5 to 7/7,"$1,018.26",3
+SV08.5,Card,3M,Umbreon ex 161,7/8 to 7/10,"$1,011.88",1
 SV09,Card,3M,Lillies Clefairy ex 184,4/20 to 4/22,$195.15,11
 SV09,Card,3M,Lillies Clefairy ex 184,4/23 to 4/25,$193.15,9
 SV09,Card,3M,Lillies Clefairy ex 184,4/26 to 4/28,$189.89,31
 SV09,Card,3M,Lillies Clefairy ex 184,4/29 to 5/1,$179.60,33
-SV09,Card,3M,Lillies Clefairy ex 184,5/2 to 5/4,$175.85,14
-SV09,Card,3M,Lillies Clefairy ex 184,5/5 to 5/7,$171.39,11
-SV09,Card,3M,Lillies Clefairy ex 184,5/8 to 5/10,$167.75,14
 SV09,Card,3M,Lillies Clefairy ex 184,5/11 to 5/13,$153.27,14
 SV09,Card,3M,Lillies Clefairy ex 184,5/14 to 5/16,$161.95,58
 SV09,Card,3M,Lillies Clefairy ex 184,5/17 to 5/19,$161.15,17
+SV09,Card,3M,Lillies Clefairy ex 184,5/2 to 5/4,$175.85,14
 SV09,Card,3M,Lillies Clefairy ex 184,5/20 to 5/22,$160.28,6
 SV09,Card,3M,Lillies Clefairy ex 184,5/23 to 5/25,$159.32,13
 SV09,Card,3M,Lillies Clefairy ex 184,5/26 to 5/28,$159.84,12
 SV09,Card,3M,Lillies Clefairy ex 184,5/29 to 5/31,$156.24,19
+SV09,Card,3M,Lillies Clefairy ex 184,5/5 to 5/7,$171.39,11
+SV09,Card,3M,Lillies Clefairy ex 184,5/8 to 5/10,$167.75,14
 SV09,Card,3M,Lillies Clefairy ex 184,6/1 to 6/3,$153.81,8
-SV09,Card,3M,Lillies Clefairy ex 184,6/4 to 6/6,$152.25,10
-SV09,Card,3M,Lillies Clefairy ex 184,6/7 to 6/9,$147.58,30
 SV09,Card,3M,Lillies Clefairy ex 184,6/10 to 6/12,$144.68,11
 SV09,Card,3M,Lillies Clefairy ex 184,6/13 to 6/15,$141.36,11
 SV09,Card,3M,Lillies Clefairy ex 184,6/16 to 6/18,$135.05,17
@@ -383,9 +381,221 @@ SV09,Card,3M,Lillies Clefairy ex 184,6/19 to 6/21,$131.94,9
 SV09,Card,3M,Lillies Clefairy ex 184,6/22 to 6/24,$131.16,6
 SV09,Card,3M,Lillies Clefairy ex 184,6/25 to 6/27,$129.80,16
 SV09,Card,3M,Lillies Clefairy ex 184,6/28 to 6/30,$129.70,24
+SV09,Card,3M,Lillies Clefairy ex 184,6/4 to 6/6,$152.25,10
+SV09,Card,3M,Lillies Clefairy ex 184,6/7 to 6/9,$147.58,30
 SV09,Card,3M,Lillies Clefairy ex 184,7/1 to 7/3,$130.18,12
-SV09,Card,3M,Lillies Clefairy ex 184,7/4 to 7/6,$131.43,8
-SV09,Card,3M,Lillies Clefairy ex 184,7/7 to 7/9,$130.25,10
 SV09,Card,3M,Lillies Clefairy ex 184,7/10 to 7/12,$128.33,13
 SV09,Card,3M,Lillies Clefairy ex 184,7/13 to 7/15,$127.97,7
 SV09,Card,3M,Lillies Clefairy ex 184,7/16 to 7/18,$128.95,8
+SV09,Card,3M,Lillies Clefairy ex 184,7/4 to 7/6,$131.43,8
+SV09,Card,3M,Lillies Clefairy ex 184,7/7 to 7/9,$130.25,10
+SWSH06,Card,3M,Blaziken vmax 201,4/22 to 4/24,$375.90,0
+SWSH06,Card,3M,Blaziken vmax 201,4/25 to 4/27,$381.07,5
+SWSH06,Card,3M,Blaziken vmax 201,4/28 to 4/30,$381.07,0
+SWSH06,Card,3M,Blaziken vmax 201,5/1 to 5/3,$379.27,2
+SWSH06,Card,3M,Blaziken vmax 201,5/10 to 5/12,$372.45,2
+SWSH06,Card,3M,Blaziken vmax 201,5/13 to 5/15,$373.75,2
+SWSH06,Card,3M,Blaziken vmax 201,5/16 to 5/18,$376.24,5
+SWSH06,Card,3M,Blaziken vmax 201,5/19 to 5/21,$375.52,0
+SWSH06,Card,3M,Blaziken vmax 201,5/22 to 5/24,$374.47,1
+SWSH06,Card,3M,Blaziken vmax 201,5/25 to 5/27,$373.94,0
+SWSH06,Card,3M,Blaziken vmax 201,5/28 to 5/30,$373.94,0
+SWSH06,Card,3M,Blaziken vmax 201,5/31 to 6/2,$373.94,0
+SWSH06,Card,3M,Blaziken vmax 201,5/4 to 5/6,$378.00,1
+SWSH06,Card,3M,Blaziken vmax 201,5/7 to 5/9,$375.47,0
+SWSH06,Card,3M,Blaziken vmax 201,6/12 to 6/14,$370.49,1
+SWSH06,Card,3M,Blaziken vmax 201,6/15 to 6/17,$369.15,0
+SWSH06,Card,3M,Blaziken vmax 201,6/18 to 6/20,$367.71,1
+SWSH06,Card,3M,Blaziken vmax 201,6/21 to 6/23,$367.71,0
+SWSH06,Card,3M,Blaziken vmax 201,6/24 to 6/26,$363.59,3
+SWSH06,Card,3M,Blaziken vmax 201,6/27 to 6/29,$359.74,0
+SWSH06,Card,3M,Blaziken vmax 201,6/3 to 6/5,$373.01,1
+SWSH06,Card,3M,Blaziken vmax 201,6/30 to 7/2,$359.72,1
+SWSH06,Card,3M,Blaziken vmax 201,6/6 to 6/8,$371.16,0
+SWSH06,Card,3M,Blaziken vmax 201,6/9 to 6/11,$371.16,0
+SWSH06,Card,3M,Blaziken vmax 201,7/12 to 7/14,$357.04,1
+SWSH06,Card,3M,Blaziken vmax 201,7/15 to 7/17,$357.04,0
+SWSH06,Card,3M,Blaziken vmax 201,7/18 to 7/20,$357.04,0
+SWSH06,Card,3M,Blaziken vmax 201,7/3 to 7/5,$359.17,0
+SWSH06,Card,3M,Blaziken vmax 201,7/6 to 7/8,$358.45,1
+SWSH06,Card,3M,Blaziken vmax 201,7/9 to 7/11,$358.09,0
+SWSH07,Card,3M,Umbreon vmax 215,4/22 to 4/24,"$1,679.62",0
+SWSH07,Card,3M,Umbreon vmax 215,4/25 to 4/27,"$1,679.48",1
+SWSH07,Card,3M,Umbreon vmax 215,4/28 to 4/30,"$1,663.85",1
+SWSH07,Card,3M,Umbreon vmax 215,5/1 to 5/3,"$1,667.86",1
+SWSH07,Card,3M,Umbreon vmax 215,5/10 to 5/12,"$1,654.61",4
+SWSH07,Card,3M,Umbreon vmax 215,5/13 to 5/15,"$1,622.41",4
+SWSH07,Card,3M,Umbreon vmax 215,5/16 to 5/18,"$1,560.48",0
+SWSH07,Card,3M,Umbreon vmax 215,5/19 to 5/21,"$1,560.48",0
+SWSH07,Card,3M,Umbreon vmax 215,5/22 to 5/24,"$1,560.48",0
+SWSH07,Card,3M,Umbreon vmax 215,5/25 to 5/27,"$1,570.34",2
+SWSH07,Card,3M,Umbreon vmax 215,5/28 to 5/30,"$1,553.28",3
+SWSH07,Card,3M,Umbreon vmax 215,5/31 to 6/2,"$1,527.28",0
+SWSH07,Card,3M,Umbreon vmax 215,5/4 to 5/6,"$1,669.86",0
+SWSH07,Card,3M,Umbreon vmax 215,5/7 to 5/9,"$1,665.91",1
+SWSH07,Card,3M,Umbreon vmax 215,6/12 to 6/14,"$1,500.29",1
+SWSH07,Card,3M,Umbreon vmax 215,6/15 to 6/17,"$1,500.33",1
+SWSH07,Card,3M,Umbreon vmax 215,6/18 to 6/20,"$1,491.50",0
+SWSH07,Card,3M,Umbreon vmax 215,6/21 to 6/23,"$1,477.73",2
+SWSH07,Card,3M,Umbreon vmax 215,6/24 to 6/26,"$1,449.30",1
+SWSH07,Card,3M,Umbreon vmax 215,6/27 to 6/29,"$1,449.30",0
+SWSH07,Card,3M,Umbreon vmax 215,6/3 to 6/5,"$1,527.28",0
+SWSH07,Card,3M,Umbreon vmax 215,6/30 to 7/2,"$1,449.30",0
+SWSH07,Card,3M,Umbreon vmax 215,6/6 to 6/8,"$1,523.50",1
+SWSH07,Card,3M,Umbreon vmax 215,6/9 to 6/11,"$1,515.94",0
+SWSH07,Card,3M,Umbreon vmax 215,7/12 to 7/14,"$1,423.41",1
+SWSH07,Card,3M,Umbreon vmax 215,7/15 to 7/17,"$1,403.49",1
+SWSH07,Card,3M,Umbreon vmax 215,7/18 to 7/20,"$1,403.49",0
+SWSH07,Card,3M,Umbreon vmax 215,7/3 to 7/5,"$1,441.94",1
+SWSH07,Card,3M,Umbreon vmax 215,7/6 to 7/8,"$1,432.79",1
+SWSH07,Card,3M,Umbreon vmax 215,7/9 to 7/11,"$1,430.06",0
+SWSH08,Card,3M,Gengar vmax 271,4/20 to 4/22,$634.54,4
+SWSH08,Card,3M,Gengar vmax 271,4/23 to 4/25,$622.10,1
+SWSH08,Card,3M,Gengar vmax 271,4/26 to 4/28,$617.64,1
+SWSH08,Card,3M,Gengar vmax 271,4/29 to 5/1,$594.51,6
+SWSH08,Card,3M,Gengar vmax 271,5/11 to 5/13,$575.38,1
+SWSH08,Card,3M,Gengar vmax 271,5/14 to 5/16,$579.19,6
+SWSH08,Card,3M,Gengar vmax 271,5/17 to 5/19,$577.46,0
+SWSH08,Card,3M,Gengar vmax 271,5/2 to 5/4,$592.01,3
+SWSH08,Card,3M,Gengar vmax 271,5/20 to 5/22,$576.59,0
+SWSH08,Card,3M,Gengar vmax 271,5/23 to 5/25,$576.59,0
+SWSH08,Card,3M,Gengar vmax 271,5/26 to 5/28,$583.07,2
+SWSH08,Card,3M,Gengar vmax 271,5/29 to 5/31,$586.34,0
+SWSH08,Card,3M,Gengar vmax 271,5/5 to 5/7,$584.11,15
+SWSH08,Card,3M,Gengar vmax 271,5/8 to 5/10,$581.78,1
+SWSH08,Card,3M,Gengar vmax 271,6/1 to 6/3,$585.90,1
+SWSH08,Card,3M,Gengar vmax 271,6/10 to 6/12,$587.00,0
+SWSH08,Card,3M,Gengar vmax 271,6/13 to 6/15,$587.00,0
+SWSH08,Card,3M,Gengar vmax 271,6/16 to 6/18,$586.99,1
+SWSH08,Card,3M,Gengar vmax 271,6/19 to 6/21,$586.90,2
+SWSH08,Card,3M,Gengar vmax 271,6/22 to 6/24,$586.45,1
+SWSH08,Card,3M,Gengar vmax 271,6/25 to 6/27,$585.49,2
+SWSH08,Card,3M,Gengar vmax 271,6/28 to 6/30,$584.73,1
+SWSH08,Card,3M,Gengar vmax 271,6/4 to 6/6,$582.81,2
+SWSH08,Card,3M,Gengar vmax 271,6/7 to 6/9,$576.34,1
+SWSH08,Card,3M,Gengar vmax 271,7/1 to 7/3,$581.08,5
+SWSH08,Card,3M,Gengar vmax 271,7/10 to 7/12,$575.33,1
+SWSH08,Card,3M,Gengar vmax 271,7/13 to 7/15,$576.81,6
+SWSH08,Card,3M,Gengar vmax 271,7/16 to 7/18,$578.58,3
+SWSH08,Card,3M,Gengar vmax 271,7/4 to 7/6,$576.79,2
+SWSH08,Card,3M,Gengar vmax 271,7/7 to 7/9,$574.43,6
+SWSH09,Card,3M,Charizard v 154,4/20 to 4/22,$211.67,5
+SWSH09,Card,3M,Charizard v 154,4/23 to 4/25,$206.55,4
+SWSH09,Card,3M,Charizard v 154,4/26 to 4/28,$202.42,1
+SWSH09,Card,3M,Charizard v 154,4/29 to 5/1,$195.50,9
+SWSH09,Card,3M,Charizard v 154,5/11 to 5/13,$183.94,4
+SWSH09,Card,3M,Charizard v 154,5/14 to 5/16,$201.06,21
+SWSH09,Card,3M,Charizard v 154,5/17 to 5/19,$202.14,2
+SWSH09,Card,3M,Charizard v 154,5/2 to 5/4,$187.08,2
+SWSH09,Card,3M,Charizard v 154,5/20 to 5/22,$203.68,2
+SWSH09,Card,3M,Charizard v 154,5/23 to 5/25,$204.13,0
+SWSH09,Card,3M,Charizard v 154,5/26 to 5/28,$204.66,3
+SWSH09,Card,3M,Charizard v 154,5/29 to 5/31,$205.13,2
+SWSH09,Card,3M,Charizard v 154,5/5 to 5/7,$183.04,17
+SWSH09,Card,3M,Charizard v 154,5/8 to 5/10,$183.84,0
+SWSH09,Card,3M,Charizard v 154,6/1 to 6/3,$203.83,3
+SWSH09,Card,3M,Charizard v 154,6/10 to 6/12,$200.25,5
+SWSH09,Card,3M,Charizard v 154,6/13 to 6/15,$200.45,3
+SWSH09,Card,3M,Charizard v 154,6/16 to 6/18,$201.62,1
+SWSH09,Card,3M,Charizard v 154,6/19 to 6/21,$198.39,1
+SWSH09,Card,3M,Charizard v 154,6/22 to 6/24,$196.91,3
+SWSH09,Card,3M,Charizard v 154,6/25 to 6/27,$196.48,3
+SWSH09,Card,3M,Charizard v 154,6/28 to 6/30,$201.95,4
+SWSH09,Card,3M,Charizard v 154,6/4 to 6/6,$201.85,2
+SWSH09,Card,3M,Charizard v 154,6/7 to 6/9,$201.01,14
+SWSH09,Card,3M,Charizard v 154,7/1 to 7/3,$203.95,5
+SWSH09,Card,3M,Charizard v 154,7/10 to 7/12,$203.62,2
+SWSH09,Card,3M,Charizard v 154,7/13 to 7/15,$201.91,3
+SWSH09,Card,3M,Charizard v 154,7/16 to 7/18,$201.98,2
+SWSH09,Card,3M,Charizard v 154,7/4 to 7/6,$203.34,27
+SWSH09,Card,3M,Charizard v 154,7/7 to 7/9,$206.50,3
+SWSH10,Card,3M,Machamp v 172,4/21 to 4/23,$168.31,1
+SWSH10,Card,3M,Machamp v 172,4/24 to 4/26,$166.11,2
+SWSH10,Card,3M,Machamp v 172,4/27 to 4/29,$162.38,2
+SWSH10,Card,3M,Machamp v 172,4/30 to 5/2,$161.97,2
+SWSH10,Card,3M,Machamp v 172,5/12 to 5/14,$145.09,8
+SWSH10,Card,3M,Machamp v 172,5/15 to 5/17,$142.38,0
+SWSH10,Card,3M,Machamp v 172,5/18 to 5/20,$142.33,1
+SWSH10,Card,3M,Machamp v 172,5/21 to 5/23,$141.97,1
+SWSH10,Card,3M,Machamp v 172,5/24 to 5/26,$141.59,3
+SWSH10,Card,3M,Machamp v 172,5/27 to 5/29,$139.86,2
+SWSH10,Card,3M,Machamp v 172,5/3 to 5/5,$157.67,4
+SWSH10,Card,3M,Machamp v 172,5/30 to 6/1,$139.97,1
+SWSH10,Card,3M,Machamp v 172,5/6 to 5/8,$153.30,2
+SWSH10,Card,3M,Machamp v 172,5/9 to 5/11,$148.23,3
+SWSH10,Card,3M,Machamp v 172,6/11 to 6/13,$142.31,2
+SWSH10,Card,3M,Machamp v 172,6/14 to 6/16,$142.89,2
+SWSH10,Card,3M,Machamp v 172,6/17 to 6/19,$140.29,3
+SWSH10,Card,3M,Machamp v 172,6/2 to 6/4,$138.93,0
+SWSH10,Card,3M,Machamp v 172,6/20 to 6/22,$139.97,3
+SWSH10,Card,3M,Machamp v 172,6/23 to 6/25,$142.03,2
+SWSH10,Card,3M,Machamp v 172,6/26 to 6/28,$141.65,0
+SWSH10,Card,3M,Machamp v 172,6/29 to 7/1,$140.35,2
+SWSH10,Card,3M,Machamp v 172,6/5 to 6/7,$140.36,2
+SWSH10,Card,3M,Machamp v 172,6/8 to 6/10,$141.67,0
+SWSH10,Card,3M,Machamp v 172,7/11 to 7/13,$139.64,2
+SWSH10,Card,3M,Machamp v 172,7/14 to 7/16,$138.71,1
+SWSH10,Card,3M,Machamp v 172,7/17 to 7/19,$138.71,0
+SWSH10,Card,3M,Machamp v 172,7/2 to 7/4,$140.07,3
+SWSH10,Card,3M,Machamp v 172,7/5 to 7/7,$139.92,1
+SWSH10,Card,3M,Machamp v 172,7/8 to 7/10,$139.64,0
+SWSH11,Card,3M,Giratina v 186,4/22 to 4/24,$616.30,0
+SWSH11,Card,3M,Giratina v 186,4/25 to 4/27,$612.14,4
+SWSH11,Card,3M,Giratina v 186,4/28 to 4/30,$600.80,3
+SWSH11,Card,3M,Giratina v 186,5/1 to 5/3,$587.49,2
+SWSH11,Card,3M,Giratina v 186,5/10 to 5/12,$560.40,2
+SWSH11,Card,3M,Giratina v 186,5/13 to 5/15,$547.07,5
+SWSH11,Card,3M,Giratina v 186,5/16 to 5/18,$542.57,0
+SWSH11,Card,3M,Giratina v 186,5/19 to 5/21,$538.25,4
+SWSH11,Card,3M,Giratina v 186,5/22 to 5/24,$542.19,2
+SWSH11,Card,3M,Giratina v 186,5/25 to 5/27,$543.12,1
+SWSH11,Card,3M,Giratina v 186,5/28 to 5/30,$543.12,0
+SWSH11,Card,3M,Giratina v 186,5/31 to 6/2,$542.53,1
+SWSH11,Card,3M,Giratina v 186,5/4 to 5/6,$571.06,7
+SWSH11,Card,3M,Giratina v 186,5/7 to 5/9,$565.56,3
+SWSH11,Card,3M,Giratina v 186,6/12 to 6/14,$512.32,2
+SWSH11,Card,3M,Giratina v 186,6/15 to 6/17,$510.87,1
+SWSH11,Card,3M,Giratina v 186,6/18 to 6/20,$510.44,1
+SWSH11,Card,3M,Giratina v 186,6/21 to 6/23,$509.57,0
+SWSH11,Card,3M,Giratina v 186,6/24 to 6/26,$509.57,0
+SWSH11,Card,3M,Giratina v 186,6/27 to 6/29,$508.29,1
+SWSH11,Card,3M,Giratina v 186,6/3 to 6/5,$519.52,14
+SWSH11,Card,3M,Giratina v 186,6/30 to 7/2,$505.80,4
+SWSH11,Card,3M,Giratina v 186,6/6 to 6/8,$517.10,1
+SWSH11,Card,3M,Giratina v 186,6/9 to 6/11,$515.20,2
+SWSH11,Card,3M,Giratina v 186,7/12 to 7/14,$499.08,3
+SWSH11,Card,3M,Giratina v 186,7/15 to 7/17,$492.46,4
+SWSH11,Card,3M,Giratina v 186,7/18 to 7/20,$492.46,0
+SWSH11,Card,3M,Giratina v 186,7/3 to 7/5,$504.39,0
+SWSH11,Card,3M,Giratina v 186,7/6 to 7/8,$503.71,5
+SWSH11,Card,3M,Giratina v 186,7/9 to 7/11,$502.27,2
+SWSH12,Card,3M,Lugia v 186,4/20 to 4/22,$285.11,6
+SWSH12,Card,3M,Lugia v 186,4/23 to 4/25,$282.21,3
+SWSH12,Card,3M,Lugia v 186,4/26 to 4/28,$281.08,2
+SWSH12,Card,3M,Lugia v 186,4/29 to 5/1,$282.23,4
+SWSH12,Card,3M,Lugia v 186,5/11 to 5/13,$271.50,9
+SWSH12,Card,3M,Lugia v 186,5/14 to 5/16,$270.23,18
+SWSH12,Card,3M,Lugia v 186,5/17 to 5/19,$271.40,3
+SWSH12,Card,3M,Lugia v 186,5/2 to 5/4,$279.69,5
+SWSH12,Card,3M,Lugia v 186,5/20 to 5/22,$271.92,3
+SWSH12,Card,3M,Lugia v 186,5/23 to 5/25,$271.49,4
+SWSH12,Card,3M,Lugia v 186,5/26 to 5/28,$272.46,3
+SWSH12,Card,3M,Lugia v 186,5/29 to 5/31,$272.89,5
+SWSH12,Card,3M,Lugia v 186,5/5 to 5/7,$274.87,7
+SWSH12,Card,3M,Lugia v 186,5/8 to 5/10,$272.99,1
+SWSH12,Card,3M,Lugia v 186,6/1 to 6/3,$272.17,3
+SWSH12,Card,3M,Lugia v 186,6/10 to 6/12,$266.51,3
+SWSH12,Card,3M,Lugia v 186,6/13 to 6/15,$270.81,2
+SWSH12,Card,3M,Lugia v 186,6/16 to 6/18,$269.84,5
+SWSH12,Card,3M,Lugia v 186,6/19 to 6/21,$267.36,3
+SWSH12,Card,3M,Lugia v 186,6/22 to 6/24,$262.13,12
+SWSH12,Card,3M,Lugia v 186,6/25 to 6/27,$259.67,4
+SWSH12,Card,3M,Lugia v 186,6/28 to 6/30,$256.30,3
+SWSH12,Card,3M,Lugia v 186,6/4 to 6/6,$272.03,2
+SWSH12,Card,3M,Lugia v 186,6/7 to 6/9,$272.45,16
+SWSH12,Card,3M,Lugia v 186,7/1 to 7/3,$254.57,4
+SWSH12,Card,3M,Lugia v 186,7/10 to 7/12,$258.95,2
+SWSH12,Card,3M,Lugia v 186,7/13 to 7/15,$261.84,5
+SWSH12,Card,3M,Lugia v 186,7/16 to 7/18,$269.67,6
+SWSH12,Card,3M,Lugia v 186,7/4 to 7/6,$256.29,5
+SWSH12,Card,3M,Lugia v 186,7/7 to 7/9,$258.90,12

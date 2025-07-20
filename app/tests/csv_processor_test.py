@@ -83,8 +83,10 @@ class TestCsvProcessor:
         result = processor._process_rows(sample_csv_data)
         
         assert len(result) == 3
-        assert all('content' in row for row in result)
-        assert all(row['content'] == '' for row in result)
+        assert all('date' in row for row in result)
+        assert all(row['date'] == 'ERROR' for row in result)
+        assert all('volume' in row for row in result)
+        assert all(row['volume'] == 0 for row in result)
     
     def test_process_rows_missing_url_column(self, csv_processor):
         invalid_data = [

@@ -86,10 +86,17 @@ class CsvProcessor:
                 
             except Exception as e:
                 self.logger.error(f"Failed to process row {i}: {e}")
-                # Add error row with original data
-                row['content'] = ''
-                row['error'] = str(e)
-                processed_rows.append(row)
+                # Create normalized error row with empty price data
+                error_row = {
+                    'set': row.get('set', ''),
+                    'type': row.get('type', ''),  
+                    'period': row.get('period', ''),
+                    'name': row.get('name', ''),
+                    'date': 'ERROR',
+                    'holofoil_price': '$0.00',
+                    'volume': 0
+                }
+                processed_rows.append(error_row)
         
         self.logger.info(f"Processed {len(processed_rows)} rows")
         return processed_rows
