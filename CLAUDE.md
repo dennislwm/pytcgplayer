@@ -160,8 +160,8 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
     ├── common/                  # Shared modules and utilities
     │   ├── __init__.py          # Common package initializer
     │   ├── processor.py         # CsvProcessor class for processing CSV data
-    │   ├── csv_writer.py        # CsvWriter class for CSV output
-    │   ├── web_client.py        # WebClient class for HTTP requests
+    │   ├── csv_writer.py        # CsvWriter class for CSV output with duplicate handling
+    │   ├── web_client.py        # WebClient class for HTTP requests with rate limiting
     │   ├── markdown_parser.py   # MarkdownParser class for markdown content processing
     │   └── logger.py            # AppLogger class for centralized logging
     ├── tests/                   # Unit tests with pytest
@@ -208,7 +208,7 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
 
 ### Dependencies
 Current dependencies (automatically managed by pipenv):
-- `requests==2.32.4` for HTTP requests
+- `requests==2.32.4` for HTTP requests with rate limiting and retry logic
 - `pytest==8.4.1` for testing framework
 - `requests-mock==1.12.1` for HTTP request mocking in tests
 - `typer==0.16.0` for CLI development (future enhancement)
@@ -351,6 +351,68 @@ make run_verbose               # Processes data/input.csv → data/output.csv
 
 # Verify idempotent behavior
 make run                       # Re-running detects duplicates, no new data added
+```
+
+## Rate Limiting and Error Handling
+
+The application includes robust rate limiting and retry logic to handle API limitations:
+
+### **WebClient Rate Limiting Features**
+
+**Built-in Rate Limiting:**
+- **Base Delay**: 1-second delay between all requests to respect API limits
+- **429 Error Detection**: Automatically detects rate limiting responses
+- **Exponential Backoff**: Progressive delays (1s → 2s → 4s) with random jitter
+- **Configurable Retries**: Default 3 attempts, customizable via constructor
+
+**Usage and Configuration:**
+```python
+# Default configuration (recommended)
+client = WebClient()  # 30s timeout, 3 retries, 1s base delay
+
+# Custom configuration for high-volume processing
+client = WebClient(
+    timeout=60,          # Longer timeout for slow responses
+    max_retries=5,       # More retry attempts
+    base_delay=2.0       # Longer delay between requests
+)
+```
+
+**Retry Behavior:**
+- **Normal Request**: 1s delay → make request → return result
+- **429 Rate Limited**: 1s delay → 429 error → wait 2s → retry → wait 4s → retry → fail if still limited
+- **Network Errors**: Same exponential backoff for connection issues
+- **Other HTTP Errors**: Immediate failure (no retries for 404, 500, etc.)
+
+**Logging Output:**
+```
+2025-07-20 19:53:27 - common.web_client - WARNING - Rate limited (429), retrying... (attempt 1)
+2025-07-20 19:53:27 - common.web_client - INFO - Retrying in 2.3s (attempt 2/3)
+```
+
+### **CSV Writer Update Behavior**
+
+**Duplicate Handling Strategy:**
+- **Before**: Skip duplicate records entirely
+- **Now**: Update existing records with new price data
+- **Benefits**: Perfect for continuous price monitoring and data refreshing
+
+**Update Logic:**
+- Identifies duplicates using fingerprint: `(set, type, period, name, date)`
+- Updates only `holofoil_price` and `volume` fields
+- Preserves all metadata and historical structure
+- Logs both update count and new record count
+
+**Example Behavior:**
+```bash
+# First run
+Updated 0 existing records, adding 390 new records
+
+# Subsequent run with updated prices
+Updated 390 existing records, adding 0 new records
+
+# Mixed scenario (some new dates, some updated prices)  
+Updated 350 existing records, adding 40 new records
 ```
 
 ## Large Codebase Analysis
