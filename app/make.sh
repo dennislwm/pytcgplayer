@@ -5,7 +5,7 @@ check_env() {
 
     # Check for required environment variables
     local required_env_vars=(
-        "TCGPLAYER_API_TOKEN"
+        # No environment variables required
     )
 
     echo "Checking environment variables..."
@@ -20,7 +20,7 @@ check_env() {
 
     # Check for required CLI applications
     local required_cli_apps=(
-        "gemini"
+        "gh"
         "python"
         "pipenv"
         "shellcheck"

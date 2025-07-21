@@ -39,9 +39,10 @@ make                     # Same as pipenv_shell
 make sample              # Create sample.csv for testing
 make run                 # Run app with sample data
 make run_verbose         # Run app with debug logging
+make run_ci              # Run app for CI/workflows (no env checks)
 make help_app           # Show CLI help
 
-# Testing (requires TCGPLAYER_API_TOKEN environment variable)
+# Testing
 make test               # Run all 50 unit tests
 make test_verbose       # Run tests with detailed output
 
@@ -194,7 +195,6 @@ app/
 ### Testing Requirements
 - **Test Suite**: 74 comprehensive unit tests with 100% pass rate
 - **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, Main CLI)
-- **Environment**: Requires `TCGPLAYER_API_TOKEN` environment variable
 - **Framework**: pytest with centralized logging via AppLogger
 - **Execution**: `PYTHONPATH=.` set for proper module imports
 - **Logging**: Test logs written to `logs/test.log` with DEBUG level
@@ -298,9 +298,68 @@ class TestMyClass:
 
 ## Environment Variables
 
-The application requires:
-- `TCGPLAYER_API_TOKEN` environment variable for API access
-- Use `source make.sh && check_env` to validate all required environment variables and CLI tools
+Use `source make.sh && check_env` to validate all required CLI tools:
+- `gh` - GitHub CLI for repository and workflow management
+- `python` - Python 3.13 interpreter
+- `pipenv` - Python dependency management
+- `shellcheck` - Shell script linting
+
+## GitHub CLI Integration
+
+The project includes GitHub CLI (`gh`) for repository management and automation:
+
+### Common GitHub CLI Commands
+
+```bash
+# Repository management
+gh repo view                    # View current repository details
+gh repo clone <repo>           # Clone a repository
+gh repo create <name>          # Create new repository
+
+# Workflow management  
+gh workflow list               # List all workflows
+gh workflow view <workflow>    # View workflow details
+gh workflow run <workflow>     # Trigger workflow manually
+gh run list                    # List recent workflow runs
+gh run view <run-id>          # View specific run details
+
+# Pull request management
+gh pr create                   # Create new pull request
+gh pr list                     # List pull requests
+gh pr view <number>           # View PR details
+gh pr checkout <number>       # Checkout PR locally
+
+# Issue management
+gh issue create               # Create new issue
+gh issue list                 # List issues
+gh issue view <number>        # View issue details
+
+# Authentication
+gh auth login                 # Login to GitHub
+gh auth status               # Check authentication status
+```
+
+### Workflow Integration
+
+The project includes automated workflows in `.github/workflows/`:
+
+**Daily TCG Data Collection** (`daily-tcg-data.yml`):
+- Runs daily at 6:00 AM UTC via cron schedule
+- Executes `make run_ci` to collect price data (bypasses environment checks for CI)
+- Commits and pushes only if `app/data/output.csv` changes
+- Manual trigger available via `gh workflow run "Daily TCG Data Collection"`
+
+**Manual workflow execution**:
+```bash
+# Trigger daily data collection manually
+gh workflow run "Daily TCG Data Collection"
+
+# View recent runs
+gh run list --workflow="Daily TCG Data Collection"
+
+# View specific run details
+gh run view <run-id> --log
+```
 
 ## Demo Scripts and Examples
 

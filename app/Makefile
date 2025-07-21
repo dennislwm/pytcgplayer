@@ -1,4 +1,4 @@
-.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose install_deps help_app sample demo demo_clean help
+.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean help
 
 default: pipenv_shell
 
@@ -48,6 +48,10 @@ run_verbose:
 	@source make.sh && check_env
 	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
 
+# Run the application for CI/GitHub workflows (no environment checks)
+run_ci:
+	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv
+
 # Show application help
 help_app:
 	pipenv run python main.py --help
@@ -87,6 +91,7 @@ help:
 	@echo "Application Execution:"
 	@echo "  run             - Run application with sample data"
 	@echo "  run_verbose     - Run application with verbose logging"
+	@echo "  run_ci          - Run application for CI/workflows (no env checks)"
 	@echo "  sample          - Create sample CSV with TCGPlayer data"
 	@echo ""
 	@echo "  help_app        - Show application command-line help"

@@ -1,0 +1,62 @@
+# Daily TCG Player data collection workflow
+# Runs daily to fetch latest price data and commit changes if output.csv is updated
+
+name: Daily TCG Data Collection
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+# * * * * *  UTC (Convert to Singapore: +0800)
+# ┬ ┬ ┬ ┬ ┬
+# │ │ │ │ └───── day of week (0 - 7) (0 to 6 are Sunday to Saturday, or use names; 7 is Sunday, the same as 0)
+# │ │ │ └────────── month (1 - 12)
+# │ │ └─────────────── day of month (1 - 31)
+# │ └──────────────────── hour (0 - 23)
+# └───────────────────────── min (0 - 59)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'  # Run daily at 6:00 AM UTC
+
+jobs:
+  collect-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.13
+
+    - name: Install pipenv
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+
+    - name: Install dependencies
+      working-directory: ./app
+      run: |
+        pipenv install requests pytest requests-mock typer
+
+    - name: Run TCG data collection
+      working-directory: ./app
+      run: |
+        pipenv run make run_ci
+
+    - name: Check for changes in output.csv
+      id: check_changes
+      run: |
+        if git diff --exit-code app/data/output.csv; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit and push if output.csv changed
+      if: steps.check_changes.outputs.changed == 'true'
+      run: |
+        git config --global user.email "github-action-bot@tcgplayer-data.com"
+        git config --global user.name "TCG Data Bot"
+        git add app/data/output.csv
+        git commit -m "data: update TCG player price data - $(date '+%Y-%m-%d %H:%M UTC')"
+        git push
