@@ -5,6 +5,19 @@ from common.logger import AppLogger
 
 
 class MarkdownParser:
+    # Combined regex pattern for all markdown cleanup operations
+    MARKDOWN_CLEANUP = re.compile(
+        r'```.*?```|'          # Code blocks
+        r'`[^`]*`|'            # Inline code
+        r'^#{1,6}\s*|'         # Headers
+        r'\[([^\]]*)\]\([^)]*\)|'  # Links (capture text)
+        r'\*{2}([^*]*)\*{2}|'      # Bold (capture text)
+        r'\*([^*]*)\*|'            # Single asterisk
+        r'_{2}([^_]*)_{2}|'        # Double underscore
+        r'_([^_]*)_',              # Single underscore (capture text)
+        re.DOTALL | re.MULTILINE
+    )
+    
     def __init__(self):
         self.logger = AppLogger.get_logger(__name__)
     
@@ -23,25 +36,17 @@ class MarkdownParser:
     def _extract_text(self, content: str) -> str:
         # Remove code blocks
         content = re.sub(r'```.*?```', '', content, flags=re.DOTALL)
-        
         # Remove inline code
         content = re.sub(r'`[^`]*`', '', content)
-        
         # Remove headers (keep text)
         content = re.sub(r'^#{1,6}\s*', '', content, flags=re.MULTILINE)
-        
         # Remove links (keep text)
         content = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', content)
-        
         # Remove bold/italic markers
         content = re.sub(r'\*{1,2}([^*]*)\*{1,2}', r'\1', content)
         content = re.sub(r'_{1,2}([^_]*)_{1,2}', r'\1', content)
-        
         # Clean up excessive whitespace but preserve paragraph breaks
-        content = re.sub(r'\n\s*\n\s*\n+', '\n\n', content)  # Multiple blank lines -> double newline
-        content = content.strip()
-        
-        return content
+        return re.sub(r'\n\s*\n\s*\n+', '\n\n', content).strip()
     
     def extract_price_history_table(self, content: str) -> Optional[str]:
         """Extract TCGPlayer price history table from markdown content"""
@@ -87,25 +92,18 @@ class MarkdownParser:
         if not table_content:
             return []
         
-        lines = table_content.split('\n')
-        data_rows = []
-        
-        # Skip header (first line) and separator (second line)
-        for line in lines[2:]:
-            line = line.strip()
-            if not line or not line.startswith('|'):
-                continue
-            
-            # Split by | and clean up
-            cells = [cell.strip() for cell in line.split('|')[1:-1]]  # Remove empty first/last
-            
-            if len(cells) >= 2:
-                row_data = {
-                    'date': cells[0].strip(),
-                    'holofoil': cells[1].strip() if len(cells) > 1 else '',
-                    'price': cells[2].strip() if len(cells) > 2 else ''
-                }
-                data_rows.append(row_data)
+        # Skip header and separator, process data rows with list comprehension
+        data_rows = [
+            {
+                'date': cells[0].strip(),
+                'holofoil': cells[1].strip() if len(cells) > 1 else '',
+                'price': cells[2].strip() if len(cells) > 2 else ''
+            }
+            for line in table_content.split('\n')[2:]
+            if line.strip() and line.startswith('|')
+            for cells in [[cell.strip() for cell in line.split('|')[1:-1]]]
+            if len(cells) >= 2
+        ]
         
         self.logger.info(f"Parsed {len(data_rows)} price history records")
         return data_rows

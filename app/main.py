@@ -12,25 +12,10 @@ from common.logger import AppLogger
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Process CSV data with web requests and markdown parsing'
-    )
-    parser.add_argument(
-        'input_file',
-        type=Path,
-        help='Input CSV file path'
-    )
-    parser.add_argument(
-        'output_file',
-        type=Path,
-        help='Output CSV file path'
-    )
-    parser.add_argument(
-        '--verbose',
-        '-v',
-        action='store_true',
-        help='Enable verbose output'
-    )
+    parser = argparse.ArgumentParser(description='Process CSV data with web requests and markdown parsing')
+    parser.add_argument('input_file', type=Path, help='Input CSV file path')
+    parser.add_argument('output_file', type=Path, help='Output CSV file path')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
     
     args = parser.parse_args()
     

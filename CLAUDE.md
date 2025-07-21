@@ -79,16 +79,7 @@ https://httpbin.org/html,Test HTML Page
 **Command execution:**
 ```bash
 $ PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:18] - Processing file: data/input.csv
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:26] - Reading CSV file: data/input.csv
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:40] - Read 1 rows
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:44] - Processing rows...
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:62] - Extracted 30 price history records for row 1
-2025-07-20 18:28:00 - common.processor - INFO - [processor.py:94] - Processed 30 rows
-2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:30] - Writing 30 rows to data/output.csv (checking for duplicates)
-2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:62] - Filtered out 0 duplicates, writing 30 new records
-2025-07-20 18:28:00 - common.csv_writer - INFO - [csv_writer.py:76] - Successfully wrote 30 total rows (30 new) to data/output.csv
-2025-07-20 18:28:00 - __main__ - INFO - [main.py:52] - Processing complete. Output saved to: data/output.csv
+# Processes 30 price history records, outputs to data/output.csv
 ```
 
 **Input CSV format (TCGPlayer data):**
@@ -144,56 +135,61 @@ make demo             # Run demonstration scripts
 4. **Demo & Examples**: `demo`, `demo_clean`
 5. **Utilities**: `pipenv_freeze`, `check_json`, `pipenv_venv`, `help`
 
+## Code Quality Standards
+
+**CRITICAL: Always prioritize code size reduction and reusability when making any code changes or implementing new features.**
+
+### Code Size Reduction Requirements
+
+**Before implementing any new code or making changes:**
+
+1. **Check for existing helpers in `common/helpers.py`**:
+   - `FileHelper` for CSV file operations
+   - `RetryHelper` for exponential backoff retry logic
+   - `DataProcessor` mixin for common data processing methods
+
+2. **Always prefer one-liners and concise implementations**:
+   - Combine argument parser declarations
+   - Use list comprehensions over loops where possible
+   - Leverage lambda functions for simple transformations
+   - Consolidate regex operations
+
+3. **Create reusable helper classes for repeated patterns**:
+   - Extract common functionality into mixins
+   - Use decorators for cross-cutting concerns (retry, logging)
+   - Centralize file operations and data processing logic
+
+4. **Inheritance and composition over duplication**:
+   - Inherit from `DataProcessor` for data manipulation classes
+   - Use helper classes instead of duplicating methods
+   - Share common patterns across modules
+
+**Code size reduction achieved**: ~120 lines (15% reduction) through systematic refactoring.
+
+### Mandatory Code Review Checklist
+
+Before any code submission:
+- [ ] Checked if functionality exists in helper classes
+- [ ] Eliminated duplicate methods/logic
+- [ ] Used one-liners where appropriate
+- [ ] Created reusable helpers for new patterns
+- [ ] Maintained or reduced total line count
+- [ ] All tests pass (74/74)
+
 ## Development Patterns
 
 Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`, `13pyviki`):
 
 ### Project Structure
 ```
-13pytcgplayer/
-├── CLAUDE.md                    # Project documentation and instructions
-├── README.md                    # Project overview
-└── app/                         # Main application directory
-    ├── Makefile                 # Development commands
-    ├── make.sh                  # Environment validation script
-    ├── main.py                  # CLI entry point
-    ├── common/                  # Shared modules and utilities
-    │   ├── __init__.py          # Common package initializer
-    │   ├── processor.py         # CsvProcessor class for processing CSV data
-    │   ├── csv_writer.py        # CsvWriter class for CSV output with duplicate handling
-    │   ├── web_client.py        # WebClient class for HTTP requests with rate limiting
-    │   ├── markdown_parser.py   # MarkdownParser class for markdown content processing
-    │   └── logger.py            # AppLogger class for centralized logging
-    ├── tests/                   # Unit tests with pytest
-    │   ├── conftest.py          # Test fixtures and configuration
-    │   ├── csv_processor_test.py    # Tests for CsvProcessor
-    │   ├── csv_writer_test.py       # Tests for CsvWriter
-    │   ├── web_client_test.py       # Tests for WebClient
-    │   ├── markdown_parser_test.py  # Tests for MarkdownParser
-    │   └── main_test.py             # Tests for CLI main function
-    ├── demo/                    # Demo scripts and sample files
-    │   ├── README.md            # Demo documentation and usage instructions
-    │   ├── demo_price_extraction.py    # Price history extraction demonstration
-    │   ├── demo_idempotent.py          # Idempotent functionality demonstration
-    │   ├── response_01.md              # Sample TCGPlayer response data
-    │   └── *.csv                       # Demo output files and test data
-    ├── data/                    # Application input and output files  
-    │   ├── input.csv            # Input CSV with TCGPlayer URLs and metadata
-    │   ├── output.csv           # Normalized price history data (generated)
-    │   └── *.csv                # Other generated CSV files
-    └── logs/                    # Generated log files (created automatically)
-        ├── app.log              # Application execution logs
-        └── test.log             # Test execution logs
+app/
+├── main.py                  # CLI entry point
+├── common/                  # Core modules (processor, web_client, csv_writer, etc.)
+├── tests/                   # Unit tests (74 tests)
+├── demo/                    # Demo scripts and sample files
+├── data/                    # Input/output CSV files
+└── logs/                    # Generated log files
 ```
-
-### Key Files and Directories
-- **Root Level**: Project documentation and configuration
-- **app/**: All application code and development tools
-- **app/common/**: Reusable modules following single responsibility principle
-- **app/tests/**: Comprehensive unit tests matching the 13pyledger pattern
-- **app/demo/**: Demonstration scripts and sample files with documentation
-- **app/data/**: Application output and generated CSV files
-- **logs/**: Auto-generated directory for centralized logging output
 
 ### Testing Requirements
 - **Test Suite**: 74 comprehensive unit tests with 100% pass rate
@@ -217,6 +213,35 @@ Current dependencies (automatically managed by pipenv):
   - `pyyaml==6.0.1` for YAML configuration handling
 
 **Installation**: Use `make install_deps` or `pipenv install requests pytest requests-mock typer`
+
+### Helper Classes Architecture
+
+The codebase includes reusable helper classes in `common/helpers.py`:
+
+**FileHelper**:
+- `read_csv(path)` - Read CSV files with error handling
+- `write_csv(data, path)` - Write CSV files with proper formatting
+
+**RetryHelper**:
+- `@with_exponential_backoff(max_retries, base_delay)` - Decorator for retry logic with exponential backoff and jitter
+
+**DataProcessor** (Mixin):
+- `create_key(row, columns)` - Generate unique keys from row data
+- `create_key_index(data, key_columns)` - Create index mapping for efficient lookups  
+- `normalize_row(source, schema)` - Transform row data according to schema
+- `convert_currency_to_int(currency_str)` - Parse currency strings to integers
+
+**Usage Example**:
+```python
+from common.helpers import FileHelper, RetryHelper, DataProcessor
+
+class MyProcessor(DataProcessor):
+    @RetryHelper.with_exponential_backoff(max_retries=3)
+    def process_data(self):
+        data = FileHelper.read_csv(self.input_path)
+        # Process using inherited DataProcessor methods
+        return self.normalize_row(data[0], schema)
+```
 
 ## Python Naming Standards
 
@@ -279,51 +304,16 @@ The application requires:
 
 ## Demo Scripts and Examples
 
-The `app/demo/` directory contains comprehensive demonstrations of the application's capabilities:
+The `app/demo/` directory contains demonstrations:
 
-### Available Demos
-
-1. **Price History Extraction (`demo_price_extraction.py`)**
-   - Demonstrates TCGPlayer price history table extraction
-   - Shows normalized CSV output format
-   - Uses real sample data from `response_01.md`
-   
-2. **Idempotent Functionality (`demo_idempotent.py`)**
-   - Proves application can be run multiple times safely
-   - Shows duplicate detection and prevention
-   - Demonstrates automated workflow compatibility
-
-### Running Demos
+1. **Price History Extraction** - Extracts 30+ price records from TCGPlayer data
+2. **Idempotent Functionality** - Proves safe repeated execution with duplicate detection
 
 ```bash
-# Navigate to demo directory
 cd app/demo
-
-# Run price extraction demo
 python3 demo_price_extraction.py
-
-# Run idempotent functionality demo  
 python3 demo_idempotent.py
 ```
-
-### Demo Features
-
-**Price Extraction Demo:**
-- Extracts 30+ price history records from sample TCGPlayer data
-- Generates normalized CSV with metadata (set, type, period, name, date, prices)
-- Shows complete end-to-end extraction process with logging
-
-**Idempotent Demo:**
-- **Run 1**: Creates 30 new records from `data/input.csv` to demo output file
-- **Run 2**: Detects all 30 as duplicates, writes 0 new records
-- **Run 3**: Confirms consistent behavior, still 0 new records
-- Proves safe automation for scheduled/recurring tasks
-
-### Sample Data
-
-- **`response_01.md`**: Real TCGPlayer product page content (Umbreon ex card)
-- **Output files**: Various `.csv` files showing different output formats
-- **Complete documentation**: See `app/demo/README.md` for detailed usage
 
 ### Data Organization
 
@@ -415,210 +405,58 @@ Updated 390 existing records, adding 0 new records
 Updated 350 existing records, adding 40 new records
 ```
 
-## Performance Analysis and Future Optimizations
+## Performance Notes
 
-The application currently performs well for its intended use case, but several optimization opportunities exist for future enhancement if higher throughput or larger datasets become requirements:
+Current performance characteristics:
+- **Sequential HTTP**: ~1 second per URL with rate limiting
+- **Suitable for**: Manual runs, small-medium datasets
+- **Limitations**: Large batch processing
+- **Code Size**: ~120 lines reduced (15% reduction) through helper classes and one-liners
 
-### **Performance Bottlenecks Identified**
+**Code optimization achievements**:
+1. **FileHelper class**: Eliminated duplicate CSV operations across modules
+2. **RetryHelper decorator**: Consolidated retry logic with exponential backoff
+3. **DataProcessor mixin**: Shared common data processing methods
+4. **One-liner implementations**: Streamlined argument parsing and simple operations
 
-#### **1. Synchronous HTTP Requests (Highest Impact)**
-**Current State**: Sequential processing with 1-second delays between requests
-- Processing 13 URLs requires ~13+ seconds minimum
-- Each request blocks the entire application thread
-- Rate limiting delays are necessary but limit throughput
+**Future optimization opportunities**:
+1. Async HTTP requests for concurrent processing
+2. Streaming CSV I/O for large datasets
+3. Further code consolidation through additional helper classes
 
-**Optimization Opportunity**: Async/await implementation
-```python
-# Potential async implementation
-async def _process_rows_concurrent(self, rows: List[Dict]) -> List[Dict]:
-    async with aiohttp.ClientSession() as session:
-        semaphore = asyncio.Semaphore(3)  # Control concurrency
-        tasks = [self._process_single_row(session, semaphore, row) for row in rows]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-    return [r for r in results if not isinstance(r, Exception)]
-```
-**Expected Impact**: Reduce processing time from ~13+ seconds to ~2-3 seconds
+## Codebase Analysis with llm CLI
 
-#### **2. CSV File I/O Inefficiency (High Impact for Large Datasets)**
-**Current State**: Reads entire CSV file on every write operation
-- O(n) complexity that grows with dataset size
-- Currently manageable with 390+ rows but will scale poorly
-
-**Optimization Opportunity**: Append-only or indexed approach
-```python
-# Potential optimized approach
-def write_unique_streaming(self, data: List[Dict], output_file: Path):
-    # Use SQLite index or file-based key tracking
-    # Only read metadata, not full data
-    pass
-```
-**Expected Impact**: Constant-time writes regardless of file size
-
-#### **3. Markdown Processing (Medium Impact)**
-**Current State**: Multiple regex operations scan entire content
-- Sequential string processing for large TCGPlayer responses
-- Multiple O(n) operations on same content
-
-**Optimization Opportunity**: Combined regex patterns
-```python
-# Potential optimization
-COMBINED_PATTERN = re.compile(r'(```.*?```)|(^#{1,6}\s*)|(`[^`]*`)', re.DOTALL | re.MULTILINE)
-def _extract_text_optimized(self, content: str) -> str:
-    return COMBINED_PATTERN.sub('', content)  # Single pass
-```
-**Expected Impact**: 30-50% reduction in markdown processing time
-
-#### **4. Memory Usage (Future Scalability)**
-**Current State**: Loads entire datasets into memory
-- All CSV data stored in memory during processing
-- Works fine for current dataset sizes
-
-**Optimization Opportunity**: Streaming/generator approach
-```python
-# Potential streaming implementation
-def process_streaming(self, input_file: Path):
-    with open(input_file, 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            yield self._process_single_row(row)
-```
-**Expected Impact**: Constant memory usage regardless of dataset size
-
-### **Optimization Priority Roadmap**
-
-**Phase 1 - Concurrency (10x+ Performance Gain)**
-- Implement async/await for HTTP requests
-- Add semaphore-controlled concurrency 
-- Maintain rate limiting within async context
-- **Target**: Process 13 URLs in ~2-3 seconds vs current ~13+ seconds
-
-**Phase 2 - I/O Optimization (Scalability)**
-- Implement append-only CSV writing with indexing
-- Add streaming data processing capabilities
-- **Target**: Handle 10,000+ records without performance degradation
-
-**Phase 3 - Processing Efficiency (Polish)**
-- Combine regex operations in markdown parser
-- Optimize string currency conversion
-- Cache redundant computations
-- **Target**: 20-30% reduction in CPU usage
-
-### **Implementation Considerations**
-
-**When to Optimize:**
-- Processing >50 URLs regularly (async HTTP becomes critical)
-- Output CSV files >10,000 rows (I/O optimization needed)
-- Memory constraints or resource limitations (streaming required)
-- High-frequency automated processing (all optimizations beneficial)
-
-**Current Performance Profile:**
-- **Suitable for**: Manual runs, small-medium datasets, development workflows
-- **Limitations**: Large batch processing, high-frequency automation
-- **Strengths**: Reliable, well-tested, clear error handling
-
-## Large Codebase Analysis
-
-When analyzing large codebases or multiple files that might exceed context limits, use the llm CLI command:
+For analyzing large codebases that exceed context limits:
 
 ```bash
-# From app directory (cd app/)
-# Analyze codebase architecture using file content injection
-llm "Here is Python code: $(cat main.py common/processor.py common/csv_writer.py | head -300)
+# Analyze architecture
+llm "Here is Python code: $(cat main.py common/processor.py | head -300)
+Summarize the architecture"
 
-Summarize the architecture of this code base"
-
-# Analyze specific patterns or functionality  
-llm "Here are test files: $(cat tests/*_test.py | head -200)
-
-Analyze the testing patterns and coverage in this codebase"
-
-# Review configuration and setup files
+# Review configuration
 llm "Here are config files: $(cat Makefile make.sh ../CLAUDE.md | head -100)
-
-Review the project configuration and setup"
+Review the project setup"
 
 # Performance analysis
 llm "Here is the codebase: $(cat common/*.py | head -500)
-
-Identify potential performance bottlenecks across the codebase"
-
-# With specific model that supports attachments (like Claude or GPT-4)
-llm "Analyze code architecture and design patterns" -m claude-3-5-sonnet-20241022 -a main.py -a common/processor.py
-
-# Process files individually for detailed analysis
-llm "Here is a Python module: $(cat common/processor.py)
-
-Analyze this processor module for performance bottlenecks"
-
-# Using system prompts for focused analysis
-llm "Here is web client code: $(cat common/web_client.py)
-
-Analyze this code for performance issues" -s "You are a performance expert. Focus on identifying bottlenecks and optimization opportunities."
+Identify performance bottlenecks"
 ```
 
-This approach is particularly useful for:
-- Understanding complex multi-file architectures
-- Analyzing large test suites
-- Reviewing configuration across multiple files
-- Getting high-level summaries without hitting context limits
-- Identifying optimization opportunities
+## Git Commit Message Generation
 
-### **Example Analysis Output**
-
-The llm CLI provides comprehensive analysis similar to senior developer code reviews. For example, when analyzing project configuration:
-
-**Strengths Identified:**
-- ✅ **Modern tooling**: pipenv for dependency management with consistent environments
-- ✅ **Organized workflow**: Logical grouping of Makefile commands into clear categories
-- ✅ **Self-documenting**: Built-in help system with detailed command descriptions
-- ✅ **Environment validation**: Automated checks for required tools and variables
-
-**Improvement Opportunities:**
-- 🔄 **Dependency simplification**: Consider streamlining pipenv + pipreqs approach
-- 🔄 **Error handling**: Add confirmations for destructive operations
-- 🔄 **CI/CD integration**: Automate testing and deployment workflows
-- 📝 **Documentation enhancement**: Central README to complement Makefile documentation
-
-This demonstrates the llm CLI's effectiveness for **architectural assessment**, **configuration review**, and **development workflow analysis**, providing actionable insights for project improvement.
-
-## **Git Commit Message Generation**
-
-Use the llm CLI to generate conventional commit messages based on actual code changes:
+Generate conventional commit messages using llm CLI:
 
 ```bash
-# Generate commit message from git diff (for unstaged changes)
-llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD -- app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py)"
+# Generate from unstaged changes
+llm "Generate a conventional commit message in one line for: $(git diff HEAD)"
 
-# For staged changes only  
-llm "Generate a conventional commit message in one line for the following git changes: $(git diff --cached)"
-
-# For all changes (staged and unstaged)
-llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD)"
-
-# With file-specific focus
-llm "Generate a conventional commit message in one line for these specific changes: $(git diff HEAD -- filename.py)"
+# Generate from staged changes
+llm "Generate a conventional commit message in one line for: $(git diff --cached)"
 ```
 
-**Example Workflow:**
-```bash
-# 1. Make code changes to fix CSV sorting and error handling
-# 2. Generate commit message from changes
-llm "Generate a conventional commit message in one line for the following git changes: $(git diff HEAD -- app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py)"
+Standard format: `type: description` (fix, feat, docs, style, refactor, test, chore)
 
-# Output: fix: sort data before writing to CSV and normalize error rows in processor
-
-# 3. Stage and commit with generated message
-git add app/common/csv_writer.py app/common/processor.py app/tests/csv_processor_test.py
-git commit -m "fix: sort data before writing to CSV and normalize error rows in processor"
-```
-
-**Standard Output Format:**
-- **Type**: fix, feat, docs, style, refactor, test, chore
-- **Scope**: Optional - component or module affected  
-- **Description**: Concise summary of changes in imperative mood
-
-This approach ensures commit messages are:
-- ✅ **Contextually accurate** based on actual code changes
-- ✅ **Conventionally formatted** following standard commit message patterns  
-- ✅ **Descriptive** of the specific modifications made
-- ✅ **Consistent** with project standards and best practices
+**IMPORTANT**: When committing code changes, always mention code size reduction efforts in commit messages. Examples:
+- `refactor: consolidate CSV operations into FileHelper class (-50 lines)`
+- `feat: add retry decorator helper class for reusable retry logic`
+- `style: convert multi-line argument parser to one-liners (-15 lines)`

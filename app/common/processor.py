@@ -5,9 +5,10 @@ from typing import Dict, List
 from common.web_client import WebClient
 from common.markdown_parser import MarkdownParser
 from common.logger import AppLogger
+from common.helpers import FileHelper, DataProcessor
 
 
-class CsvProcessor:
+class CsvProcessor(DataProcessor):
     def __init__(self):
         self.logger = AppLogger.get_logger(__name__)
         self.web_client = WebClient()
@@ -24,19 +25,9 @@ class CsvProcessor:
     
     def _read_csv(self, file_path: Path) -> List[Dict]:
         self.logger.info(f"Reading CSV file: {file_path}")
-        
-        with open(file_path, 'r', newline='', encoding='utf-8') as file:
-            content = file.read().strip()
-            if not content:
-                raise ValueError(f"CSV file '{file_path}' is empty")
-            
-            file.seek(0)  # Reset file pointer
-            reader = csv.DictReader(file)
-            rows = list(reader)
-            
-            if not rows:
-                raise ValueError(f"CSV file '{file_path}' contains no data rows")
-        
+        rows = FileHelper.read_csv(file_path)
+        if not rows:
+            raise ValueError(f"CSV file '{file_path}' is empty or contains no data rows")
         self.logger.info(f"Read {len(rows)} rows")
         return rows
     
@@ -69,7 +60,7 @@ class CsvProcessor:
                                 'name': row.get('name', ''),
                                 'date': price_record['date'],
                                 'holofoil_price': price_record['holofoil'],
-                                'volume': self._convert_currency_to_int(price_record['price'])
+                                'volume': self.convert_currency_to_int(price_record['price'])
                             }
                             processed_rows.append(normalized_row)
                     else:
@@ -105,15 +96,6 @@ class CsvProcessor:
         """Check if URL is a TCGPlayer product page"""
         return 'tcgplayer.com' in url.lower()
     
-    def _convert_currency_to_int(self, currency_str: str) -> int:
-        """Convert currency string like '$1.00' to integer like 1"""
-        try:
-            # Remove $ symbol and convert to float, then to int
-            cleaned_str = currency_str.replace('$', '').replace(',', '')
-            return int(float(cleaned_str))
-        except (ValueError, AttributeError):
-            self.logger.warning(f"Could not convert currency '{currency_str}' to integer, defaulting to 0")
-            return 0
     
     def _calculate_price_trend(self, price_data: List[Dict]) -> str:
         """Calculate price trend from historical data"""
