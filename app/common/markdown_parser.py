@@ -56,16 +56,24 @@ class MarkdownParser:
         if not content.strip():
             return None
 
-        # Pattern to match table starting with Date | Holofoil header
-        table_pattern = r'\|\s*Date\s*\|\s*Holofoil\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
-
-        match = re.search(table_pattern, content, re.DOTALL | re.IGNORECASE)
-
-        if not match:
-            self.logger.debug("No price history table found")
-            return None
-
-        table_content = match.group(0).strip()
+        # Try original format first (Date | Holofoil)
+        holofoil_pattern = r'\|\s*Date\s*\|\s*Holofoil\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
+        match = re.search(holofoil_pattern, content, re.DOTALL | re.IGNORECASE)
+        
+        if match:
+            self.logger.debug("Found 'Date | Holofoil' format table")
+            table_content = match.group(0).strip()
+        else:
+            # Try alternative format (Date | Normal)
+            normal_pattern = r'\|\s*Date\s*\|\s*Normal\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
+            match = re.search(normal_pattern, content, re.DOTALL | re.IGNORECASE)
+            
+            if match:
+                self.logger.debug("Found 'Date | Normal' format table")
+                table_content = match.group(0).strip()
+            else:
+                self.logger.debug("No price history table found (tried both 'Date | Holofoil' and 'Date | Normal' formats)")
+                return None
 
         # Clean up the table formatting
         lines = table_content.split('\n')

@@ -169,6 +169,28 @@ Required tools: `gh`, `python`, `pipenv`, `shellcheck`. Daily workflow runs `mak
 
 The application includes robust rate limiting and retry logic to handle API limitations:
 
+### **Flexible Table Format Support**
+
+**Multiple Table Format Detection:**
+- **Primary Format**: `| Date | Holofoil |` - Standard TCGPlayer format for individual cards
+- **Alternative Format**: `| Date | Normal |` - Format used for booster boxes and some products
+- **Automatic Fallback**: MarkdownParser tries Holofoil format first, then Normal format
+- **Consistent Processing**: Both formats parsed into identical v2.0 schema output
+
+**Detection Logic:**
+```python
+# Try original format first (Date | Holofoil)
+holofoil_pattern = r'\|\s*Date\s*\|\s*Holofoil\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
+# Fallback to alternative format (Date | Normal)
+normal_pattern = r'\|\s*Date\s*\|\s*Normal\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
+```
+
+**Logging Output:**
+```
+Found 'Date | Holofoil' format table    # Individual cards
+Found 'Date | Normal' format table      # Booster boxes
+```
+
 ### **WebClient Rate Limiting Features**
 
 **Built-in Rate Limiting:**
@@ -245,6 +267,74 @@ Current performance characteristics:
 1. Async HTTP requests for concurrent processing
 2. Streaming CSV I/O for large datasets
 3. Further code consolidation through additional helper classes
+
+## Storage Scalability and Future Enhancements
+
+### Current Storage Analysis
+
+The application currently uses CSV format for data storage with the following characteristics:
+- **Current growth rate**: ~15.5 records/day (1,266 bytes/day)
+- **File size**: 115KB for 93 days of data (1,437 records)
+- **Record size**: ~82 bytes per record
+- **Projected growth**: 10MB in ~22.4 years at current rate
+
+### SQLite Migration for High-Volume Data
+
+**Target Scenario**: 300 records/day (19.4x current growth rate)
+- **Timeline to 10MB**: ~1.2 years (vs 22.4 years with CSV)
+- **Timeline to 100MB**: ~11.7 years (vs 226.5 years with CSV)
+
+**Recommended Enhancement: SQLite + Compression**
+
+**Benefits**:
+- **Storage efficiency**: 40-60 bytes/record (27-51% space savings vs CSV)
+- **Query performance**: Fast date range queries with indexed columns
+- **Data integrity**: ACID transactions and constraint validation
+- **Concurrent access**: Multiple readers, single writer support
+- **Built-in compression**: SQLite VACUUM and page compression
+- **No external dependencies**: Uses Python's built-in `sqlite3` module
+
+**Implementation Strategy**:
+```python
+# Database schema design
+CREATE TABLE price_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    set_name TEXT NOT NULL,
+    card_type TEXT NOT NULL,
+    period TEXT NOT NULL,
+    name TEXT NOT NULL,
+    period_start_date DATE NOT NULL,
+    period_end_date DATE NOT NULL,
+    timestamp DATETIME NOT NULL,
+    holofoil_price DECIMAL(10,2) NOT NULL,
+    volume INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+# Indexes for fast queries
+CREATE INDEX idx_date_range ON price_history(period_start_date, period_end_date);
+CREATE INDEX idx_card_lookup ON price_history(set_name, name, period);
+CREATE INDEX idx_timestamp ON price_history(timestamp);
+```
+
+**Migration Path**:
+1. **Phase 1**: Add SQLite writer alongside CSV (dual output)
+2. **Phase 2**: Implement SQLite reader with backwards compatibility
+3. **Phase 3**: Migrate existing CSV data using conversion utility
+4. **Phase 4**: Deprecate CSV format, SQLite becomes primary storage
+
+**Alternative Storage Formats** (for higher volumes):
+- **Parquet**: 15-25 bytes/record, excellent for analytics (70-82% savings)
+- **CSV + gzip**: 28 bytes/record, minimal changes (66% savings)
+- **Time-series databases**: InfluxDB/TimescaleDB for enterprise scale
+
+**Trigger Conditions for Migration**:
+- Data collection exceeds 100 records/day consistently
+- File size approaches 5-10MB
+- Need for complex date range queries increases
+- Multiple concurrent data access patterns emerge
+
+This enhancement maintains the current CSV simplicity while providing a clear upgrade path for production workloads.
 
 ## Codebase Analysis with llm CLI
 
