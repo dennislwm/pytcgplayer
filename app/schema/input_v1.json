@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "description": "Input CSV schema for TCGPlayer URLs with metadata",
+  "fields": [
+    {
+      "name": "set",
+      "type": "string",
+      "required": true,
+      "description": "Trading card set identifier (e.g., SV01, SWSH06)"
+    },
+    {
+      "name": "type", 
+      "type": "string",
+      "required": true,
+      "description": "Card type classification"
+    },
+    {
+      "name": "period",
+      "type": "string", 
+      "required": true,
+      "description": "Time period for price data (e.g., 3M)"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Card name and identifier"
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": true,
+      "description": "TCGPlayer URL via Jina.ai markdown service"
+    }
+  ],
+  "header_order": ["set", "type", "period", "name", "url"]
+}

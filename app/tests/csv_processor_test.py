@@ -28,8 +28,11 @@ class TestCsvProcessor:
         rows = csv_processor._read_csv(sample_csv_file)
         
         assert len(rows) == 3
-        assert rows[0]['url'] == 'https://example.com/test1.md'
+        assert rows[0]['set'] == 'SV08.5'
+        assert rows[0]['type'] == 'Card'
+        assert rows[0]['period'] == '3M'
         assert rows[0]['name'] == 'Test Document 1'
+        assert rows[0]['url'] == 'https://example.com/test1.md'
         assert rows[1]['url'] == 'https://example.com/test2.md'
         assert rows[2]['url'] == 'https://example.com/test3.md'
     

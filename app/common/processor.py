@@ -18,6 +18,9 @@ class CsvProcessor(DataProcessor):
     def process(self, input_file: Path) -> List[Dict]:
         self.logger.info(f"Processing file: {input_file}")
         
+        # Validate input schema
+        self._validate_input_schema(input_file)
+        
         rows = self._read_csv(input_file)
         self.results = self._process_rows(rows)
         
@@ -125,3 +128,15 @@ class CsvProcessor(DataProcessor):
         except (ValueError, KeyError) as e:
             self.logger.warning(f"Error calculating price trend: {e}")
             return 'calculation_error'
+    
+    def _validate_input_schema(self, input_file: Path) -> None:
+        """Validate input CSV schema and raise error if invalid"""
+        schema_path = Path(__file__).parent.parent / 'schema' / 'input_v1.json'
+        is_valid, errors = FileHelper.validate_csv_schema(input_file, schema_path)
+        
+        if not is_valid:
+            error_msg = f"Input schema validation failed: {errors}"
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+        
+        self.logger.info("Input schema validation passed")

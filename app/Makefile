@@ -31,21 +31,21 @@ pipenv_venv:
 	pipenv --venv
 
 test:
-	@source make.sh && check_env
+	@source ./make.sh && check_env
 	PYTHONPATH=. pipenv run pytest tests/
 
 test_verbose:
-	@source make.sh && check_env
+	@source ./make.sh && check_env
 	PYTHONPATH=. pipenv run pytest tests/ -v -s --log-cli-level INFO --log-cli-format "[%(filename)s:%(lineno)s - def %(funcName)s()] %(levelname)s %(message)s"
 
 # Run the application with input data
 run:
-	@source make.sh && check_env
+	@source ./make.sh && check_env
 	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv
 
 # Run the application with verbose logging
 run_verbose:
-	@source make.sh && check_env
+	@source ./make.sh && check_env
 	PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
 
 # Run the application for CI/GitHub workflows (no environment checks)

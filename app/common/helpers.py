@@ -1,8 +1,9 @@
 import csv
+import json
 import time
 import random
 from pathlib import Path
-from typing import Dict, List, Tuple, Callable, Any
+from typing import Dict, List, Tuple, Callable, Any, Optional
 from functools import wraps
 
 from common.logger import AppLogger
@@ -10,6 +11,60 @@ from common.logger import AppLogger
 
 class FileHelper:
     """Utility class for common file operations"""
+    
+    @staticmethod
+    def load_schema(schema_path: Path) -> Optional[Dict]:
+        """Load JSON schema file"""
+        try:
+            with open(schema_path, 'r', encoding='utf-8') as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger = AppLogger.get_logger(__name__)
+            logger.warning(f"Failed to load schema {schema_path}: {e}")
+            return None
+    
+    @staticmethod
+    def validate_csv_schema(csv_path: Path, schema_path: Path) -> Tuple[bool, List[str]]:
+        """Validate CSV headers against schema, return (is_valid, errors)"""
+        logger = AppLogger.get_logger(__name__)
+        
+        schema = FileHelper.load_schema(schema_path)
+        if not schema:
+            return False, [f"Could not load schema from {schema_path}"]
+        
+        try:
+            with open(csv_path, 'r', newline='', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                headers = next(reader, [])
+        except FileNotFoundError:
+            return False, [f"CSV file not found: {csv_path}"]
+        except Exception as e:
+            return False, [f"Error reading CSV: {e}"]
+        
+        expected_headers = schema.get('header_order', [])
+        errors = []
+        
+        # Check for missing headers
+        missing = set(expected_headers) - set(headers)
+        if missing:
+            errors.append(f"Missing headers: {list(missing)}")
+        
+        # Check for extra headers
+        extra = set(headers) - set(expected_headers)
+        if extra:
+            errors.append(f"Extra headers: {list(extra)}")
+        
+        # Check header order
+        if headers != expected_headers:
+            errors.append(f"Header order mismatch. Expected: {expected_headers}, Got: {headers}")
+        
+        is_valid = len(errors) == 0
+        if not is_valid:
+            logger.warning(f"Schema validation failed for {csv_path}: {errors}")
+        else:
+            logger.info(f"Schema validation passed for {csv_path}")
+        
+        return is_valid, errors
     
     @staticmethod
     def read_csv(path: Path) -> List[Dict]:

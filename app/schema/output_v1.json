@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "description": "Output CSV schema for normalized TCGPlayer price history data",
+  "fields": [
+    {
+      "name": "set",
+      "type": "string",
+      "required": true,
+      "description": "Trading card set identifier (inherited from input)"
+    },
+    {
+      "name": "type",
+      "type": "string", 
+      "required": true,
+      "description": "Card type classification (inherited from input)"
+    },
+    {
+      "name": "period",
+      "type": "string",
+      "required": true,
+      "description": "Time period for price data (inherited from input)"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Card name and identifier (inherited from input)"
+    },
+    {
+      "name": "date",
+      "type": "string",
+      "required": true,
+      "description": "Date range for price data (e.g., '4/20 to 4/22')"
+    },
+    {
+      "name": "holofoil_price",
+      "type": "currency_string",
+      "required": true,
+      "description": "Price in currency format (e.g., '$49.73')"
+    },
+    {
+      "name": "volume",
+      "type": "integer",
+      "required": true,
+      "description": "Trading volume as integer (converted from currency strings)"
+    }
+  ],
+  "header_order": ["set", "type", "period", "name", "date", "holofoil_price", "volume"],
+  "changelog": [
+    {
+      "version": "1.0",
+      "date": "2025-07-24",
+      "changes": "Initial schema definition with volume as integer type"
+    }
+  ]
+}

@@ -43,7 +43,7 @@ make run_ci              # Run app for CI/workflows (no env checks)
 make help_app           # Show CLI help
 
 # Testing
-make test               # Run all 50 unit tests
+make test               # Run all unit tests
 make test_verbose       # Run tests with detailed output
 
 # Utilities
@@ -108,7 +108,7 @@ make pipenv_new && make install_deps
 # 2. Create input data and run application with verbose output
 make sample && make run_verbose
 
-# 3. Run comprehensive test suite (74 tests)
+# 3. Run comprehensive test suite
 make test
 
 # 4. Run demo scripts to see full functionality
@@ -124,7 +124,7 @@ make help
 make                    # Activate environment
 make sample            # Create fresh input data (data/input.csv)
 make run_verbose       # Test application with logging (outputs to data/output.csv)
-make test             # Verify all tests pass (74/74)
+make test             # Verify all tests pass
 make demo             # Run demonstration scripts
 ```
 
@@ -175,7 +175,45 @@ Before any code submission:
 - [ ] Used one-liners where appropriate
 - [ ] Created reusable helpers for new patterns
 - [ ] Maintained or reduced total line count
-- [ ] All tests pass (74/74)
+- [ ] All tests pass
+
+## CSV Schema Management
+
+The application includes comprehensive CSV schema validation and tracking:
+
+### Schema Files
+- `app/schema/input_v1.json` - Input CSV schema definition
+- `app/schema/output_v1.json` - Output CSV schema definition
+
+### Input Schema (v1.0)
+```csv
+set,type,period,name,url
+```
+- **set**: Trading card set identifier (e.g., SV01, SWSH06)
+- **type**: Card type classification  
+- **period**: Time period for price data (e.g., 3M)
+- **name**: Card name and identifier
+- **url**: TCGPlayer URL via Jina.ai markdown service
+
+### Output Schema (v1.0)
+```csv
+set,type,period,name,date,holofoil_price,volume
+```
+- Inherits: set, type, period, name from input
+- **date**: Date range for price data (e.g., "4/20 to 4/22")
+- **holofoil_price**: Price in currency format (e.g., "$49.73")
+- **volume**: Trading volume as integer (converted from currency strings)
+
+### Schema Validation
+- **Automatic validation**: Input files validated against schema on processing
+- **Error handling**: Processing fails with clear error message if schema invalid
+- **Change detection**: Logs warnings for schema mismatches (missing, extra, reordered headers)
+- **Version tracking**: Schema versions tracked in JSON with changelog
+
+### Testing Coverage
+- Schema validation tests in `tests/schema_test.py`
+- Tests cover valid schemas, missing headers, extra headers, wrong order
+- Integration tests with CsvProcessor validation
 
 ## Development Patterns
 
@@ -186,14 +224,14 @@ Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`,
 app/
 ├── main.py                  # CLI entry point
 ├── common/                  # Core modules (processor, web_client, csv_writer, etc.)
-├── tests/                   # Unit tests (74 tests)
+├── tests/                   # Unit tests
 ├── demo/                    # Demo scripts and sample files
 ├── data/                    # Input/output CSV files
 └── logs/                    # Generated log files
 ```
 
 ### Testing Requirements
-- **Test Suite**: 74 comprehensive unit tests with 100% pass rate
+- **Test Suite**: Comprehensive unit tests with 100% pass rate
 - **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, Main CLI)
 - **Framework**: pytest with centralized logging via AppLogger
 - **Execution**: `PYTHONPATH=.` set for proper module imports
@@ -201,6 +239,13 @@ app/
 - **Setup**: Each test class initializes logging in `setup_class()` method
 - **Mocking**: Uses `requests-mock` for HTTP request testing
 - **Data Format**: Tests updated to expect `volume` column with integer values instead of `additional_price` currency strings
+
+### Windows Testing Notes
+- **Directory Navigation**: Tests must run from `pytcgplayer/app` directory due to Windows path handling
+- **Command Execution**: Use `cd pytcgplayer/app && PYTHONPATH=. pipenv run pytest tests/` for manual test runs
+- **Pipenv Warnings**: Windows may show pipenv virtual environment warnings (can be suppressed with `PIPENV_VERBOSITY=-1`)
+- **Path Separators**: Test output shows Windows backslash paths (`tests\csv_processor_test.py`) which is normal
+- **Make Commands**: All `make test` commands work correctly on Windows when run from project root
 
 ### Dependencies
 Current dependencies (automatically managed by pipenv):

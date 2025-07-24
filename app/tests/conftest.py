@@ -16,10 +16,10 @@ from common.csv_writer import CsvWriter
 from common.logger import AppLogger
 
 
-SAMPLE_CSV = """url,name
-https://example.com/test1.md,Test Document 1
-https://example.com/test2.md,Test Document 2
-https://example.com/test3.md,Test Document 3"""
+SAMPLE_CSV = """set,type,period,name,url
+SV08.5,Card,3M,Test Document 1,https://example.com/test1.md
+SV08.5,Card,3M,Test Document 2,https://example.com/test2.md
+SV08.5,Card,3M,Test Document 3,https://example.com/test3.md"""
 
 SAMPLE_MARKDOWN = """# Test Document
 
@@ -84,9 +84,9 @@ def sample_markdown_content():
 @pytest.fixture
 def sample_csv_data():
     return [
-        {'url': 'https://example.com/test1.md', 'name': 'Test Document 1'},
-        {'url': 'https://example.com/test2.md', 'name': 'Test Document 2'},
-        {'url': 'https://example.com/test3.md', 'name': 'Test Document 3'}
+        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 1', 'url': 'https://example.com/test1.md'},
+        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 2', 'url': 'https://example.com/test2.md'},
+        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 3', 'url': 'https://example.com/test3.md'}
     ]
 
 
