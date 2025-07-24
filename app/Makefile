@@ -1,4 +1,4 @@
-.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean help
+.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean convert_schema help
 
 default: pipenv_shell
 
@@ -77,6 +77,17 @@ demo_clean:
 	rm -rf demo/logs/
 	@echo "Demo files cleaned"
 
+# Convert CSV data from v1.0 to v2.0 schema format
+convert_schema:
+	@echo "Converting output.csv from v1.0 to v2.0 schema format..."
+	@if [ ! -f data/output.csv ]; then echo "Error: data/output.csv not found"; exit 1; fi
+	@cp data/output.csv data/output_v1_backup.csv
+	@echo "Backup created: data/output_v1_backup.csv"
+	PYTHONPATH=. pipenv run python utils/schema_converter.py data/output.csv data/output_v2_converted.csv --verbose
+	@cp data/output_v2_converted.csv data/output.csv
+	@echo "Schema conversion complete: v1.0 → v2.0"
+	@echo "Original v1.0 data backed up to: data/output_v1_backup.csv"
+
 
 # Show all available targets
 help:
@@ -103,6 +114,9 @@ help:
 	@echo "Demo & Examples:"
 	@echo "  demo            - Run both demo scripts"
 	@echo "  demo_clean      - Clean demo output files"
+	@echo ""
+	@echo "Schema Management:"
+	@echo "  convert_schema  - Convert output.csv from v1.0 to v2.0 format"
 	@echo ""
 	@echo "Utilities:"
 	@echo ""

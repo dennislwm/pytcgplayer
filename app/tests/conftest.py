@@ -90,6 +90,110 @@ def sample_csv_data():
     ]
 
 
+# V2.0 Schema Test Data Fixtures
+
+@pytest.fixture
+def sample_v2_card_data():
+    """Sample TCGPlayer card data in v2.0 format"""
+    return [
+        {
+            'set': 'SV08.5',
+            'type': 'Card',
+            'period': '3M',
+            'name': 'Test Card',
+            'period_start_date': '2025-01-01',
+            'period_end_date': '2025-01-03',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 100.00,
+            'volume': 0
+        },
+        {
+            'set': 'SV08.5',
+            'type': 'Card',
+            'period': '3M',
+            'name': 'Test Card',
+            'period_start_date': '2025-01-04',
+            'period_end_date': '2025-01-06',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 105.00,
+            'volume': 1
+        },
+        {
+            'set': 'SV08.5',
+            'type': 'Card',
+            'period': '3M',
+            'name': 'Test Card',
+            'period_start_date': '2025-01-07',
+            'period_end_date': '2025-01-09',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 110.00,
+            'volume': 2
+        }
+    ]
+
+
+@pytest.fixture
+def sample_v2_price_history():
+    """Sample price history data in v2.0 format for TCGPlayer tests"""
+    return [
+        {
+            'period_start_date': '2025-07-16',
+            'period_end_date': '2025-07-18',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 1200.00,
+            'volume': 0
+        },
+        {
+            'period_start_date': '2025-07-13',
+            'period_end_date': '2025-07-15',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 1150.00,
+            'volume': 1
+        },
+        {
+            'period_start_date': '2025-07-10',
+            'period_end_date': '2025-07-12',
+            'timestamp': '2025-07-24 15:00:00',
+            'holofoil_price': 1100.00,
+            'volume': 2
+        }
+    ]
+
+
+@pytest.fixture
+def sample_v2_single_record():
+    """Single v2.0 format record for testing"""
+    return {
+        'set': 'SV08.5',
+        'type': 'Card',
+        'period': '3M',
+        'name': 'Test Card',
+        'period_start_date': '2025-01-01',
+        'period_end_date': '2025-01-03',
+        'timestamp': '2025-07-24 15:00:00',
+        'holofoil_price': 100.00,
+        'volume': 0
+    }
+
+
+@pytest.fixture
+def sample_tcg_url_data():
+    """Sample data with TCGPlayer URL for processor tests"""
+    return [{
+        'set': 'SV08.5',
+        'type': 'Card',
+        'period': '3M',
+        'name': 'Test Card',
+        'url': 'https://www.tcgplayer.com/product/123'
+    }]
+
+
+@pytest.fixture
+def default_timestamp():
+    """Standard timestamp for test data consistency"""
+    return '2025-07-24 15:00:00'
+
+
 @pytest.fixture
 def csv_processor():
     # Initialize logging for tests
@@ -122,15 +226,15 @@ def runner():
             import sys
             import io
             from contextlib import redirect_stdout, redirect_stderr
-            
+
             # Capture stdout and stderr
             stdout_capture = io.StringIO()
             stderr_capture = io.StringIO()
-            
+
             # Mock sys.argv
             original_argv = sys.argv
             sys.argv = ['main.py'] + args
-            
+
             try:
                 with redirect_stdout(stdout_capture), redirect_stderr(stderr_capture):
                     main_func()
@@ -142,16 +246,16 @@ def runner():
                 exit_code = 1
             finally:
                 sys.argv = original_argv
-            
+
             # Create mock result
             class MockResult:
                 def __init__(self, exit_code, stdout, stderr):
                     self.exit_code = exit_code
                     self.stdout = stdout
                     self.stderr = stderr
-            
+
             return MockResult(exit_code, stdout_capture.getvalue(), stderr_capture.getvalue())
-    
+
     return TestRunner()
 
 

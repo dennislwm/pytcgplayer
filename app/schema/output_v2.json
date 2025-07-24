@@ -1,0 +1,72 @@
+{
+  "version": "2.0",
+  "description": "Output CSV schema with enhanced date handling for time series analysis",
+  "fields": [
+    {
+      "name": "set",
+      "type": "string",
+      "required": true,
+      "description": "Trading card set identifier (inherited from input)"
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": true,
+      "description": "Card type classification (inherited from input)"
+    },
+    {
+      "name": "period",
+      "type": "string",
+      "required": true,
+      "description": "Time period for price data (inherited from input)"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Card name and identifier (inherited from input)"
+    },
+    {
+      "name": "period_start_date",
+      "type": "date",
+      "format": "YYYY-MM-DD",
+      "required": true,
+      "description": "Start date of price period (e.g., '2024-04-20')"
+    },
+    {
+      "name": "period_end_date",
+      "type": "date",
+      "format": "YYYY-MM-DD",
+      "required": true,
+      "description": "End date of price period (e.g., '2024-04-22')"
+    },
+    {
+      "name": "timestamp",
+      "type": "datetime",
+      "format": "YYYY-MM-DD HH:MM:SS",
+      "required": true,
+      "description": "Data collection timestamp"
+    },
+    {
+      "name": "holofoil_price",
+      "type": "number",
+      "minimum": 0,
+      "required": true,
+      "description": "Price as decimal number for calculations (e.g., 49.73)"
+    },
+    {
+      "name": "volume",
+      "type": "integer",
+      "required": true,
+      "description": "Trading volume as integer (converted from currency strings)"
+    }
+  ],
+  "header_order": ["set", "type", "period", "name", "period_start_date", "period_end_date", "timestamp", "holofoil_price", "volume"],
+  "changelog": [
+    {
+      "version": "2.0",
+      "date": "2025-07-24",
+      "changes": "Enhanced date handling: replaced 'date' string range with period_start_date and period_end_date (YYYY-MM-DD format), added timestamp for data collection tracking"
+    }
+  ]
+}

@@ -4,77 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Python CLI application for processing CSV data with web requests and markdown parsing. The application reads URLs from CSV files, fetches markdown content from those URLs, parses the content, and outputs the results to a new CSV file.
+This is a Python CLI application for processing TCGPlayer trading card price data. The application reads TCGPlayer URLs from CSV files, fetches price history data from those URLs, parses markdown price tables, and outputs normalized price data to CSV files in schema v2.0 format with numeric types for efficient analysis and time series charting.
 
 ## Development Setup
 
-### Environment Management
+### Quick Start
 ```bash
-# Create new pipenv environment with Python 3.13
-make pipenv_new
-
-# Install dependencies (automatically installs requests and pytest)
-pipenv install requests pytest
-
-# Activate virtual environment (may fail in non-interactive environments)
-make pipenv_shell
-
-# Alternative: Run commands in virtual environment
-pipenv run <command>
-
-# Show virtual environment path
-make pipenv_venv
+make pipenv_new && make install_deps  # Setup environment
+make sample && make run_verbose       # Create test data and run
+make test                             # Run all tests
+make convert_schema                   # Convert v1.0 to v2.0 format
 ```
 
-### Common Commands
-
+### Key Commands
 ```bash
-# Environment setup
-make pipenv_new          # Create Python 3.13 environment
-make install_deps        # Install current dependencies  
-make pipenv_shell        # Activate environment (default target)
-make                     # Same as pipenv_shell
-
-# Development workflow
-make sample              # Create sample.csv for testing
-make run                 # Run app with sample data
-make run_verbose         # Run app with debug logging
-make run_ci              # Run app for CI/workflows (no env checks)
-make help_app           # Show CLI help
-
-# Testing
-make test               # Run all unit tests
-make test_verbose       # Run tests with detailed output
-
-# Utilities
-make pipenv_freeze      # Generate requirements.txt with current versions
-make check_json         # Validate JSON schemas (when config files exist)
-make pipenv_venv        # Show virtual environment path
-```
-
-### Running the Application
-
-```bash
-# Show CLI help
-pipenv run python main.py --help
-
-# Process CSV file with web requests and markdown parsing
-pipenv run python main.py input.csv output.csv
-
-# Enable verbose logging (shows DEBUG level messages)
-pipenv run python main.py input.csv output.csv --verbose
-
-# Example with test data
-pipenv run python main.py sample.csv output.csv --verbose
+# Environment: pipenv_new, install_deps, pipenv_shell
+# Application: run, run_verbose, run_ci, sample, help_app
+# Testing: test, test_verbose
+# Schema: convert_schema
+# Utilities: pipenv_freeze, check_json, help
 ```
 
 ### Sample Usage and Output
 
-**Input CSV format:**
+**Input CSV format (TCGPlayer URLs only):**
 ```csv
-url,name
-https://httpbin.org/json,Test JSON API
-https://httpbin.org/html,Test HTML Page
+set,type,period,name,url
+SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
 ```
 
 **Command execution:**
@@ -83,126 +39,60 @@ $ PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbos
 # Processes 30 price history records, outputs to data/output.csv
 ```
 
-**Input CSV format (TCGPlayer data):**
+**Output CSV format (Schema v2.0 - Normalized price history):**
 ```csv
-set,type,period,name,url
-SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
-```
-
-**Output CSV format (Normalized price history):**
-```csv
-set,type,period,name,date,holofoil_price,volume
-SV08.5,Card,3M,Umbreon ex 161,4/20 to 4/22,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,4/23 to 4/25,"$1,451.66",0
-SV08.5,Card,3M,Umbreon ex 161,4/26 to 4/28,"$1,451.66",0
+set,type,period,name,period_start_date,period_end_date,timestamp,holofoil_price,volume
+SV08.5,Card,3M,Umbreon ex 161,2025-04-20,2025-04-22,2025-07-24 15:00:00,1451.66,0
+SV08.5,Card,3M,Umbreon ex 161,2025-04-23,2025-04-25,2025-07-24 15:00:00,1451.66,0
+SV08.5,Card,3M,Umbreon ex 161,2025-04-26,2025-04-28,2025-07-24 15:00:00,1451.66,0
 ...
 ```
 
-### Make Commands Workflow
-
-**Quick Start Workflow:**
-```bash
-# 1. Setup environment and dependencies
-make pipenv_new && make install_deps
-
-# 2. Create input data and run application with verbose output
-make sample && make run_verbose
-
-# 3. Run comprehensive test suite
-make test
-
-# 4. Run demo scripts to see full functionality
-make demo
-
-# 5. View all available commands
-make help
-```
-
-**Development Workflow:**
-```bash
-# Daily development cycle
-make                    # Activate environment
-make sample            # Create fresh input data (data/input.csv)
-make run_verbose       # Test application with logging (outputs to data/output.csv)
-make test             # Verify all tests pass
-make demo             # Run demonstration scripts
-```
-
-**Command Categories:**
-
-1. **Environment Management**: `pipenv_new`, `install_deps`, `pipenv_shell`
-2. **Application Execution**: `run`, `run_verbose`, `help_app`, `sample`  
-3. **Testing & Quality**: `test`, `test_verbose`
-4. **Demo & Examples**: `demo`, `demo_clean`
-5. **Utilities**: `pipenv_freeze`, `check_json`, `pipenv_venv`, `help`
-
 ## Code Quality Standards
 
-**CRITICAL: Always prioritize code size reduction and reusability when making any code changes or implementing new features.**
+**CRITICAL: Always prioritize code size reduction and reusability.**
 
-### Code Size Reduction Requirements
-
-**Before implementing any new code or making changes:**
-
-1. **Check for existing helpers in `common/helpers.py`**:
-   - `FileHelper` for CSV file operations
-   - `RetryHelper` for exponential backoff retry logic
-   - `DataProcessor` mixin for common data processing methods
-
-2. **Always prefer one-liners and concise implementations**:
-   - Combine argument parser declarations
-   - Use list comprehensions over loops where possible
-   - Leverage lambda functions for simple transformations
-   - Consolidate regex operations
-
-3. **Create reusable helper classes for repeated patterns**:
-   - Extract common functionality into mixins
-   - Use decorators for cross-cutting concerns (retry, logging)
-   - Centralize file operations and data processing logic
-
-4. **Inheritance and composition over duplication**:
-   - Inherit from `DataProcessor` for data manipulation classes
-   - Use helper classes instead of duplicating methods
-   - Share common patterns across modules
-
-**Code size reduction achieved**: ~120 lines (15% reduction) through systematic refactoring.
-
-### Mandatory Code Review Checklist
-
-Before any code submission:
-- [ ] Checked if functionality exists in helper classes
-- [ ] Eliminated duplicate methods/logic
-- [ ] Used one-liners where appropriate
-- [ ] Created reusable helpers for new patterns
-- [ ] Maintained or reduced total line count
-- [ ] All tests pass
+Use existing helpers in `common/helpers.py`: `FileHelper`, `RetryHelper`, `DataProcessor`. Prefer one-liners, list comprehensions, and reusable classes. Achieved ~120 lines reduction (15%) through systematic refactoring.
 
 ## CSV Schema Management
 
-The application includes comprehensive CSV schema validation and tracking:
+The application uses schema v2.0 format with numeric types for efficient analysis and time series charting:
 
 ### Schema Files
 - `app/schema/input_v1.json` - Input CSV schema definition
-- `app/schema/output_v1.json` - Output CSV schema definition
+- `app/schema/output_v2.json` - Output CSV schema definition (v2.0 format)
 
 ### Input Schema (v1.0)
 ```csv
 set,type,period,name,url
 ```
 - **set**: Trading card set identifier (e.g., SV01, SWSH06)
-- **type**: Card type classification  
+- **type**: Card type classification
 - **period**: Time period for price data (e.g., 3M)
 - **name**: Card name and identifier
 - **url**: TCGPlayer URL via Jina.ai markdown service
 
-### Output Schema (v1.0)
+### Output Schema (v2.0) - Current Format
 ```csv
-set,type,period,name,date,holofoil_price,volume
+set,type,period,name,period_start_date,period_end_date,timestamp,holofoil_price,volume
 ```
 - Inherits: set, type, period, name from input
-- **date**: Date range for price data (e.g., "4/20 to 4/22")
-- **holofoil_price**: Price in currency format (e.g., "$49.73")
-- **volume**: Trading volume as integer (converted from currency strings)
+- **period_start_date**: Start date in YYYY-MM-DD format (e.g., "2025-04-20")
+- **period_end_date**: End date in YYYY-MM-DD format (e.g., "2025-04-22")
+- **timestamp**: Data collection timestamp in YYYY-MM-DD HH:MM:SS format
+- **holofoil_price**: Price as numeric decimal (e.g., 49.73) for calculations
+- **volume**: Trading volume as integer (e.g., 12) for aggregations
+
+### Schema Migration
+```bash
+# Convert existing v1.0 data to v2.0 format
+make convert_schema
+```
+The schema converter automatically:
+- Parses date ranges ("4/20 to 4/22") into separate start/end dates
+- Converts currency strings ("$49.73") to numeric values (49.73)
+- Converts volume strings ("12") to integers (12)
+- Adds collection timestamps for data tracking
 
 ### Schema Validation
 - **Automatic validation**: Input files validated against schema on processing
@@ -254,198 +144,26 @@ Current dependencies (automatically managed by pipenv):
 - `requests-mock==1.12.1` for HTTP request mocking in tests
 - `typer==0.16.0` for CLI development (future enhancement)
 - Additional dependencies for future features:
-  - `check-jsonschema==0.23.0` for config validation  
+  - `check-jsonschema==0.23.0` for config validation
   - `pyyaml==6.0.1` for YAML configuration handling
 
 **Installation**: Use `make install_deps` or `pipenv install requests pytest requests-mock typer`
 
-### Helper Classes Architecture
+### Helper Classes
 
-The codebase includes reusable helper classes in `common/helpers.py`:
-
-**FileHelper**:
-- `read_csv(path)` - Read CSV files with error handling
-- `write_csv(data, path)` - Write CSV files with proper formatting
-
-**RetryHelper**:
-- `@with_exponential_backoff(max_retries, base_delay)` - Decorator for retry logic with exponential backoff and jitter
-
-**DataProcessor** (Mixin):
-- `create_key(row, columns)` - Generate unique keys from row data
-- `create_key_index(data, key_columns)` - Create index mapping for efficient lookups  
-- `normalize_row(source, schema)` - Transform row data according to schema
-- `convert_currency_to_int(currency_str)` - Parse currency strings to integers
-
-**Usage Example**:
-```python
-from common.helpers import FileHelper, RetryHelper, DataProcessor
-
-class MyProcessor(DataProcessor):
-    @RetryHelper.with_exponential_backoff(max_retries=3)
-    def process_data(self):
-        data = FileHelper.read_csv(self.input_path)
-        # Process using inherited DataProcessor methods
-        return self.normalize_row(data[0], schema)
-```
-
-## Python Naming Standards
-
-Follow these naming conventions for scalable code:
-
-### Files and Modules
-- Use `snake_case` for file names: `markdown_parser.py`, `csv_writer.py`
-
-### Classes
-- Use `PascalCase` for class names: `CsvProcessor`, `MarkdownParser`, `WebClient`
-
-### Variables and Functions
-- Use `snake_case` for variables and functions: `input_file`, `process_rows()`, `markdown_parser`
-
-### Constants
-- Use `UPPER_SNAKE_CASE` for constants: `DEFAULT_TIMEOUT`, `API_BASE_URL`
+`common/helpers.py` includes: `FileHelper` (CSV I/O), `RetryHelper` (exponential backoff), `DataProcessor` (currency conversion, date parsing, key generation). Use `snake_case` for files/functions, `PascalCase` for classes.
 
 ## Centralized Logging
 
-The application uses a centralized logging system via the `AppLogger` class:
+Singleton `AppLogger` class: dual output (console + file), logs to `logs/app.log` and `logs/test.log`. Use `AppLogger.get_logger(__name__)` in classes.
 
-### Implementation
-- **Singleton Pattern**: Single `AppLogger` instance manages all logging across modules
-- **Dual Output**: Console (respects verbosity) and file (always DEBUG level)
-- **Common Log Files**: 
-  - `logs/app.log` for application execution
-  - `logs/test.log` for test execution
-- **Structured Format**: `timestamp - module - level - [file:line] - message`
+## Environment & GitHub Integration
 
-### Usage in Code
-```python
-from common.logger import AppLogger
+Required tools: `gh`, `python`, `pipenv`, `shellcheck`. Daily workflow runs `make run_ci` at 6AM UTC for automated data collection. Use `gh workflow run "Daily TCG Data Collection"` for manual triggers.
 
-# Initialize logging (typically in main.py or test setup)
-logger = AppLogger()
-logger.setup_logging(verbose=True, log_file="app.log")
+## Data & Demo
 
-# Get logger for module
-class MyClass:
-    def __init__(self):
-        self.logger = AppLogger.get_logger(__name__)
-        self.logger.info("Class initialized")
-```
-
-### Usage in Tests
-```python
-class TestMyClass:
-    @classmethod
-    def setup_class(cls):
-        logger = AppLogger()
-        logger.setup_logging(verbose=True, log_file="test.log")
-        cls.logger = AppLogger.get_logger(__name__)
-```
-
-## Environment Variables
-
-Use `source make.sh && check_env` to validate all required CLI tools:
-- `gh` - GitHub CLI for repository and workflow management
-- `python` - Python 3.13 interpreter
-- `pipenv` - Python dependency management
-- `shellcheck` - Shell script linting
-
-## GitHub CLI Integration
-
-The project includes GitHub CLI (`gh`) for repository management and automation:
-
-### Common GitHub CLI Commands
-
-```bash
-# Repository management
-gh repo view                    # View current repository details
-gh repo clone <repo>           # Clone a repository
-gh repo create <name>          # Create new repository
-
-# Workflow management  
-gh workflow list               # List all workflows
-gh workflow view <workflow>    # View workflow details
-gh workflow run <workflow>     # Trigger workflow manually
-gh run list                    # List recent workflow runs
-gh run view <run-id>          # View specific run details
-
-# Pull request management
-gh pr create                   # Create new pull request
-gh pr list                     # List pull requests
-gh pr view <number>           # View PR details
-gh pr checkout <number>       # Checkout PR locally
-
-# Issue management
-gh issue create               # Create new issue
-gh issue list                 # List issues
-gh issue view <number>        # View issue details
-
-# Authentication
-gh auth login                 # Login to GitHub
-gh auth status               # Check authentication status
-```
-
-### Workflow Integration
-
-The project includes automated workflows in `.github/workflows/`:
-
-**Daily TCG Data Collection** (`daily-tcg-data.yml`):
-- Runs daily at 6:00 AM UTC via cron schedule
-- Executes `make run_ci` to collect price data (bypasses environment checks for CI)
-- Commits and pushes only if `app/data/output.csv` changes
-- Manual trigger available via `gh workflow run "Daily TCG Data Collection"`
-
-**Manual workflow execution**:
-```bash
-# Trigger daily data collection manually
-gh workflow run "Daily TCG Data Collection"
-
-# View recent runs
-gh run list --workflow="Daily TCG Data Collection"
-
-# View specific run details
-gh run view <run-id> --log
-```
-
-## Demo Scripts and Examples
-
-The `app/demo/` directory contains demonstrations:
-
-1. **Price History Extraction** - Extracts 30+ price records from TCGPlayer data
-2. **Idempotent Functionality** - Proves safe repeated execution with duplicate detection
-
-```bash
-cd app/demo
-python3 demo_price_extraction.py
-python3 demo_idempotent.py
-```
-
-### Data Organization
-
-The application now uses a centralized data directory structure:
-
-**Input Data (`data/input.csv`):**
-- Contains TCGPlayer URLs with metadata (set, type, period, name)
-- Created automatically with `make sample`
-- Tracks multiple trading cards or products
-
-**Output Data (`data/output.csv`):**
-- Normalized price history with one row per price record
-- Includes all original metadata plus extracted price data
-- `volume` column contains integer values (converted from currency strings like "$1.00" → 1)
-- Generated with idempotent duplicate prevention
-- Safe for repeated processing and automation
-
-**Data Workflow:**
-```bash
-# Create fresh input data
-make sample                     # Creates data/input.csv
-
-# Process and generate output  
-make run_verbose               # Processes data/input.csv → data/output.csv
-
-# Verify idempotent behavior
-make run                       # Re-running detects duplicates, no new data added
-```
+`app/demo/` contains price extraction and idempotent demos. `data/input.csv` has TCGPlayer URLs (created via `make sample`), `data/output.csv` stores normalized price history with duplicate prevention. Safe for repeated processing.
 
 ## Rate Limiting and Error Handling
 
@@ -505,7 +223,7 @@ Updated 0 existing records, adding 390 new records
 # Subsequent run with updated prices
 Updated 390 existing records, adding 0 new records
 
-# Mixed scenario (some new dates, some updated prices)  
+# Mixed scenario (some new dates, some updated prices)
 Updated 350 existing records, adding 40 new records
 ```
 
