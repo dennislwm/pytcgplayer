@@ -194,27 +194,27 @@ Found 'Date | Normal' format table      # Booster boxes
 ### **WebClient Rate Limiting Features**
 
 **Built-in Rate Limiting:**
-- **Base Delay**: 1-second delay between all requests to respect API limits
+- **Base Delay**: 5-second delay between all requests to respect API limits
 - **429 Error Detection**: Automatically detects rate limiting responses
-- **Exponential Backoff**: Progressive delays (1s → 2s → 4s) with random jitter
+- **Exponential Backoff**: Aggressive delays (5s → 20s → 80s) with random jitter
 - **Configurable Retries**: Default 3 attempts, customizable via constructor
 
 **Usage and Configuration:**
 ```python
 # Default configuration (recommended)
-client = WebClient()  # 30s timeout, 3 retries, 1s base delay
+client = WebClient()  # 30s timeout, 3 retries, 5s base delay
 
 # Custom configuration for high-volume processing
 client = WebClient(
     timeout=60,          # Longer timeout for slow responses
     max_retries=5,       # More retry attempts
-    base_delay=2.0       # Longer delay between requests
+    base_delay=10.0      # Even longer delay between requests
 )
 ```
 
 **Retry Behavior:**
-- **Normal Request**: 1s delay → make request → return result
-- **429 Rate Limited**: 1s delay → 429 error → wait 2s → retry → wait 4s → retry → fail if still limited
+- **Normal Request**: 5s delay → make request → return result
+- **429 Rate Limited**: 5s delay → 429 error → wait 20s+jitter → retry → wait 80s+jitter → retry → fail if still limited
 - **Network Errors**: Same exponential backoff for connection issues
 - **Other HTTP Errors**: Immediate failure (no retries for 404, 500, etc.)
 

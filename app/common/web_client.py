@@ -7,7 +7,7 @@ from common.helpers import RetryHelper
 
 
 class WebClient:
-    def __init__(self, timeout: int = 30, max_retries: int = 3, base_delay: float = 1.0):
+    def __init__(self, timeout: int = 30, max_retries: int = 3, base_delay: float = 5.0):
         self.logger = AppLogger.get_logger(__name__)
         self.timeout = timeout
         self.max_retries = max_retries

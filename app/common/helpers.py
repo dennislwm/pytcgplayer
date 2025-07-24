@@ -108,7 +108,7 @@ class RetryHelper:
                 for attempt in range(max_retries):
                     try:
                         if attempt > 0:
-                            delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                            delay = base_delay * (4 ** attempt) + random.uniform(0, 3)
                             logger.info(f"Retrying in {delay:.1f}s (attempt {attempt + 1}/{max_retries})")
                             time.sleep(delay)
                         return func(*args, **kwargs)
