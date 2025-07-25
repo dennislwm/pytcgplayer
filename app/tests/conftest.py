@@ -17,9 +17,9 @@ from common.logger import AppLogger
 
 
 SAMPLE_CSV = """set,type,period,name,url
-SV08.5,Card,3M,Test Document 1,https://example.com/test1.md
-SV08.5,Card,3M,Test Document 2,https://example.com/test2.md
-SV08.5,Card,3M,Test Document 3,https://example.com/test3.md"""
+SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
+SV08,Card,3M,Pikachu ex 238,https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English
+SV07,Card,3M,Squirtle 148,https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English"""
 
 SAMPLE_MARKDOWN = """# Test Document
 
@@ -84,9 +84,9 @@ def sample_markdown_content():
 @pytest.fixture
 def sample_csv_data():
     return [
-        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 1', 'url': 'https://example.com/test1.md'},
-        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 2', 'url': 'https://example.com/test2.md'},
-        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Test Document 3', 'url': 'https://example.com/test3.md'}
+        {'set': 'SV08.5', 'type': 'Card', 'period': '3M', 'name': 'Umbreon ex 161', 'url': 'https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English'},
+        {'set': 'SV08', 'type': 'Card', 'period': '3M', 'name': 'Pikachu ex 238', 'url': 'https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English'},
+        {'set': 'SV07', 'type': 'Card', 'period': '3M', 'name': 'Squirtle 148', 'url': 'https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English'}
     ]
 
 
@@ -178,13 +178,13 @@ def sample_v2_single_record():
 
 @pytest.fixture
 def sample_tcg_url_data():
-    """Sample data with TCGPlayer URL for processor tests"""
+    """Sample data with real TCGPlayer URL for processor tests"""
     return [{
         'set': 'SV08.5',
         'type': 'Card',
         'period': '3M',
-        'name': 'Test Card',
-        'url': 'https://www.tcgplayer.com/product/123'
+        'name': 'Umbreon ex 161',
+        'url': 'https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English'
     }]
 
 
@@ -263,7 +263,8 @@ def runner():
 def mock_requests():
     import requests.exceptions
     with requests_mock.Mocker() as m:
-        m.get('https://example.com/test1.md', text=SAMPLE_MARKDOWN)
-        m.get('https://example.com/test2.md', status_code=404)
-        m.get('https://example.com/test3.md', exc=requests.exceptions.ConnectTimeout())
+        # Mock TCGPlayer URLs with sample content
+        m.get('https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English', text=SAMPLE_MARKDOWN)
+        m.get('https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English', status_code=404)
+        m.get('https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English', exc=requests.exceptions.ConnectTimeout())
         yield m

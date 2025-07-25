@@ -25,8 +25,10 @@ class TestWebClient:
         assert 'User-Agent' in web_client.session.headers
     
     def test_init_custom_timeout(self):
-        client = WebClient(timeout=60)
+        # Use fast delays for testing
+        client = WebClient(timeout=60, base_delay=0.01)
         assert client.timeout == 60
+        assert client.base_delay == 0.01
     
     @patch('common.web_client.requests.Session')
     def test_fetch_success(self, mock_session, web_client):
@@ -42,10 +44,12 @@ class TestWebClient:
         client = WebClient()
         client.session = mock_session_instance
         
-        result = client.fetch("https://example.com/test.md")
+        # Create client with fast delays for testing
+        client.base_delay = 0.01
+        result = client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/610516/test")
         
         assert result == "Test content"
-        mock_session_instance.get.assert_called_once_with("https://example.com/test.md", timeout=30)
+        mock_session_instance.get.assert_called_once_with("https://r.jina.ai/https://www.tcgplayer.com/product/610516/test", timeout=30)
         mock_response.raise_for_status.assert_called_once()
     
     @patch('common.web_client.requests.Session')
@@ -58,11 +62,11 @@ class TestWebClient:
         mock_session_instance.get.return_value = mock_response
         mock_session.return_value = mock_session_instance
         
-        client = WebClient()
+        client = WebClient(base_delay=0.01)  # Fast delays for testing
         client.session = mock_session_instance
         
         with pytest.raises(requests.exceptions.HTTPError):
-            client.fetch("https://example.com/nonexistent.md")
+            client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/404/nonexistent")
     
     @patch('common.web_client.requests.Session')
     def test_fetch_connection_error(self, mock_session, web_client):
@@ -71,11 +75,11 @@ class TestWebClient:
         mock_session_instance.get.side_effect = requests.exceptions.ConnectionError("Connection failed")
         mock_session.return_value = mock_session_instance
         
-        client = WebClient()
+        client = WebClient(base_delay=0.01)  # Fast delays for testing
         client.session = mock_session_instance
         
         with pytest.raises(requests.exceptions.ConnectionError):
-            client.fetch("https://example.com/test.md")
+            client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/timeout/test")
     
     @patch('common.web_client.requests.Session')
     def test_fetch_timeout_error(self, mock_session, web_client):
@@ -84,25 +88,31 @@ class TestWebClient:
         mock_session_instance.get.side_effect = requests.exceptions.Timeout("Request timed out")
         mock_session.return_value = mock_session_instance
         
-        client = WebClient()
+        client = WebClient(base_delay=0.01)  # Fast delays for testing
         client.session = mock_session_instance
         
         with pytest.raises(requests.exceptions.Timeout):
-            client.fetch("https://example.com/test.md")
+            client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/timeout/test")
     
-    def test_fetch_with_mock_requests(self, web_client, mock_requests, sample_markdown_content):
-        result = web_client.fetch("https://example.com/test1.md")
+    def test_fetch_with_mock_requests(self, mock_requests, sample_markdown_content):
+        # Create client with fast delays for testing
+        web_client = WebClient(base_delay=0.01)
+        result = web_client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English")
         
         assert result == sample_markdown_content
         assert len(result) > 0
     
-    def test_fetch_404_with_mock_requests(self, web_client, mock_requests):
+    def test_fetch_404_with_mock_requests(self, mock_requests):
+        # Create client with fast delays for testing
+        web_client = WebClient(base_delay=0.01)
         with pytest.raises(requests.exceptions.HTTPError):
-            web_client.fetch("https://example.com/test2.md")
+            web_client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English")
     
-    def test_fetch_timeout_with_mock_requests(self, web_client, mock_requests):
+    def test_fetch_timeout_with_mock_requests(self, mock_requests):
+        # Create client with fast delays for testing
+        web_client = WebClient(base_delay=0.01)
         with pytest.raises(requests.exceptions.ConnectTimeout):
-            web_client.fetch("https://example.com/test3.md")
+            web_client.fetch("https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English")
     
     def test_user_agent_header(self, web_client):
         assert web_client.session.headers['User-Agent'] == 'CSVProcessor/1.0'

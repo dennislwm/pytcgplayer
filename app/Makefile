@@ -1,4 +1,4 @@
-.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean convert_schema help
+.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean convert_schema chart chart_yfinance chart_help help
 
 default: pipenv_shell
 
@@ -20,9 +20,9 @@ pipenv_new:
 pipenv_install:
 	pipenv install requests pytest requests-mock typer
 
-# Install development dependencies
+# Install development dependencies (including chart analysis packages)
 install_deps:
-	pipenv install requests pytest requests-mock typer
+	pipenv install requests pytest requests-mock typer numpy==2.0.2 pandas==2.3.1 pyfxgit==0.1.1 ruamel.yaml==0.16.12 ta==0.6.1 yfinance==0.2.65
 
 pipenv_shell:
 	pipenv shell
@@ -88,6 +88,18 @@ convert_schema:
 	@echo "Schema conversion complete: v1.0 → v2.0"
 	@echo "Original v1.0 data backed up to: data/output_v1_backup.csv"
 
+# Technical Analysis Charts
+chart:
+	@source ./make.sh && check_env
+	PYTHONPATH=. pipenv run python chart/index_chart.py data/single_time_series.csv data/sealed_time_series.csv
+
+chart_yfinance:
+	@source ./make.sh && check_env
+	PYTHONPATH=. pipenv run python chart/index_chart.py --yfinance
+
+chart_help:
+	PYTHONPATH=. pipenv run python chart/index_chart.py --help
+
 
 # Show all available targets
 help:
@@ -108,7 +120,7 @@ help:
 	@echo "  help_app        - Show application command-line help"
 	@echo ""
 	@echo "Testing & Quality:"
-	@echo "  test            - Run all tests (74 tests)"
+	@echo "  test            - Run all tests"
 	@echo "  test_verbose    - Run tests with verbose output"
 	@echo ""
 	@echo "Demo & Examples:"
@@ -117,6 +129,11 @@ help:
 	@echo ""
 	@echo "Schema Management:"
 	@echo "  convert_schema  - Convert output.csv from v1.0 to v2.0 format"
+	@echo ""
+	@echo "Technical Analysis Charts:"
+	@echo "  chart           - Generate DBS charts from CSV time series data"
+	@echo "  chart_yfinance  - Generate DBS charts from yfinance stock data"
+	@echo "  chart_help      - Show chart command-line help"
 	@echo ""
 	@echo "Utilities:"
 	@echo ""

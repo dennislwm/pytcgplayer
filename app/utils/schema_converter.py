@@ -64,12 +64,9 @@ class SchemaConverter:
         return start_date, end_date
 
     def convert_currency_to_float(self, currency_str: str) -> float:
-        """Convert currency string like '$49.73' to float like 49.73"""
-        try:
-            cleaned = currency_str.replace('$', '').replace(',', '')
-            return float(cleaned) if cleaned.replace('.', '').isdigit() else 0.0
-        except (ValueError, AttributeError):
-            return 0.0
+        """Convert currency string using DataProcessor helper"""
+        from common.helpers import DataProcessor
+        return DataProcessor.convert_currency_to_float(currency_str)
 
     def convert_row(self, row: Dict, timestamp: str) -> Dict:
         """
@@ -82,30 +79,15 @@ class SchemaConverter:
         Returns:
             Converted row dictionary with v2.0 schema
         """
-        # Parse the date range
-        start_date, end_date = self.parse_date_range(row.get('date', ''))
-
-        # Convert holofoil_price from currency string to numeric
+        # One-liner data conversion using DataProcessor helpers
+        from common.helpers import DataProcessor
+        start_date, end_date = DataProcessor.parse_date_range(row.get('date', ''))
         holofoil_price = self.convert_currency_to_float(row.get('holofoil_price', ''))
-
-        # Convert volume to integer
-        try:
-            volume = int(row.get('volume', '0'))
-        except ValueError:
-            volume = 0
-
-        # Create new row with v2.0 schema (numeric price, integer volume)
-        converted_row = {
-            'set': row.get('set', ''),
-            'type': row.get('type', ''),
-            'period': row.get('period', ''),
-            'name': row.get('name', ''),
-            'period_start_date': start_date,
-            'period_end_date': end_date,
-            'timestamp': timestamp,
-            'holofoil_price': holofoil_price,
-            'volume': volume
-        }
+        volume = int(row.get('volume', '0')) if row.get('volume', '0').isdigit() else 0
+        
+        # One-liner row creation with v2.0 schema
+        converted_row = {**{k: row.get(k, '') for k in ['set', 'type', 'period', 'name']}, 
+                        **{'period_start_date': start_date, 'period_end_date': end_date, 'timestamp': timestamp, 'holofoil_price': holofoil_price, 'volume': volume}}
 
         return converted_row
 
@@ -158,14 +140,14 @@ class SchemaConverter:
             raise
 
 
-def main():
-    """Main function for command line usage"""
+def main() -> None:
+    """Main function with one-liner argument setup"""
     import argparse
 
     parser = argparse.ArgumentParser(description='Convert CSV from v1.0 to v2.0 schema')
-    parser.add_argument('input_file', help='Input CSV file (v1.0 format)')
-    parser.add_argument('output_file', help='Output CSV file (v2.0 format)')
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose logging')
+    # One-liner argument configuration
+    args_config = [('input_file', {'help': 'Input CSV file (v1.0 format)'}), ('output_file', {'help': 'Output CSV file (v2.0 format)'}), ('--verbose', {'action': 'store_true', 'help': 'Enable verbose logging'})]
+    [parser.add_argument(name, **kwargs) for name, kwargs in args_config]
 
     args = parser.parse_args()
 

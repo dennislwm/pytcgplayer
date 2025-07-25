@@ -46,25 +46,15 @@ class FileHelper:
         expected_headers = schema.get('header_order', [])
         errors = []
 
-        # Check for missing headers
-        missing = set(expected_headers) - set(headers)
-        if missing:
-            errors.append(f"Missing headers: {list(missing)}")
+        # One-liner header validation
+        missing, extra = set(expected_headers) - set(headers), set(headers) - set(expected_headers)
+        if missing: errors.append(f"Missing headers: {list(missing)}")
+        if extra: errors.append(f"Extra headers: {list(extra)}")
+        if headers != expected_headers: errors.append(f"Header order mismatch. Expected: {expected_headers}, Got: {headers}")
 
-        # Check for extra headers
-        extra = set(headers) - set(expected_headers)
-        if extra:
-            errors.append(f"Extra headers: {list(extra)}")
-
-        # Check header order
-        if headers != expected_headers:
-            errors.append(f"Header order mismatch. Expected: {expected_headers}, Got: {headers}")
-
+        # One-liner validation result logging
         is_valid = len(errors) == 0
-        if not is_valid:
-            logger.warning(f"Schema validation failed for {csv_path}: {errors}")
-        else:
-            logger.info(f"Schema validation passed for {csv_path}")
+        (logger.warning(f"Schema validation failed for {csv_path}: {errors}") if not is_valid else logger.info(f"Schema validation passed for {csv_path}"))
 
         return is_valid, errors
 
@@ -138,16 +128,12 @@ class DataProcessor:
 
     @staticmethod
     def convert_currency_to_int(currency_str: str) -> int:
-        """Convert currency string like '$1.00' to integer like 1"""
-        try:
-            cleaned = currency_str.replace('$', '').replace(',', '')
-            return int(float(cleaned)) if cleaned.replace('.', '').isdigit() else 0
-        except (ValueError, AttributeError):
-            return 0
+        """One-liner currency to integer conversion"""
+        return int(DataProcessor.convert_currency_to_float(currency_str))
 
     @staticmethod
     def convert_currency_to_float(currency_str: str) -> float:
-        """Convert currency string like '$49.73' to float like 49.73"""
+        """One-liner currency string to float conversion"""
         try:
             cleaned = currency_str.replace('$', '').replace(',', '')
             return float(cleaned) if cleaned.replace('.', '').isdigit() else 0.0

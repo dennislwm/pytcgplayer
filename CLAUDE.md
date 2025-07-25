@@ -22,6 +22,7 @@ make convert_schema                   # Convert v1.0 to v2.0 format
 # Application: run, run_verbose, run_ci, sample, help_app
 # Testing: test, test_verbose
 # Schema: convert_schema
+# Charts: chart, chart_yfinance, chart_help
 # Utilities: pipenv_freeze, check_json, help
 ```
 
@@ -47,6 +48,28 @@ SV08.5,Card,3M,Umbreon ex 161,2025-04-23,2025-04-25,2025-07-24 15:00:00,1451.66,
 SV08.5,Card,3M,Umbreon ex 161,2025-04-26,2025-04-28,2025-07-24 15:00:00,1451.66,0
 ...
 ```
+
+## Technical Analysis Charts
+
+DBS (Defensive Bull/Bear Signal) technical analysis system for comparing TCGPlayer price data, based on pymonitor financial analysis tool.
+
+### Chart Commands
+```bash
+make chart           # Compare CSV time series data
+make chart_yfinance  # Compare stock data (XLU vs VTI)
+make chart_help      # Show command options
+```
+
+### Features
+- **Dual Data Sources**: CSV (TCG data) and yfinance (stock data) with automatic format conversion
+- **Technical Indicators**: Ratio analysis, 20-period ROC, 4-point trading signals, 7-period DBS MA
+- **Chart Output**: `_ChartC_0.1_TCG_DBS.png` with dual oscillators and trend indicators
+- **Alert System**: Automated Bull/Neutral/Bear trend shift detection (±3.75 thresholds)
+
+### Helper Classes
+- `DataFrameHelper`: Column conversion, OHLC creation, yfinance flattening
+- `TechnicalAnalysisHelper`: Ratio/ROC/signal calculations with one-liner implementations
+- `AlertHelper`: DBS status and alert generation utilities
 
 ## Code Quality Standards
 
@@ -121,13 +144,14 @@ app/
 ```
 
 ### Testing Requirements
-- **Test Suite**: Comprehensive unit tests with 100% pass rate
-- **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, Main CLI)
+- **Test Suite**: Comprehensive unit tests with 100% pass rate (165+ tests)
+- **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, IndexChart, Main CLI)
+- **Technical Analysis Tests**: Complete coverage of helper classes and chart functionality (`tests/index_chart_test.py`)
 - **Framework**: pytest with centralized logging via AppLogger
 - **Execution**: `PYTHONPATH=.` set for proper module imports
 - **Logging**: Test logs written to `logs/test.log` with DEBUG level
 - **Setup**: Each test class initializes logging in `setup_class()` method
-- **Mocking**: Uses `requests-mock` for HTTP request testing
+- **Mocking**: Uses `requests-mock` for HTTP request testing and pandas DataFrame mocking
 - **Data Format**: Tests updated to expect `volume` column with integer values instead of `additional_price` currency strings
 
 ### Windows Testing Notes
@@ -139,15 +163,12 @@ app/
 
 ### Dependencies
 Current dependencies (automatically managed by pipenv):
-- `requests==2.32.4` for HTTP requests with rate limiting and retry logic
-- `pytest==8.4.1` for testing framework
-- `requests-mock==1.12.1` for HTTP request mocking in tests
-- `typer==0.16.0` for CLI development (future enhancement)
-- Additional dependencies for future features:
-  - `check-jsonschema==0.23.0` for config validation
-  - `pyyaml==6.0.1` for YAML configuration handling
+- `requests`, `pytest`, `requests-mock`, `typer` for core functionality
+- `numpy==2.0.2`, `pandas==2.3.1` for data analysis
+- `pyfxgit==0.1.1` for chart generation
+- `ruamel.yaml==0.16.12`, `ta==0.6.1`, `yfinance==0.2.65` for technical analysis
 
-**Installation**: Use `make install_deps` or `pipenv install requests pytest requests-mock typer`
+**Installation**: Use `make install_deps` for complete setup with pinned versions
 
 ### Helper Classes
 

@@ -58,20 +58,8 @@ class CsvProcessor(DataProcessor):
                     price_data = self.markdown_parser.parse_price_history_data(markdown_content)
                     if price_data:
                         self.logger.info(f"Extracted {len(price_data)} price history records for row {i}")
-                        # Create normalized rows - one for each price record (v2.0 format)
-                        for price_record in price_data:
-                            normalized_row = {
-                                'set': row.get('set', ''),
-                                'type': row.get('type', ''),
-                                'period': row.get('period', ''),
-                                'name': row.get('name', ''),
-                                'period_start_date': price_record['period_start_date'],
-                                'period_end_date': price_record['period_end_date'],
-                                'timestamp': price_record['timestamp'],
-                                'holofoil_price': price_record['holofoil_price'],
-                                'volume': price_record['volume']
-                            }
-                            processed_rows.append(normalized_row)
+                        # One-liner normalized row creation for each price record (v2.0 format)
+                        processed_rows.extend([{**{k: row.get(k, '') for k in ['set', 'type', 'period', 'name']}, **price_record} for price_record in price_data])
                     else:
                         self.logger.warning(f"No price history found for TCGPlayer URL in row {i}, skipping")
                 else:
@@ -81,19 +69,8 @@ class CsvProcessor(DataProcessor):
 
             except Exception as e:
                 self.logger.error(f"Failed to process row {i}: {e}")
-                # Create normalized error row with empty price data (v2.0 format)
-                error_row = {
-                    'set': row.get('set', ''),
-                    'type': row.get('type', ''),
-                    'period': row.get('period', ''),
-                    'name': row.get('name', ''),
-                    'period_start_date': '',
-                    'period_end_date': '',
-                    'timestamp': DataProcessor.get_current_timestamp(),
-                    'holofoil_price': 0.0,
-                    'volume': 0
-                }
-                processed_rows.append(error_row)
+                # One-liner normalized error row creation (v2.0 format)
+                processed_rows.append({**{k: row.get(k, '') for k in ['set', 'type', 'period', 'name']}, **{'period_start_date': '', 'period_end_date': '', 'timestamp': DataProcessor.get_current_timestamp(), 'holofoil_price': 0.0, 'volume': 0}})
 
         self.logger.info(f"Processed {len(processed_rows)} rows")
         return processed_rows
@@ -109,12 +86,9 @@ class CsvProcessor(DataProcessor):
             return 'insufficient_data'
 
         try:
-            # Get first and last prices, clean the $ and commas
-            first_price_str = price_data[-1]['holofoil'].replace('$', '').replace(',', '')
-            last_price_str = price_data[0]['holofoil'].replace('$', '').replace(',', '')
-
-            first_price = float(first_price_str) if first_price_str else 0.0
-            last_price = float(last_price_str) if last_price_str else 0.0
+            # One-liner price extraction and conversion using DataProcessor
+            first_price = DataProcessor.convert_currency_to_float(price_data[-1]['holofoil']) if price_data else 0.0
+            last_price = DataProcessor.convert_currency_to_float(price_data[0]['holofoil']) if price_data else 0.0
 
             if first_price == 0:
                 return 'no_baseline'
@@ -155,9 +129,8 @@ class CsvProcessor(DataProcessor):
             'holofoil_price', 'volume'
         ]
 
-        sample_row = output_data[0]
-        missing_fields = [field for field in expected_fields if field not in sample_row]
-
+        # One-liner field validation
+        missing_fields = [field for field in expected_fields if field not in output_data[0]]
         if missing_fields:
             error_msg = f"Output data missing required v2.0 fields: {missing_fields}"
             self.logger.error(error_msg)
