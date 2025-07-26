@@ -37,7 +37,7 @@ jobs:
       working-directory: ./app
       run: |
         pipenv --python 3.9
-        make install_deps
+        make install_ci
 
     - name: Run TCG data collection
       working-directory: ./app

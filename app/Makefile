@@ -20,6 +20,10 @@ pipenv_new:
 pipenv_install:
 	pipenv install requests pytest requests-mock typer
 
+# Install CI dependencies (minimal for GitHub Actions)
+install_ci:
+	pipenv install requests pytest requests-mock typer
+
 # Install development dependencies (including chart analysis packages)
 install_deps:
 	pipenv install requests pytest requests-mock typer numpy==2.0.2 pandas==2.3.1 pyfxgit==0.1.1 ruamel.yaml==0.16.12 ta==0.6.1 yfinance==0.2.65
