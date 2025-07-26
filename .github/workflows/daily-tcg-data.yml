@@ -23,10 +23,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.13
+    - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
-        python-version: 3.13
+        python-version: 3.9
 
     - name: Install pipenv
       run: |
@@ -36,7 +36,8 @@ jobs:
     - name: Install dependencies
       working-directory: ./app
       run: |
-        pipenv install requests pytest requests-mock typer
+        pipenv --python 3.9
+        make install_deps
 
     - name: Run TCG data collection
       working-directory: ./app
