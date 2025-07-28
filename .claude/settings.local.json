@@ -9,7 +9,9 @@
       "Bash(PYTHONPATH=. pipenv run python chart/index_chart.py --yfinance --dbs-period 7)",
       "Bash(PYTHONPATH=. pipenv run pytest tests/index_chart_test.py::TestDataFrameHelper::test_flatten_yfinance_columns_multiindex -v -s)",
       "Bash(PYTHONPATH=. pipenv run pytest tests/index_chart_test.py -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/ -v)"
+      "Bash(PYTHONPATH=. pipenv run pytest tests/ -v)",
+      "Bash(ls:*)",
+      "Bash(pipenv:*)"
     ],
     "deny": []
   }
