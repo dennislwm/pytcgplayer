@@ -11,7 +11,18 @@
       "Bash(PYTHONPATH=. pipenv run pytest tests/index_chart_test.py -v)",
       "Bash(PYTHONPATH=. pipenv run pytest tests/ -v)",
       "Bash(ls:*)",
-      "Bash(pipenv:*)"
+      "Bash(pipenv:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cut:*)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_multiple_dates -v)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestTimeSeriesAlignment -v)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py -v --tb=short)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestCompleteDataFiltering::test_create_complete_subset_vs_create_subset -v)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py -q)",
+      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py data/output.csv --name test_debug --sets \"SV01,SV02\" --types \"Card\" --verbose)",
+      "Bash(cp:*)",
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic -v)"
     ],
     "deny": []
   }

@@ -104,6 +104,17 @@ chart_yfinance:
 chart_help:
 	PYTHONPATH=. pipenv run python chart/index_chart.py --help
 
+aggregate_sealed:
+	PYTHONPATH=. pipenv run python chart/index_aggregator.py --name sealed --sets "S*" --types "*Box" --period "3M" --verbose data/output.csv
+
+aggregate_single:
+	PYTHONPATH=. pipenv run python chart/index_aggregator.py --name single --sets "S*" --types "Card" --period "3M" --verbose data/output.csv
+
+aggregate_sealed_fb:
+	PYTHONPATH=. pipenv run python chart/index_aggregator.py --name sealed_fb --sets "S*" --types "*Box" --period "3M" --allow-fallback --verbose data/output.csv
+
+aggregate_single_fb:
+	PYTHONPATH=. pipenv run python chart/index_aggregator.py --name single_fb --sets "S*" --types "Card" --period "3M" --allow-fallback --verbose data/output.csv
 
 # Show all available targets
 help:
