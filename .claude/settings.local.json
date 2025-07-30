@@ -22,7 +22,10 @@
       "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py -q)",
       "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py data/output.csv --name test_debug --sets \"SV01,SV02\" --types \"Card\" --verbose)",
       "Bash(cp:*)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic -v)"
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic -v)",
+      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_analysis --sets \"SV*\" --types \"Card\" --period \"3M\" --verbose data/output.csv)",
+      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_failure --sets \"SWSH*,SV*\" --types \"Card\" --period \"3M\" --verbose data/output.csv)",
+      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_fallback --sets \"SWSH*,SV*\" --types \"Card\" --period \"3M\" --allow-fallback --verbose data/output.csv)"
     ],
     "deny": []
   }
