@@ -9,6 +9,9 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Callable, Any, Optional
 from functools import wraps
 
+import pandas as pd
+import numpy as np
+
 from common.logger import AppLogger
 
 
@@ -363,3 +366,70 @@ def resilient_config_operation(operation_name: str):
                 return False if func.__name__.startswith(('save', 'delete', 'update')) else None
         return wrapper
     return decorator
+
+
+class ChartDataProcessor(DataProcessor):
+    """Helper class for chart data processing operations with one-liner implementations"""
+    
+    @staticmethod
+    def load_and_convert_time_series(csv_file: str) -> pd.DataFrame:
+        """One-liner time series loading with OHLC conversion and technical indicators"""
+        try:
+            # Load and convert time series data in one pipeline
+            df = (pd.read_csv(csv_file)
+                  .pipe(lambda x: x.set_index(pd.to_datetime(x['period_end_date'])).sort_index())
+                  .pipe(ChartDataProcessor._create_ohlc_format)
+                  .pipe(ChartDataProcessor._calculate_dbs_indicators)
+                  .dropna())
+            return df
+        except Exception as e:
+            raise FileNotFoundError(f"Error loading {csv_file}: {e}")
+    
+    @staticmethod
+    def _create_ohlc_format(df: pd.DataFrame) -> pd.DataFrame:
+        """Convert time series data to OHLC format for charting"""
+        # Use aggregate_price as Close, create realistic OHLC with small variations
+        df['Close'] = df['aggregate_price']
+        df['Open'] = df['Close'].shift(1).fillna(df['Close'].iloc[0])
+        
+        # Add controlled variations for High/Low (within 2% of Close)
+        np.random.seed(42)  # Reproducible results
+        variation = 0.02
+        df['High'] = df['Close'] * (1 + np.random.uniform(0, variation, len(df)))
+        df['Low'] = df['Close'] * (1 - np.random.uniform(0, variation, len(df)))
+        
+        # Ensure proper OHLC relationships
+        df['High'] = np.maximum(df['High'], np.maximum(df['Close'], df['Open']))
+        df['Low'] = np.minimum(df['Low'], np.minimum(df['Close'], df['Open']))
+        
+        # Use aggregate_value as Volume
+        df['Volume'] = df['aggregate_value']
+        df['Adjusted'] = df['Close']
+        
+        return df
+    
+    @staticmethod
+    def _calculate_dbs_indicators(df: pd.DataFrame) -> pd.DataFrame:
+        """Calculate DBS technical indicators using one-liner assignments"""
+        return df.assign(
+            Dbs=lambda x: ((x['Close'] / x['Close'].shift(20) - 1) * 100).rolling(5).mean(),
+            DbsMa=lambda x: x['Dbs'].rolling(7).mean()
+        )
+    
+    @staticmethod
+    def create_chart_with_indicators(df: pd.DataFrame, title_suffix: str, save_name: str) -> str:
+        """One-liner chart creation with standard DBS indicators"""
+        from pyfxgit.ChartCls import ChartCls
+        
+        chart = ChartCls(df, intSub=2)
+        chart.BuildOscillator(1, df['Dbs'], intUpper=3, intLower=-3, strTitle="Dbs")
+        chart.BuildOscillator(0, df['DbsMa'], intUpper=3.75, intLower=-3.75, strTitle="DbsMa")
+        
+        lstTag = chart.BuildOscillatorTag(df, 'DbsMa', 3.75)
+        chart.MainAddSpan(df['Tag'], lstTag[lstTag>0], 0.2, 'red')
+        chart.MainAddSpan(df['Tag'], lstTag[lstTag<0], 0.2, 'green')
+        
+        chart.BuildMain(strTitle=f"TCGPlayer Time Series - {title_suffix}")
+        chart.save(save_name)
+        
+        return f"_ChartC_0.1_{save_name}.png"

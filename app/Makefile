@@ -1,4 +1,4 @@
-.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean convert_schema chart chart_yfinance chart_help workbench_discover workbench_analyze workbench_help help
+.PHONY: default pipenv_freeze pipenv_new pipenv_install pipenv_shell pipenv_venv test test_verbose run run_verbose run_ci install_deps help_app sample demo demo_clean convert_schema chart chart_yfinance chart_help workbench_discover workbench_analyze workbench_save workbench_list workbench_run workbench_help help
 
 # Variables for repeated commands
 PYTHON_RUN = PYTHONPATH=. pipenv run python
@@ -124,6 +124,15 @@ workbench_discover:
 workbench_analyze:
 	$(PYTHON_RUN) workbench/alignment_workbench.py analyze --sets "SV*" --types "Card" --period "3M"
 
+workbench_save:
+	$(PYTHON_RUN) workbench/alignment_workbench.py save --name "default_config" --sets "SV*" --types "Card" --period "3M"
+
+workbench_list:
+	$(PYTHON_RUN) workbench/alignment_workbench.py list
+
+workbench_run:
+	$(PYTHON_RUN) workbench/alignment_workbench.py run default_config
+
 workbench_help:
 	$(PYTHON_RUN) workbench/alignment_workbench.py --help
 
@@ -136,5 +145,5 @@ help:
 	@echo "Schema: convert_schema"
 	@echo "Charts: chart chart_yfinance chart_help"
 	@echo "Aggregation: aggregate_sealed aggregate_single aggregate_sealed_fb aggregate_single_fb"
-	@echo "Workbench: workbench_discover workbench_analyze workbench_help"
+	@echo "Workbench: workbench_discover workbench_analyze workbench_save workbench_list workbench_run workbench_help"
 	@echo "Utilities: pipenv_freeze check_json help"
