@@ -195,6 +195,49 @@ class IndexAggregator:
         # Use TimeSeriesAligner for completeness-only alignment (Steps 1-2)
         return self.aligner.align_complete(subset_df, allow_fallback)
 
+    def create_complete_subset(self, input_path: Path, sets: str = '*', types: str = '*', period: str = '3M') -> pd.DataFrame:
+        """
+        Create a subset with only dates that have complete coverage across ALL signatures.
+
+        Unlike create_subset which uses most common date count, this method only includes
+        dates where every signature is present (100% coverage).
+
+        Args:
+            input_path: Path to input CSV file
+            sets: Set filter pattern (e.g., 'SV*', 'SV01,SV02', '*')
+            types: Type filter pattern (e.g., '*Box', 'Card', '*')
+            period: Period filter (currently only '3M')
+
+        Returns:
+            pandas.DataFrame with only dates having complete signature coverage
+        """
+        self.logger.info(f"Creating complete subset with complete coverage only")
+
+        # Load and apply filters
+        df = self.read_csv(input_path)
+        subset_df = self.apply_filters(df, sets, types, period)
+
+        if subset_df.empty:
+            return pd.DataFrame()
+
+        # Get all unique signatures
+        signatures = subset_df.groupby(['set', 'type', 'period', 'name']).ngroups
+        total_signatures = len(subset_df.groupby(['set', 'type', 'period', 'name']).groups)
+
+        # Find dates with complete coverage (all signatures present)
+        date_coverage = subset_df.groupby('period_end_date').size()
+        complete_dates = date_coverage[date_coverage == total_signatures].index
+
+        if len(complete_dates) == 0:
+            self.logger.warning("No dates found with complete signature coverage")
+            return pd.DataFrame()
+
+        # Return only records for dates with complete coverage
+        result_df = subset_df[subset_df['period_end_date'].isin(complete_dates)].copy()
+        result_df = result_df.sort_values(['period_end_date', 'set', 'name']).reset_index(drop=True)
+
+        self.logger.info(f"Complete subset: {len(result_df)} records across {len(complete_dates)} complete dates")
+        return result_df
 
     def aggregate_time_series(self, subset_df: pd.DataFrame, name: str = None) -> pd.DataFrame:
         """
@@ -266,7 +309,7 @@ Available Periods: 3M
 
     parser.add_argument('input_csv', nargs='?', default='data/output.csv', help='Input CSV file (default: data/output.csv)')
     parser.add_argument('--name', required=True,
-                       help='Name for the time series (e.g., SV_Box). Used as column value and saved to data/{name}_time_series.csv')
+                       help='Name for the time series (e.g., SV_Box). Used as column value and saved to data/NAME_time_series.csv')
     parser.add_argument('--sets', default='*',
                        help='Sets filter (default: * for all sets)')
     parser.add_argument('--types', default='*',
@@ -276,7 +319,7 @@ Available Periods: 3M
     parser.add_argument('--verbose', action='store_true',
                        help='Enable verbose logging')
     parser.add_argument('--allow-fallback', action='store_true',
-                       help='Enable fallback mode: use date with maximum coverage when 100% not available')
+                       help='Enable fallback mode: use date with maximum coverage when 100%% not available')
 
     return parser
 

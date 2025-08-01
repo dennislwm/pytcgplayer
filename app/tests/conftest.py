@@ -268,3 +268,194 @@ def mock_requests():
         m.get('https://r.jina.ai/https://www.tcgplayer.com/product/590027/pokemon-sv08-surging-sparks-pikachu-ex-238-191?page=1&Language=English', status_code=404)
         m.get('https://r.jina.ai/https://www.tcgplayer.com/product/567429/pokemon-sv07-stellar-crown-squirtle?page=1&Language=English', exc=requests.exceptions.ConnectTimeout())
         yield m
+
+
+# Coverage Analyzer Test Fixtures
+
+@pytest.fixture
+def sv_card_filter_config():
+    """Standard SV* Card filter configuration"""
+    return {"sets": "SV*", "types": "Card", "period": "3M"}
+
+
+@pytest.fixture
+def mixed_generation_filter_config():
+    """Mixed generation filter configuration for failure scenarios"""
+    return {"sets": "SWSH*,SV*", "types": "Card", "period": "3M"}
+
+
+@pytest.fixture
+def invalid_filter_config():
+    """Invalid filter configuration for testing edge cases"""
+    return {"sets": "invalid", "types": "invalid", "period": "3M"}
+
+
+@pytest.fixture
+def successful_coverage_result_data():
+    """Complete coverage result data (100% success scenario)"""
+    return {
+        "coverage_percentage": 1.0,
+        "signatures_found": 13,
+        "signatures_total": 13,
+        "optimal_start_date": "2025-04-28",
+        "records_before_start": 57,
+        "records_aligned": 1209,
+        "time_series_points": 93,
+        "gap_fills_required": 50,
+        "missing_signatures": [],
+        "fallback_required": False,
+        "quality_score": 1.0
+    }
+
+
+@pytest.fixture
+def failed_coverage_result_data():
+    """Failed coverage result data (0% coverage scenario)"""
+    return {
+        "coverage_percentage": 0.0,
+        "signatures_found": 0,
+        "signatures_total": 20,
+        "optimal_start_date": None,
+        "records_before_start": 0,
+        "records_aligned": 0,
+        "time_series_points": 0,
+        "gap_fills_required": 0,
+        "missing_signatures": ["SWSH06_Charizard_Card", "SV01_Pikachu_Card"],
+        "fallback_required": False,
+        "quality_score": 0.0
+    }
+
+
+@pytest.fixture
+def partial_coverage_result_data():
+    """Partial coverage result data (95% with fallback scenario)"""
+    return {
+        "coverage_percentage": 0.95,
+        "signatures_found": 19,
+        "signatures_total": 20,
+        "optimal_start_date": "2025-04-28",
+        "records_before_start": 67,
+        "records_aligned": 1859,
+        "time_series_points": 93,
+        "gap_fills_required": 212,
+        "missing_signatures": ["SWSH06_Charizard_Card"],
+        "fallback_required": True,
+        "quality_score": 0.85
+    }
+
+
+@pytest.fixture
+def standard_coverage_result_data():
+    """Standard coverage result data for general testing"""
+    return {
+        "coverage_percentage": 0.9,
+        "signatures_found": 10,
+        "signatures_total": 11,
+        "optimal_start_date": "2025-04-28",
+        "records_before_start": 50,
+        "records_aligned": 1000,
+        "time_series_points": 90,
+        "gap_fills_required": 25,
+        "missing_signatures": ["SV10_Missing_Card"],
+        "fallback_required": False,
+        "quality_score": 0.88
+    }
+
+
+@pytest.fixture
+def alternative_suggestion_result_data():
+    """Coverage result data for alternative suggestion scenarios"""
+    return {
+        "coverage_percentage": 0.92,
+        "signatures_found": 12,
+        "signatures_total": 13,
+        "optimal_start_date": "2025-04-28",
+        "records_before_start": 43,
+        "records_aligned": 1156,
+        "time_series_points": 93,
+        "gap_fills_required": 74,
+        "missing_signatures": ["SV10_MissingCard_Card"],
+        "fallback_required": False,
+        "quality_score": 0.89
+    }
+
+
+@pytest.fixture
+def successful_coverage_result(sv_card_filter_config, successful_coverage_result_data):
+    """Complete CoverageResult fixture for successful analysis"""
+    from common.coverage_analyzer import CoverageResult
+    return CoverageResult(
+        filter_config=sv_card_filter_config,
+        **successful_coverage_result_data
+    )
+
+
+@pytest.fixture
+def failed_coverage_result(mixed_generation_filter_config, failed_coverage_result_data):
+    """Complete CoverageResult fixture for failed analysis"""
+    from common.coverage_analyzer import CoverageResult
+    return CoverageResult(
+        filter_config=mixed_generation_filter_config,
+        **failed_coverage_result_data
+    )
+
+
+@pytest.fixture
+def partial_coverage_result(mixed_generation_filter_config, partial_coverage_result_data):
+    """Complete CoverageResult fixture for partial coverage analysis"""
+    from common.coverage_analyzer import CoverageResult
+    return CoverageResult(
+        filter_config=mixed_generation_filter_config,
+        **partial_coverage_result_data
+    )
+
+
+@pytest.fixture
+def standard_coverage_result(sv_card_filter_config, standard_coverage_result_data):
+    """Complete CoverageResult fixture for standard testing"""
+    from common.coverage_analyzer import CoverageResult
+    return CoverageResult(
+        filter_config=sv_card_filter_config,
+        **standard_coverage_result_data
+    )
+
+
+@pytest.fixture
+def successful_recommendation_result(sv_card_filter_config, successful_coverage_result):
+    """Complete RecommendationResult fixture for successful recommendation"""
+    from common.coverage_analyzer import RecommendationResult
+    return RecommendationResult(
+        rank=1,
+        filter_config=sv_card_filter_config,
+        coverage_result=successful_coverage_result,
+        description="SV Cards (Complete)",
+        command_string='--sets "SV*" --types "Card" --period "3M"',
+        estimated_records=1209
+    )
+
+
+@pytest.fixture
+def fallback_recommendation_result(mixed_generation_filter_config, partial_coverage_result):
+    """Complete RecommendationResult fixture for fallback recommendation"""
+    from common.coverage_analyzer import RecommendationResult
+    return RecommendationResult(
+        rank=2,
+        filter_config=mixed_generation_filter_config,
+        coverage_result=partial_coverage_result,
+        description="SWSH/SV Cards (Excellent)",
+        command_string='--sets "SWSH*,SV*" --types "Card" --period "3M" --allow-fallback',
+        estimated_records=1859
+    )
+
+
+@pytest.fixture
+def coverage_analyzer_dependencies():
+    """Mock dependencies for CoverageAnalyzer testing"""
+    from chart.index_aggregator import IndexAggregator, FilterValidator
+    from common.time_series_aligner import TimeSeriesAligner
+
+    return {
+        "aggregator": IndexAggregator(),
+        "aligner": TimeSeriesAligner(),
+        "validator": FilterValidator()
+    }
