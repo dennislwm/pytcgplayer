@@ -1,14 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregatorIntegration::test_main_help -v -s)"
+      "Bash(PYTHONPATH=. pipenv run python -m pytest tests/configuration_manager_test.py::TestFilterConfiguration::test_filter_configuration_creation -v)"
     ],
     "deny": []
   },
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write",
         "hooks": [
           {
             "type": "command",
@@ -16,7 +16,20 @@
           },
           {
             "type": "user-prompt-submit",
-            "prompt": "The previous action modified code files. Only if there has been significant changes, then ensure a cost-efficiency-reviewer agent is required to analyze the changes for token efficiency and engineering simplicity. Review the modified code for potential optimizations, overengineering patterns, and refactor the code or content to reduce token consumption while maintaining functionality. Do not ultra compact the code as to maintain readability."
+            "prompt": "The previous action created a new code file. Use the cost-efficiency-reviewer agent to analyze the new code for token efficiency and engineering simplicity. Review the code for potential optimizations, overengineering patterns, and refactor the code or content to reduce token consumption while maintaining functionality. Do not ultra compact the code as to maintain readability."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/remove-trailing-spaces.sh"
+          },
+          {
+            "type": "user-prompt-submit",
+            "prompt": "The previous action modified existing code files. Only if the changes are significant (50+ lines changed, major refactoring, new functions/classes, or substantial logic changes), use the cost-efficiency-reviewer agent to analyze the changes for token efficiency and engineering simplicity. Review the modified code for potential optimizations, overengineering patterns, and refactor the code or content to reduce token consumption while maintaining functionality. Do not ultra compact the code as to maintain readability."
           }
         ]
       }

@@ -62,6 +62,35 @@ Examples:
     parser_analyze.add_argument('--allow-fallback', action='store_true',
                               help='Enable fallback mode for <100% coverage scenarios')
 
+    # Save command
+    parser_save = subparsers.add_parser('save', help='Save filter configuration for reuse')
+    parser_save.add_argument('input_csv', nargs='?', default='data/output.csv',
+                           help='Input CSV file for validation (default: data/output.csv)')
+    parser_save.add_argument('--name', required=True,
+                           help='Configuration name (alphanumeric, underscores, hyphens)')
+    parser_save.add_argument('--sets', required=True,
+                           help='Sets filter pattern to save')
+    parser_save.add_argument('--types', required=True,
+                           help='Types filter pattern to save')
+    parser_save.add_argument('--period', default='3M',
+                           help='Period filter to save (default: 3M)')
+    parser_save.add_argument('--description',
+                           help='Optional description for this configuration')
+
+    # List command
+    parser_list = subparsers.add_parser('list', help='List saved configurations')
+    parser_list.add_argument('--detailed', action='store_true',
+                           help='Show detailed information including coverage stats')
+
+    # Run command
+    parser_run = subparsers.add_parser('run', help='Execute saved configuration')
+    parser_run.add_argument('config_name',
+                          help='Name of saved configuration to execute')
+    parser_run.add_argument('--input-csv', default='data/output.csv',
+                          help='Input CSV file (default: data/output.csv)')
+    parser_run.add_argument('--output-name',
+                          help='Override output name (default: use config name)')
+
     return parser
 
 
@@ -223,6 +252,180 @@ def handle_analyze_command(args) -> None:
         sys.exit(1)
 
 
+def handle_save_command(args) -> None:
+    """Handle the save command"""
+    logger = AppLogger.get_logger(__name__)
+    logger.info(f"Saving configuration: {args.name}")
+
+    try:
+        from common.configuration_manager import ConfigurationManager
+        from common.coverage_analyzer import CoverageAnalyzer
+        from dataclasses import asdict
+
+        config_manager = ConfigurationManager()
+        coverage_analyzer = CoverageAnalyzer(Path(args.input_csv))
+
+        print("✅ Validating configuration...")
+
+        # Validate configuration against dataset
+        coverage_result = coverage_analyzer.analyze_filter_combination(
+            args.sets, args.types, args.period
+        )
+
+        if coverage_result.coverage_percentage == 0:
+            print("❌ Configuration validation failed - no alignment possible")
+            print("💡 Use 'analyze' command to troubleshoot filter combination")
+            return
+
+        # Save configuration
+        success = config_manager.save_configuration(
+            name=args.name,
+            display_name=args.name.replace('_', ' ').title(),
+            filters={"sets": args.sets, "types": args.types, "period": args.period},
+            validation_metadata=asdict(coverage_result),
+            description=args.description
+        )
+
+        if success:
+            print(f"💾 Saved configuration: {args.name}")
+            print()
+            print("Configuration Details:")
+            print(f"├─ Sets: {args.sets}")
+            print(f"├─ Types: {args.types}")
+            print(f"├─ Period: {args.period}")
+            print(f"├─ Coverage: {coverage_result.coverage_percentage:.1%} perfect alignment" if coverage_result.coverage_percentage == 1.0 else f"├─ Coverage: {coverage_result.coverage_percentage:.1%} ({coverage_result.signatures_found}/{coverage_result.signatures_total} signatures)")
+            print(f"├─ Records: {coverage_result.records_aligned} aligned records expected")
+            print(f"└─ Description: {args.description or '(none)'}")
+            print()
+            print(f"💡 Use 'python workbench/alignment_workbench.py run {args.name}' to execute")
+        else:
+            print("❌ Failed to save configuration")
+            print("💡 Check configuration name format and try again")
+
+    except Exception as e:
+        logger.error(f"Save failed: {e}")
+        print(f"❌ Save failed: {e}")
+        sys.exit(1)
+
+
+def handle_list_command(args) -> None:
+    """Handle the list command"""
+    logger = AppLogger.get_logger(__name__)
+    logger.info("Listing saved configurations")
+
+    try:
+        from common.configuration_manager import ConfigurationManager
+
+        config_manager = ConfigurationManager()
+        configurations = config_manager.list_configurations(detailed=args.detailed)
+
+        if not configurations:
+            print("📋 No saved configurations found")
+            print("💡 Use 'save' command to create your first configuration")
+            return
+
+        if args.detailed:
+            print("📋 Saved Configurations (Detailed):\n")
+            for i, config in enumerate(configurations, 1):
+                print(f"[{i}] {config.name}")
+                print(f"├─ Command: --sets \"{config.filters['sets']}\" --types \"{config.filters['types']}\" --period \"{config.filters['period']}\"")
+                print(f"├─ Coverage: {config.validation_metadata['coverage_percentage']:.1%} ({config.validation_metadata['signatures_found']}/{config.validation_metadata['signatures_total']} signatures)")
+                print(f"├─ Records: {config.validation_metadata['records_aligned']} aligned, {config.validation_metadata['time_series_points']} time series points")
+                print(f"├─ Created: {config.usage_statistics['created_at']}")
+                print(f"├─ Last used: {config.usage_statistics['last_used'] or 'Never'}")
+                print(f"└─ Description: {config.description or '(none)'}")
+                print()
+        else:
+            print("📋 Saved Configurations:\n")
+            for i, config in enumerate(configurations, 1):
+                coverage = config.validation_metadata['coverage_percentage']
+                records = config.validation_metadata['records_aligned']
+                print(f"{i}. {config.name}")
+                print(f"   └─ {config.filters['sets']} {config.filters['types']}, {coverage:.0%} coverage, {records} records")
+                print()
+
+        print("💡 Use --detailed for coverage statistics and descriptions")
+        print("💡 Use 'run CONFIG_NAME' to execute a saved configuration")
+
+    except Exception as e:
+        logger.error(f"List failed: {e}")
+        print(f"❌ List failed: {e}")
+        sys.exit(1)
+
+
+def handle_run_command(args) -> None:
+    """Handle the run command"""
+    logger = AppLogger.get_logger(__name__)
+    logger.info(f"Running configuration: {args.config_name}")
+
+    try:
+        from common.configuration_manager import ConfigurationManager
+        from chart.index_aggregator import IndexAggregator
+        from datetime import datetime, timezone
+
+        config_manager = ConfigurationManager()
+        config = config_manager.load_configuration(args.config_name)
+
+        if not config:
+            print(f"❌ Configuration '{args.config_name}' not found")
+            print("💡 Use 'list' command to see available configurations")
+            return
+
+        print(f"🚀 Executing saved configuration: {args.config_name}")
+        print()
+        print("📋 Configuration:")
+        print(f"   Sets: {config.filters['sets']}")
+        print(f"   Types: {config.filters['types']}")
+        print(f"   Period: {config.filters['period']}")
+        print()
+
+        # Execute using existing IndexAggregator
+        aggregator = IndexAggregator()
+        output_name = args.output_name or args.config_name
+
+        # Run aggregation with saved filters
+        subset_df = aggregator.create_subset(
+            Path(args.input_csv),
+            config.filters['sets'],
+            config.filters['types'],
+            config.filters['period']
+        )
+
+        if not subset_df.empty:
+            # Generate time series
+            ts_df = aggregator.aggregate_time_series(subset_df, output_name)
+
+            # Save outputs
+            data_dir = Path("data")
+            data_dir.mkdir(exist_ok=True)
+            raw_output = data_dir / f"{output_name}_time_series_raw.csv"
+            ts_output = data_dir / f"{output_name}_time_series.csv"
+
+            aggregator.write_csv(subset_df.sort_values(['period_end_date', 'set']), raw_output)
+            aggregator.write_csv(ts_df, ts_output)
+
+            print("📊 Execution Results:")
+            print(f"   ✅ Alignment successful: {len(subset_df)} records processed")
+            print(f"   ✅ Time series generated: {len(ts_df)} data points")
+            print(f"   ✅ Files created:")
+            print(f"      • {raw_output} ({len(subset_df)} records)")
+            print(f"      • {ts_output} ({len(ts_df)} aggregated points)")
+            print()
+
+            # Update usage statistics
+            config_manager.update_usage_statistics(args.config_name)
+            print(f"🕐 Last used updated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
+        else:
+            print("❌ Execution failed: No data matches the configuration filters")
+            print("💡 The dataset may have changed since configuration was saved")
+            print("💡 Use 'analyze' command to check current filter compatibility")
+
+    except Exception as e:
+        logger.error(f"Run failed: {e}")
+        print(f"❌ Run failed: {e}")
+        sys.exit(1)
+
+
 def main() -> None:
     """Main entry point"""
     parser = create_parser()
@@ -237,15 +440,17 @@ def main() -> None:
         parser.print_help()
         sys.exit(1)
 
-    # One-liner command dispatch using dictionary mapping
-    command_handlers = {'discover': handle_discover_command, 'analyze': handle_analyze_command}
-    unimplemented = {'save', 'list', 'run'}
+    # Command dispatch using dictionary mapping
+    command_handlers = {
+        'discover': handle_discover_command, 
+        'analyze': handle_analyze_command,
+        'save': handle_save_command,
+        'list': handle_list_command,
+        'run': handle_run_command
+    }
 
     if args.command in command_handlers:
         command_handlers[args.command](args)
-    elif args.command in unimplemented:
-        print(f"❌ {args.command.title()} command not yet implemented\n💡 Coming in next building phase")
-        sys.exit(1)
     else:
         print(f"❌ Unknown command: {args.command}")
         parser.print_help()

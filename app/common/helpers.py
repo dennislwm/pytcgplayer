@@ -3,12 +3,44 @@ import json
 import re
 import time
 import random
-from datetime import datetime
+import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Tuple, Callable, Any, Optional
 from functools import wraps
 
 from common.logger import AppLogger
+
+
+class ConfigurationTestHelper:
+    """Helper class for Configuration Manager test utilities"""
+    
+    @staticmethod
+    def assert_config_equality(config, expected_name: str, expected_filters: Dict, expected_validation: Dict = None):
+        """One-liner configuration assertion"""
+        assert all([
+            config.name == expected_name,
+            config.filters == expected_filters,
+            not expected_validation or config.validation_metadata.get("coverage_percentage") == expected_validation.get("coverage_percentage")
+        ])
+    
+    @staticmethod
+    def create_test_config(name: str = "test_config", filters: Dict = None, validation: Dict = None) -> Dict:
+        """One-liner test configuration creation"""
+        return {
+            "name": name,
+            "display_name": f"Test {name.replace('_', ' ').title()}",
+            "description": f"Test description for {name}",
+            "filters": filters or {"sets": "SV*", "types": "Card", "period": "3M"},
+            "validation_metadata": validation or {"coverage_percentage": 1.0, "signatures_found": 10},
+            "usage_statistics": {"created_at": "2025-07-30T10:00:00Z", "last_used": None, "use_count": 0},
+            "system_metadata": {"created_by_version": "workbench-v1.0", "dataset_fingerprint": "abc123"}
+        }
+    
+    @staticmethod
+    def validate_usage_update(config, expected_count: int = 1):
+        """One-liner usage statistics validation"""
+        assert config.usage_statistics["use_count"] == expected_count and config.usage_statistics["last_used"] is not None
 
 
 class FileHelper:
@@ -237,3 +269,97 @@ class PerformanceHelper:
                 return result
             return wrapper
         return decorator
+
+
+class JsonConfigHelper:
+    """JSON configuration file operations with atomic writes and error handling"""
+    
+    @staticmethod
+    def load_json_config(file_path: Path, default_factory: Callable[[], Dict]) -> Dict[str, Any]:
+        """One-liner JSON config loading with fallback"""
+        try:
+            return json.load(open(file_path, 'r', encoding='utf-8')) if file_path.exists() else default_factory()
+        except (json.JSONDecodeError, Exception):
+            return default_factory()
+    
+    @staticmethod
+    def save_json_atomic(file_path: Path, data: Dict[str, Any]) -> bool:
+        """One-liner atomic JSON save with temp file"""
+        try:
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            temp_file = file_path.with_suffix('.tmp')
+            json.dump(data, open(temp_file, 'w', encoding='utf-8'), indent=2, ensure_ascii=False)
+            temp_file.replace(file_path)
+            return True
+        except Exception:
+            temp_file.unlink(missing_ok=True) if 'temp_file' in locals() else None
+            return False
+
+
+class ConfigurationFactory:
+    """Factory for FilterConfiguration objects with one-liner creation"""
+    
+    @staticmethod
+    def from_dict(config_data: Dict[str, Any]):
+        """One-liner FilterConfiguration creation from dictionary"""
+        from common.configuration_manager import FilterConfiguration
+        return FilterConfiguration(**{k: config_data[k] for k in 
+                                   ['name', 'display_name', 'description', 'filters', 
+                                    'validation_metadata', 'usage_statistics', 'system_metadata']})
+    
+    @staticmethod
+    def create_config_entry(name: str, display_name: str, filters: Dict, validation_metadata: Dict, 
+                          description: str, updating_existing: bool, existing_usage: Dict = None) -> Dict:
+        """One-liner config entry creation with usage preservation"""
+        now = datetime.now(timezone.utc).isoformat()
+        return {
+            "name": name, "display_name": display_name, "description": description,
+            "filters": filters, "validation_metadata": validation_metadata,
+            "usage_statistics": {
+                "created_at": existing_usage.get("created_at", now) if updating_existing and existing_usage else now,
+                "last_used": existing_usage.get("last_used") if updating_existing and existing_usage else None,
+                "use_count": existing_usage.get("use_count", 0) if updating_existing and existing_usage else 0,
+                "last_validation": now
+            },
+            "system_metadata": {
+                "created_by_version": "workbench-v1.0",
+                "dataset_fingerprint": f"sha256:{hashlib.sha256(open('data/output.csv', 'rb').read()).hexdigest()[:16]}" if Path("data/output.csv").exists() else "",
+                "validation_dataset_size": validation_metadata.get("signatures_total", 0)
+            }
+        }
+
+
+class ConfigurationManagerHelper:
+    """Helper methods for configuration management operations"""
+    
+    @staticmethod
+    def update_usage_stats(config: Dict, action: str = "use") -> Dict:
+        """One-liner usage statistics update"""
+        now = datetime.now(timezone.utc).isoformat()
+        if action == "use":
+            config["usage_statistics"].update({"last_used": now, "use_count": config["usage_statistics"].get("use_count", 0) + 1})
+        elif action == "validate":
+            config["usage_statistics"]["last_validation"] = now
+        return config
+    
+    @staticmethod
+    def validate_and_log(name: str, validation_func: Callable, logger) -> bool:
+        """One-liner validation with error logging"""
+        is_valid, errors = validation_func()
+        if not is_valid: 
+            logger.error(f"Validation failed for {name}: {errors}")
+        return is_valid
+
+
+def resilient_config_operation(operation_name: str):
+    """Decorator for consistent error handling in configuration operations"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except Exception as e:
+                self.logger.error(f"Failed to {operation_name}: {e}")
+                return False if func.__name__.startswith(('save', 'delete', 'update')) else None
+        return wrapper
+    return decorator

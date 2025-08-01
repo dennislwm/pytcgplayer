@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2025-08-01T13:35:48.573684+00:00",
+  "last_modified": "2025-08-01T13:52:28.892161+00:00",
+  "configurations": {
+    "sv_cards_test": {
+      "name": "sv_cards_test",
+      "display_name": "Sv Cards Test",
+      "description": "Test configuration for SV cards",
+      "filters": {
+        "sets": "SV*",
+        "types": "Card",
+        "period": "3M"
+      },
+      "validation_metadata": {
+        "filter_config": {
+          "sets": "SV*",
+          "types": "Card",
+          "period": "3M"
+        },
+        "coverage_percentage": 1.0,
+        "signatures_found": 13,
+        "signatures_total": 13,
+        "optimal_start_date": "2025-04-28",
+        "records_before_start": 0,
+        "records_aligned": 1248,
+        "time_series_points": 96,
+        "gap_fills_required": 0,
+        "missing_signatures": [],
+        "fallback_required": false,
+        "quality_score": 1.0
+      },
+      "usage_statistics": {
+        "created_at": "2025-08-01T13:36:04.184179+00:00",
+        "last_used": "2025-08-01T13:36:50.887212+00:00",
+        "use_count": 1,
+        "last_validation": "2025-08-01T13:36:04.184179+00:00"
+      },
+      "system_metadata": {
+        "created_by_version": "workbench-v1.0",
+        "dataset_fingerprint": "sha256:e0a6cf48642b0c46",
+        "validation_dataset_size": 13
+      }
+    },
+    "sealed": {
+      "name": "sealed",
+      "display_name": "Sealed",
+      "description": null,
+      "filters": {
+        "sets": "S*",
+        "types": "*Box",
+        "period": "3M"
+      },
+      "validation_metadata": {
+        "filter_config": {
+          "sets": "S*",
+          "types": "*Box",
+          "period": "3M"
+        },
+        "coverage_percentage": 1.0,
+        "signatures_found": 23,
+        "signatures_total": 23,
+        "optimal_start_date": "2025-05-02",
+        "records_before_start": 0,
+        "records_aligned": 2116,
+        "time_series_points": 92,
+        "gap_fills_required": 0,
+        "missing_signatures": [],
+        "fallback_required": false,
+        "quality_score": 1.0
+      },
+      "usage_statistics": {
+        "created_at": "2025-08-01T13:52:28.891474+00:00",
+        "last_used": null,
+        "use_count": 0,
+        "last_validation": "2025-08-01T13:52:28.891474+00:00"
+      },
+      "system_metadata": {
+        "created_by_version": "workbench-v1.0",
+        "dataset_fingerprint": "sha256:e0a6cf48642b0c46",
+        "validation_dataset_size": 23
+      }
+    }
+  }
+}

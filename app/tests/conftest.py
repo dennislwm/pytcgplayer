@@ -278,6 +278,54 @@ def sv_card_filter_config():
     return {"sets": "SV*", "types": "Card", "period": "3M"}
 
 
+# Configuration Manager Test Fixtures
+
+@pytest.fixture
+def config_temp_file():
+    """Temporary configuration file for ConfigurationManager tests"""
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        temp_path = Path(f.name)
+    yield temp_path
+    if temp_path.exists():
+        temp_path.unlink()
+
+
+@pytest.fixture
+def config_manager(config_temp_file):
+    """ConfigurationManager instance with temporary file"""
+    from common.configuration_manager import ConfigurationManager
+    return ConfigurationManager(config_temp_file)
+
+
+@pytest.fixture
+def sample_filter_config():
+    """Sample filter configuration for testing"""
+    return {"sets": "SV*", "types": "Card", "period": "3M"}
+
+
+@pytest.fixture
+def sample_validation_metadata():
+    """Sample validation metadata for configuration testing"""
+    return {
+        "coverage_percentage": 1.0,
+        "signatures_found": 13,
+        "signatures_total": 13,
+        "optimal_start_date": "2025-04-28",
+        "records_aligned": 1209,
+        "time_series_points": 93
+    }
+
+
+@pytest.fixture
+def existing_usage_stats():
+    """Sample existing usage statistics for testing updates"""
+    return {
+        "created_at": "2025-07-29T10:00:00Z",
+        "last_used": "2025-07-30T10:00:00Z",
+        "use_count": 5
+    }
+
+
 @pytest.fixture
 def mixed_generation_filter_config():
     """Mixed generation filter configuration for failure scenarios"""
