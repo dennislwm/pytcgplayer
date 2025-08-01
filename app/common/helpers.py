@@ -174,3 +174,66 @@ class DataProcessor:
     def get_current_timestamp() -> str:
         """Get current timestamp in YYYY-MM-DD HH:MM:SS format"""
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+class CoverageResultFactory:
+    """Factory class for creating CoverageResult objects with common patterns"""
+
+    @staticmethod
+    def create_empty(filter_config: Dict[str, str]):
+        """One-liner empty coverage result creation"""
+        from common.coverage_analyzer import CoverageResult  # Import here to avoid circular dependency
+        return CoverageResult(filter_config=filter_config, coverage_percentage=0.0, signatures_found=0,
+                            signatures_total=0, optimal_start_date=None, records_before_start=0,
+                            records_aligned=0, time_series_points=0, gap_fills_required=0,
+                            missing_signatures=[], fallback_required=False, quality_score=0.0)
+
+    @staticmethod
+    def create_from_metrics(filter_config: Dict[str, str], metrics: Dict[str, Any]):
+        """One-liner coverage result from alignment metrics"""
+        from common.coverage_analyzer import CoverageResult
+        return CoverageResult(filter_config=filter_config, **{k: metrics[k] for k in
+                            ['coverage_percentage', 'signatures_found', 'signatures_total', 'optimal_start_date',
+                             'records_before_start', 'records_aligned', 'time_series_points', 'gap_fills_required',
+                             'missing_signatures', 'fallback_required', 'quality_score']})
+
+
+class FilterValidationHelper:
+    """One-liner filter validation utilities for coverage analysis"""
+
+    @staticmethod
+    def is_valid_filter_combination(sets: str, types: str) -> bool:
+        """One-liner validation check for filter combinations"""
+        from chart.index_aggregator import FilterValidator
+        return bool(FilterValidator.expand_set_pattern(sets) and FilterValidator.expand_type_pattern(types))
+
+    @staticmethod
+    def get_default_configurations() -> List[Dict[str, str]]:
+        """One-liner default configuration patterns for fallback recommendations"""
+        return [{"sets": "SV*", "types": "Card", "period": "3M", "description": "SV Cards (Recommended)"},
+                {"sets": "SV*", "types": "*Box", "period": "3M", "description": "SV Boxes (Alternative)"},
+                {"sets": "SWSH*", "types": "Card", "period": "3M", "description": "SWSH Cards (Alternative)"}]
+
+    @staticmethod
+    def generate_description(combo: Dict[str, str], coverage_percentage: float) -> str:
+        """One-liner description generation for filter combinations"""
+        set_desc, type_desc = (combo["sets"].replace("*", "").replace(",", "/") if combo["sets"] != "*" else "All",
+                               combo["types"].replace("*", "").replace(",", "/") if combo["types"] != "*" else "All Types")
+        quality = "Complete" if coverage_percentage == 1.0 else "Excellent" if coverage_percentage >= 0.95 else "High Quality" if coverage_percentage >= 0.90 else "Good"
+        return f"{set_desc} {type_desc} ({quality})"
+
+
+class PerformanceHelper:
+    """Performance monitoring and logging utilities"""
+
+    @staticmethod
+    def create_performance_decorator(method_name: str):
+        """One-liner performance logging decorator factory"""
+        def decorator(func):
+            @wraps(func)
+            def wrapper(self, *args, **kwargs):
+                start_time, result = time.time(), func(self, *args, **kwargs)
+                self.logger.info(f"{method_name} completed in {time.time() - start_time:.2f}s")
+                return result
+            return wrapper
+        return decorator

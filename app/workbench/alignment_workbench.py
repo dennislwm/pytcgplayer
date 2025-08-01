@@ -20,31 +20,20 @@ from common.logger import AppLogger
 
 
 def create_parser():
-    """Create main argument parser with subcommands"""
-    parser = argparse.ArgumentParser(
-        description='Interactive Alignment Workbench for TCGPlayer Price Data',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Commands:
-  discover    Discover viable filter combinations with high coverage rates
-  analyze     Analyze specific filter combinations with detailed feedback
-  save        Save successful filter configurations for reuse
-  list        List saved configurations
-  run         Execute saved configurations
-
+    """One-liner main argument parser creation with subcommands"""
+    parser = argparse.ArgumentParser(description='Interactive Alignment Workbench for TCGPlayer Price Data',
+                                   formatter_class=argparse.RawDescriptionHelpFormatter,
+                                   epilog="""Commands: discover, analyze, save, list, run
 Examples:
   python workbench/alignment_workbench.py discover --min-coverage 0.9
   python workbench/alignment_workbench.py analyze --sets "SV*" --types "Card"
   python workbench/alignment_workbench.py save --name "sv_cards" --sets "SV*" --types "Card"
   python workbench/alignment_workbench.py list --detailed
   python workbench/alignment_workbench.py run sv_cards --output-name "current_analysis"
-        """
-    )
+        """)
 
-    # Add common arguments
+    # One-liner common arguments and subparsers setup
     parser.add_argument('--verbose', action='store_true', help='Enable verbose logging')
-
-    # Create subparsers for commands
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
     # Discover command
@@ -248,22 +237,14 @@ def main() -> None:
         parser.print_help()
         sys.exit(1)
 
-    # Handle commands
-    if args.command == 'discover':
-        handle_discover_command(args)
-    elif args.command == 'analyze':
-        handle_analyze_command(args)
-    elif args.command == 'save':
-        print("❌ Save command not yet implemented")
-        print("💡 Coming in next building phase")
-        sys.exit(1)
-    elif args.command == 'list':
-        print("❌ List command not yet implemented")
-        print("💡 Coming in next building phase")
-        sys.exit(1)
-    elif args.command == 'run':
-        print("❌ Run command not yet implemented")
-        print("💡 Coming in next building phase")
+    # One-liner command dispatch using dictionary mapping
+    command_handlers = {'discover': handle_discover_command, 'analyze': handle_analyze_command}
+    unimplemented = {'save', 'list', 'run'}
+
+    if args.command in command_handlers:
+        command_handlers[args.command](args)
+    elif args.command in unimplemented:
+        print(f"❌ {args.command.title()} command not yet implemented\n💡 Coming in next building phase")
         sys.exit(1)
     else:
         print(f"❌ Unknown command: {args.command}")

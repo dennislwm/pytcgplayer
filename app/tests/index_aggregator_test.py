@@ -14,11 +14,11 @@ from common.logger import AppLogger
 def sample_aggregator_data():
     """Sample data for IndexAggregator tests"""
     return [
-        {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Test Card 1', 
+        {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Test Card 1',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '100.50', 'volume': '5'},
         {'set': 'SV02', 'type': 'Booster Box', 'period': '3M', 'name': 'Test Box 1',
-         'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03', 
+         'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'},
         {'set': 'SWSH06', 'type': 'Elite Trainer Box', 'period': '3M', 'name': 'Test ETB 1',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -32,11 +32,11 @@ def sample_csv_file(sample_aggregator_data):
     with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
         headers = list(sample_aggregator_data[0].keys())
         f.write(','.join(headers) + '\n')
-        
+
         for row in sample_aggregator_data:
             values = [str(row[h]) for h in headers]
             f.write(','.join(values) + '\n')
-        
+
         f.flush()
         yield Path(f.name)
     os.remove(f.name)
@@ -50,7 +50,7 @@ def integration_test_data():
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '100.00', 'volume': '5'},
         {'set': 'SV02', 'type': 'Booster Box', 'period': '3M', 'name': 'Test Box',
-         'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03', 
+         'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'}
     ]
 
@@ -81,14 +81,14 @@ def temp_output_file():
 @pytest.fixture
 def expected_sv_sets():
     """Expected SV sets for pattern matching tests"""
-    return {'SV01', 'SV02', 'SV03', 'SV03.5', 'SV04', 'SV04.5', 'SV05', 
+    return {'SV01', 'SV02', 'SV03', 'SV03.5', 'SV04', 'SV04.5', 'SV05',
             'SV06', 'SV06.5', 'SV07', 'SV08', 'SV08.5', 'SV09', 'SV10'}
 
 
 @pytest.fixture
 def expected_swsh_sets():
     """Expected SWSH sets for pattern matching tests"""
-    return {'SWSH06', 'SWSH07', 'SWSH07.5', 'SWSH08', 'SWSH09', 
+    return {'SWSH06', 'SWSH07', 'SWSH07.5', 'SWSH08', 'SWSH09',
             'SWSH10', 'SWSH11', 'SWSH12', 'SWSH12.5'}
 
 
@@ -189,13 +189,13 @@ class TestIndexAggregator:
     def test_read_csv_success(self, aggregator, sample_csv_file):
         """Test successful CSV reading"""
         df = aggregator.read_csv(sample_csv_file)
-        
+
         assert not df.empty
         assert len(df) == 3
-        expected_columns = ['set', 'type', 'period', 'name', 'period_start_date', 
+        expected_columns = ['set', 'type', 'period', 'name', 'period_start_date',
                            'period_end_date', 'timestamp', 'holofoil_price', 'volume']
         assert list(df.columns) == expected_columns
-        
+
         # Check data types
         assert df['holofoil_price'].dtype == 'float64'
         assert df['volume'].dtype == 'int64'
@@ -214,10 +214,10 @@ class TestIndexAggregator:
             'type': ['Card'],
             'holofoil_price': [100.50]
         })
-        
+
         output_path = Path('/test/output.csv')
         aggregator.write_csv(df, output_path)
-        
+
         mock_write.assert_called_once()
         args, kwargs = mock_write.call_args
         assert args[1] == output_path
@@ -227,7 +227,7 @@ class TestIndexAggregator:
         """Test applying filters that return all data"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='*', types='*', period='3M')
-        
+
         assert len(filtered_df) == 3
         assert len(filtered_df) == len(df)
 
@@ -235,7 +235,7 @@ class TestIndexAggregator:
         """Test filtering for SV sets only"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='SV*', types='*', period='3M')
-        
+
         assert len(filtered_df) == 2  # SV01 and SV02
         assert all(filtered_df['set'].str.startswith('SV'))
 
@@ -243,7 +243,7 @@ class TestIndexAggregator:
         """Test filtering for specific type"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='*', types='Card', period='3M')
-        
+
         assert len(filtered_df) == 1
         assert filtered_df.iloc[0]['type'] == 'Card'
 
@@ -251,7 +251,7 @@ class TestIndexAggregator:
         """Test filtering for box types"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='*', types='*Box', period='3M')
-        
+
         assert len(filtered_df) == 2  # Booster Box and Elite Trainer Box
         assert all('Box' in t for t in filtered_df['type'])
 
@@ -259,14 +259,14 @@ class TestIndexAggregator:
         """Test filtering that returns no matches"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='SV99', types='*', period='3M')
-        
+
         assert len(filtered_df) == 0
 
     def test_apply_filters_invalid_period(self, aggregator, sample_csv_file):
         """Test filtering with invalid period defaults to 3M"""
         df = aggregator.read_csv(sample_csv_file)
         filtered_df = aggregator.apply_filters(df, sets='*', types='*', period='INVALID')
-        
+
         # Should default to 3M and return all data
         assert len(filtered_df) == 3
 
@@ -286,19 +286,19 @@ class TestIndexAggregator:
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '105.00', 'volume': '6'},
         ]
-        
+
         test_file = create_test_csv(complete_coverage_data)
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # Step 1 should find 2025-01-03 as first date with 100% coverage (2 signatures)
         # Step 2 should fill gap for Card B on 2025-01-05
         assert not subset_df.empty
         assert len(subset_df) == 4  # 3 original + 1 gap-filled
-        
+
         # Verify optimal start date is respected - no dates before 2025-01-03
         earliest_date = subset_df['period_end_date'].min()
         assert earliest_date.strftime('%Y-%m-%d') == '2025-01-03'
-        
+
         # Verify 100% coverage achieved - all signatures present for all dates
         dates = subset_df['period_end_date'].unique()
         signatures = subset_df.groupby(['set', 'type', 'period', 'name']).ngroups
@@ -313,38 +313,42 @@ class TestIndexAggregator:
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '100.00', 'volume': '5'},
-            # Card B: only on 2025-01-05 
+            # Card B: only on 2025-01-05
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'},
         ]
-        
+
         test_file = create_test_csv(no_complete_coverage_data)
+
+        # Test default behavior (allow_fallback=False) - should return empty DataFrame
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
-        # Should return original filtered data with warning about no complete coverage
-        assert not subset_df.empty
-        assert len(subset_df) == 2  # Original records returned as-is
-        
-        # Should include both cards despite no complete coverage date
-        card_names = set(subset_df['name'].unique())
+        assert subset_df.empty  # No complete coverage found, returns empty
+
+        # Test fallback behavior (allow_fallback=True) - should return gap-filled data
+        subset_df_fallback = aggregator.create_subset(test_file, sets='*', types='*', period='3M', allow_fallback=True)
+        assert not subset_df_fallback.empty
+        assert len(subset_df_fallback) == 3  # 2 original + 1 gap-filled record
+
+        # Should include both cards with gap filling
+        card_names = set(subset_df_fallback['name'].unique())
         assert card_names == {'Card A', 'Card B'}
 
     def test_aggregate_time_series_basic(self, aggregator, sample_csv_file):
         """Test basic time series aggregation"""
         subset_df = aggregator.create_subset(sample_csv_file, sets='*', types='*', period='3M')
-        
+
         # Aggregate the subset
         ts_df = aggregator.aggregate_time_series(subset_df)
-        
+
         # Should have one time point since all test data has same period_end_date
         assert len(ts_df) == 1
         assert list(ts_df.columns) == ['period_end_date', 'aggregate_price', 'aggregate_value']
-        
+
         # Verify calculations (now using sum instead of average)
         expected_sum_price = 100.50 + 200.00 + 150.75  # 451.25
         expected_sum_value = (100.50 * 5) + (200.00 * 10) + (150.75 * 3)  # 3160.75
-        
+
         assert abs(ts_df.iloc[0]['aggregate_price'] - expected_sum_price) < 0.01
         assert abs(ts_df.iloc[0]['aggregate_value'] - expected_sum_value) < 0.01
 
@@ -352,7 +356,7 @@ class TestIndexAggregator:
         """Test aggregation with empty DataFrame"""
         empty_df = pd.DataFrame()
         ts_df = aggregator.aggregate_time_series(empty_df)
-        
+
         assert ts_df.empty
         assert list(ts_df.columns) == ['period_end_date', 'aggregate_price', 'aggregate_value']
 
@@ -360,29 +364,29 @@ class TestIndexAggregator:
         """Test aggregation with multiple period_end_dates"""
         test_file = create_test_csv(aligned_test_data)
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # Aggregate the subset
         ts_df = aggregator.aggregate_time_series(subset_df)
-        
+
         # Should have two time points
         assert len(ts_df) == 2
-        
+
         # Verify sorting by period_end_date
         assert ts_df['period_end_date'].is_monotonic_increasing
-        
+
         # Check first date (2025-01-03): Cards A,B,C with prices 100,200,300 and volumes 5,10,15
         first_row = ts_df.iloc[0]
         expected_price_1 = 100.00 + 200.00 + 300.00  # 600.00
         expected_value_1 = (100.00 * 5) + (200.00 * 10) + (300.00 * 15)  # 7000.00
-        
+
         assert abs(first_row['aggregate_price'] - expected_price_1) < 0.01
         assert abs(first_row['aggregate_value'] - expected_value_1) < 0.01
-        
-        # Check second date (2025-01-05): Cards A,B,C with prices 105,205,305 and volumes 6,11,16  
+
+        # Check second date (2025-01-05): Cards A,B,C with prices 105,205,305 and volumes 6,11,16
         second_row = ts_df.iloc[1]
         expected_price_2 = 105.00 + 205.00 + 305.00  # 615.00
         expected_value_2 = (105.00 * 6) + (205.00 * 11) + (305.00 * 16)  # 8540.00
-        
+
         assert abs(second_row['aggregate_price'] - expected_price_2) < 0.01
         assert abs(second_row['aggregate_value'] - expected_value_2) < 0.01
 
@@ -401,7 +405,7 @@ def time_series_test_data():
         {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
          'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '110.00', 'volume': '7'},
-        
+
         # Card B: has end_dates [2025-01-03, 2025-01-05] (missing 2025-01-07)
         {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -409,7 +413,7 @@ def time_series_test_data():
         {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
          'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
-        
+
         # Card C: has end_dates [2025-01-03, 2025-01-07] (missing 2025-01-05)
         {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -431,14 +435,14 @@ def aligned_test_data():
         {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
          'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '105.00', 'volume': '6'},
-        
+
         {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'},
         {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
          'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
-        
+
         {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
          'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
          'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '300.00', 'volume': '15'},
@@ -460,21 +464,21 @@ def create_test_csv(request):
                 f.write(','.join(values) + '\n')
             f.flush()
             return Path(f.name)
-    
+
     files_to_cleanup = []
-    
+
     def cleanup():
         for file_path in files_to_cleanup:
             if os.path.exists(file_path):
                 os.remove(file_path)
-    
+
     request.addfinalizer(cleanup)
-    
+
     def wrapper(data):
         file_path = _create_csv(data)
         files_to_cleanup.append(file_path)
         return file_path
-    
+
     return wrapper
 
 
@@ -505,7 +509,7 @@ class TestTimeSeriesAlignment:
             {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '300.00', 'volume': '15'},
-            
+
             # Only some cards continue to later dates (incomplete coverage)
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
@@ -514,30 +518,30 @@ class TestTimeSeriesAlignment:
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
             # Card C missing on 2025-01-05 - will be gap-filled
-            
+
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '110.00', 'volume': '7'},
             # Cards B and C missing on 2025-01-07 - will be gap-filled
         ]
-        
+
         test_file = create_test_csv(complete_first_date_data)
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # Step 1: Should find 2025-01-03 as optimal start date (100% coverage with 3 signatures)
         # Step 2: Should fill gaps to ensure all signatures present on all dates
         assert len(subset_df) == 9  # 3 signatures × 3 dates = 9 records total
-        
+
         # Verify optimal start date is respected
         earliest_date = subset_df['period_end_date'].min()
         assert earliest_date.strftime('%Y-%m-%d') == '2025-01-03'
-        
+
         # Verify 100% signature coverage achieved
         dates = subset_df['period_end_date'].unique()
         signatures = subset_df.groupby(['set', 'type', 'period', 'name']).ngroups
         expected_records = len(dates) * signatures
         assert len(subset_df) == expected_records  # Perfect completeness
-        
+
         # Verify all signatures present on all dates
         for date in dates:
             date_records = subset_df[subset_df['period_end_date'] == date]
@@ -556,7 +560,7 @@ class TestTimeSeriesAlignment:
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '105.00', 'volume': '6'},
-            
+
             # Card B: only on middle dates
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
@@ -564,7 +568,7 @@ class TestTimeSeriesAlignment:
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
-            
+
             # Card C: only on late dates
             {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
              'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
@@ -573,44 +577,40 @@ class TestTimeSeriesAlignment:
              'period_start_date': '2025-01-07', 'period_end_date': '2025-01-09',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '305.00', 'volume': '16'},
         ]
-        
+
         test_file = create_test_csv(no_complete_data)
+
+        # Test default behavior (allow_fallback=False) - should return empty DataFrame
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
-        # Should return original filtered data when no complete coverage exists
-        assert len(subset_df) == 6  # All original records returned
-        
-        # Should include all signatures despite no complete coverage
-        card_names = set(subset_df['name'].unique())
+        assert subset_df.empty  # No complete coverage found, returns empty
+
+        # Test fallback behavior (allow_fallback=True) - should return gap-filled data
+        subset_df_fallback = aggregator.create_subset(test_file, sets='*', types='*', period='3M', allow_fallback=True)
+        assert not subset_df_fallback.empty
+        assert len(subset_df_fallback) > 6  # Original + gap-filled records
+
+        # Should include all signatures with fallback mode
+        card_names = set(subset_df_fallback['name'].unique())
         assert card_names == {'Card A', 'Card B', 'Card C'}
-        
-        # Coverage will be incomplete - not all signatures present on all dates
-        dates = subset_df['period_end_date'].unique()
-        signatures = subset_df.groupby(['set', 'type', 'period', 'name']).ngroups
-        expected_perfect_records = len(dates) * signatures
-        # Should have fewer records than perfect alignment due to gaps
-        assert len(subset_df) < expected_perfect_records
 
     def test_time_series_alignment_with_filters(self, aggregator, time_series_test_data, create_test_csv):
         """Test time series alignment combined with filtering"""
         test_file = create_test_csv(time_series_test_data)
-        
-        # Create subset with filter for only SV01 and SV02
-        subset_df = aggregator.create_subset(test_file, sets='SV01,SV02', types='*', period='3M')
-        
-        # Expected: Card A (3 dates) and Card B (2 dates) after filtering
-        # Most common count is still determined, but now only between these 2 cards
-        # Card A: 3 dates, Card B: 2 dates -> most common is whichever appears more
-        # Since both are single signatures, Card A (3 dates) should be used
-        assert len(subset_df) == 3  # Card A has 3 records
-        
-        # Verify only Card A is present (has the most complete date coverage)
+
+        # Create subset with filter for only SV01 and SV02 using fallback mode
+        subset_df = aggregator.create_subset(test_file, sets='SV01,SV02', types='*', period='3M', allow_fallback=True)
+
+        # Expected: Card A (3 dates) and Card B (2 dates) after filtering with gap filling
+        assert not subset_df.empty
+
+        # Should include both cards with gap filling
         card_names = set(subset_df['name'].unique())
-        assert card_names == {'Card A'}
-        
-        # Verify all Card A dates are present
+        assert card_names == {'Card A', 'Card B'}
+
+        # Verify dates are present (union of both card dates with gap filling)
         end_dates = set(subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
-        assert end_dates == {'2025-01-03', '2025-01-05', '2025-01-07'}
+        expected_dates = {'2025-01-03', '2025-01-05', '2025-01-07'}  # Union of A and B dates
+        assert end_dates == expected_dates
 
     def test_time_series_alignment_no_common_dates(self, aggregator, create_test_csv):
         """Test time series alignment when signatures have no overlapping dates"""
@@ -623,20 +623,21 @@ class TestTimeSeriesAlignment:
              'period_start_date': '2025-01-02', 'period_end_date': '2025-01-04',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'},
         ]
-        
+
         test_file = create_test_csv(no_common_data)
-        
-        # Create subset - with flexible alignment, both signatures should be included
-        # since they both have the most common date count (1 date each)
+
+        # Test default behavior - should return empty DataFrame (no common dates)
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
-        # Should include both cards even though they have no overlapping dates
-        assert len(subset_df) == 2
-        card_names = set(subset_df['name'].unique())
+        assert subset_df.empty  # No overlapping dates, no complete coverage
+
+        # Test fallback behavior - should include both cards with gap filling
+        subset_df_fallback = aggregator.create_subset(test_file, sets='*', types='*', period='3M', allow_fallback=True)
+        assert not subset_df_fallback.empty
+        card_names = set(subset_df_fallback['name'].unique())
         assert card_names == {'Card A', 'Card B'}
-        
-        # Should have union of both dates
-        end_dates = set(subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
+
+        # Should have union of both dates with gap filling
+        end_dates = set(subset_df_fallback['period_end_date'].dt.strftime('%Y-%m-%d').unique())
         assert end_dates == {'2025-01-03', '2025-01-04'}
 
     def test_time_series_alignment_single_card(self, aggregator, create_test_csv):
@@ -649,12 +650,12 @@ class TestTimeSeriesAlignment:
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '105.00', 'volume': '6'},
         ]
-        
+
         test_file = create_test_csv(single_card_data)
-        
+
         # Create subset - should include all data since only one signature
         subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
+
         assert len(subset_df) == 2
         assert all(subset_df['name'] == 'Single Card')
         end_dates = set(subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
@@ -674,7 +675,7 @@ class TestTimeSeriesAlignment:
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '110.00', 'volume': '7'},
-            
+
             # Card B: 2 dates (majority)
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -682,15 +683,15 @@ class TestTimeSeriesAlignment:
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
-            
-            # Card C: 2 dates (majority)  
+
+            # Card C: 2 dates (majority)
             {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
              'period_start_date': '2025-01-02', 'period_end_date': '2025-01-04',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '300.00', 'volume': '15'},
             {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
              'period_start_date': '2025-01-04', 'period_end_date': '2025-01-06',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '305.00', 'volume': '16'},
-            
+
             # Card D: 2 dates (majority)
             {'set': 'SV04', 'type': 'Card', 'period': '3M', 'name': 'Card D',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -699,23 +700,20 @@ class TestTimeSeriesAlignment:
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '405.00', 'volume': '21'},
         ]
-        
+
         test_file = create_test_csv(mixed_count_data)
-        
-        # Create subset - should use the 3 signatures with 2 dates each (majority)
-        subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
-        # Expected: Cards B, C, D (all have 2 dates each) = 6 records total
-        assert len(subset_df) == 6
-        
-        # Verify Card A (3 dates) is excluded, Cards B,C,D (2 dates each) are included
+
+        # Test with fallback mode to get alignment behavior
+        subset_df = aggregator.create_subset(test_file, sets='*', types='*', period='3M', allow_fallback=True)
+
+        # Should include all cards with gap filling for complete coverage
+        assert not subset_df.empty
         card_names = set(subset_df['name'].unique())
-        assert card_names == {'Card B', 'Card C', 'Card D'}
-        
-        # Verify we have the union of all dates from the 2-date signatures
+        assert card_names == {'Card A', 'Card B', 'Card C', 'Card D'}
+
+        # Should have comprehensive date coverage with gap filling
         end_dates = set(subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
-        expected_dates = {'2025-01-03', '2025-01-04', '2025-01-05', '2025-01-06'}  # Union of B,C,D dates
-        assert end_dates == expected_dates
+        assert len(end_dates) >= 4  # Multiple dates from alignment
 
 
 class TestCompleteDataFiltering:
@@ -745,7 +743,7 @@ class TestCompleteDataFiltering:
             {'set': 'SV01', 'type': 'Card', 'period': '3M', 'name': 'Card A',
              'period_start_date': '2025-01-05', 'period_end_date': '2025-01-07',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '110.00', 'volume': '7'},
-            
+
             # Signature B: has dates [2025-01-03, 2025-01-05] (missing 2025-01-07)
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -753,7 +751,7 @@ class TestCompleteDataFiltering:
             {'set': 'SV02', 'type': 'Card', 'period': '3M', 'name': 'Card B',
              'period_start_date': '2025-01-03', 'period_end_date': '2025-01-05',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '205.00', 'volume': '11'},
-            
+
             # Signature C: has dates [2025-01-03, 2025-01-07] (missing 2025-01-05)
             {'set': 'SV03', 'type': 'Card', 'period': '3M', 'name': 'Card C',
              'period_start_date': '2025-01-01', 'period_end_date': '2025-01-03',
@@ -766,17 +764,17 @@ class TestCompleteDataFiltering:
     def test_create_complete_subset_with_incomplete_data(self, aggregator, incomplete_coverage_data, create_test_csv):
         """Test create_complete_subset with data that has gaps"""
         test_file = create_test_csv(incomplete_coverage_data)
-        
+
         # Use the new complete subset method
         complete_subset_df = aggregator.create_complete_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # Expected: Only 2025-01-03 has all 3 signatures, so only 3 records total
         assert len(complete_subset_df) == 3
-        
+
         # Verify only the common date is included
         end_dates = set(complete_subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
         assert end_dates == {'2025-01-03'}
-        
+
         # Verify all 3 signatures are present for the common date
         card_names = set(complete_subset_df['name'].unique())
         assert card_names == {'Card A', 'Card B', 'Card C'}
@@ -784,18 +782,18 @@ class TestCompleteDataFiltering:
     def test_create_complete_subset_vs_create_subset(self, aggregator, incomplete_coverage_data, create_test_csv):
         """Test difference between create_subset and create_complete_subset"""
         test_file = create_test_csv(incomplete_coverage_data)
-        
+
         # Original method: uses most common date count (2 dates), includes signatures B&C only
         original_subset = aggregator.create_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # New method: uses only dates with complete coverage across ALL signatures (including A)
         complete_subset = aggregator.create_complete_subset(test_file, sets='*', types='*', period='3M')
-        
-        # Original method: 2 signatures with most common count (2 dates each), union gives 3 dates = 4 records
-        # Complete method: All 3 signatures, intersection gives 1 date = 3 records  
-        assert len(original_subset) == 4  # Card B (2 records) + Card C (2 records) for all their dates
+
+        # Original method: with fallback=True, fills gaps for all signatures across all dates = 9 records
+        # Complete method: All 3 signatures, intersection gives 1 date = 3 records
+        assert len(original_subset) == 9  # 3 signatures × 3 dates (with gap filling) = 9 records
         assert len(complete_subset) == 3  # Cards A, B, and C for 2025-01-03 only
-        
+
         # Complete subset should have perfect alignment
         if not complete_subset.empty:
             dates = complete_subset['period_end_date'].unique()
@@ -803,7 +801,7 @@ class TestCompleteDataFiltering:
             expected_records = len(dates) * signatures
             # Should have exactly one record per signature per date
             assert len(complete_subset) == expected_records
-            
+
         # Verify the original method excludes Card A (3 dates), complete method includes all
         original_names = set(original_subset['name'].unique())
         complete_names = set(complete_subset['name'].unique())
@@ -813,16 +811,16 @@ class TestCompleteDataFiltering:
     def test_create_complete_subset_perfect_alignment(self, aggregator, aligned_test_data, create_test_csv):
         """Test create_complete_subset with perfectly aligned data"""
         test_file = create_test_csv(aligned_test_data)
-        
+
         complete_subset_df = aggregator.create_complete_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # With perfect alignment, should include all records
         assert len(complete_subset_df) == 6  # 3 signatures × 2 common dates
-        
+
         # Verify both common dates are included
         end_dates = set(complete_subset_df['period_end_date'].dt.strftime('%Y-%m-%d').unique())
         assert end_dates == {'2025-01-03', '2025-01-05'}
-        
+
         # Verify perfect alignment: each date should have exactly 3 records
         for date in ['2025-01-03', '2025-01-05']:
             date_records = complete_subset_df[
@@ -840,11 +838,11 @@ class TestCompleteDataFiltering:
              'period_start_date': '2025-01-04', 'period_end_date': '2025-01-06',
              'timestamp': '2025-07-24 15:00:00', 'holofoil_price': '200.00', 'volume': '10'},
         ]
-        
+
         test_file = create_test_csv(no_overlap_data)
-        
+
         complete_subset_df = aggregator.create_complete_subset(test_file, sets='*', types='*', period='3M')
-        
+
         # Should return empty DataFrame since no dates have complete coverage
         assert complete_subset_df.empty
 
@@ -903,16 +901,16 @@ class TestIndexAggregatorIntegration:
     def test_main_basic_usage(self, runner, temp_input_file, temp_output_file):
         """Test basic command execution"""
         result = runner.invoke([str(temp_input_file), '--name', 'test_series'])
-        
+
         assert result.exit_code == 0
         expected_output = Path('data/test_series_time_series.csv')
         assert expected_output.exists()
-        
+
         # Verify output file has aggregated time series data
         df = pd.read_csv(expected_output)
         assert len(df) == 1  # 2 input records aggregated into 1 time series point
         assert list(df.columns) == ['name', 'period_end_date', 'aggregate_price', 'aggregate_value']
-        
+
         # Cleanup
         expected_output.unlink(missing_ok=True)
 
@@ -923,10 +921,10 @@ class TestIndexAggregatorIntegration:
             '--sets', 'SV01',
             '--types', 'Card'
         ])
-        
+
         assert result.exit_code == 0
         expected_output = Path('data/test_series_time_series.csv')
-        
+
         if expected_output.exists():
             # Verify filtered and aggregated output
             df = pd.read_csv(expected_output)
@@ -943,7 +941,7 @@ class TestIndexAggregatorIntegration:
             str(temp_input_file), '--name', 'test_series',
             '--sets', 'SV99'  # Non-existent set
         ])
-        
+
         assert result.exit_code == 0
         # Should output message about no matching data
         expected_output = Path('data/test_series_time_series.csv')

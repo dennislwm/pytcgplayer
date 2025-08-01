@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from chart.index_aggregator import IndexAggregator, FilterValidator
 from common.time_series_aligner import TimeSeriesAligner
 from common.logger import AppLogger
+from common.helpers import CoverageResultFactory, FilterValidationHelper
 
 
 def _log_performance(method_name: str):
@@ -74,10 +75,17 @@ class CoverageAnalyzer:
     without modifying any core alignment logic.
     """
 
-    def __init__(self, input_csv: Path = Path("data/output.csv")):
+    def __init__(
+        self,
+        input_csv: Path = Path("data/output.csv"),
+        aggregator: Optional[IndexAggregator] = None,
+        aligner: Optional[TimeSeriesAligner] = None,
+        validator: Optional[FilterValidator] = None
+    ):
         self.input_csv = input_csv
-        self.aggregator = IndexAggregator()
-        self.aligner = TimeSeriesAligner()
+        self.aggregator = aggregator or IndexAggregator()
+        self.aligner = aligner or TimeSeriesAligner()
+        self.validator = validator or FilterValidator()
         self.logger = AppLogger.get_logger(__name__)
         self._dataset_cache: Optional[pd.DataFrame] = None
         self._signature_cache: Optional[Set[str]] = None
@@ -109,26 +117,10 @@ class CoverageAnalyzer:
         try:
             self.logger.info(f"Analyzing filter combination: sets={sets}, types={types}, period={period}")
 
-            # Validate filters using existing FilterValidator
-            valid_sets = FilterValidator.expand_set_pattern(sets)
-            valid_types = FilterValidator.expand_type_pattern(types)
-
-            if not valid_sets or not valid_types:
+            # One-liner filter validation using helper
+            if not FilterValidationHelper.is_valid_filter_combination(sets, types):
                 self.logger.warning(f"Invalid filter patterns: sets={sets}, types={types}")
-                return CoverageResult(
-                    filter_config={"sets": sets, "types": types, "period": period},
-                    coverage_percentage=0.0,
-                    signatures_found=0,
-                    signatures_total=0,
-                    optimal_start_date=None,
-                    records_before_start=0,
-                    records_aligned=0,
-                    time_series_points=0,
-                    gap_fills_required=0,
-                    missing_signatures=[],
-                    fallback_required=False,
-                    quality_score=0.0
-                )
+                return CoverageResultFactory.create_empty({"sets": sets, "types": types, "period": period})
 
             # Load and filter dataset
             df = self._load_and_cache_dataset()
@@ -143,21 +135,8 @@ class CoverageAnalyzer:
             # Extract alignment metrics by analyzing aligner behavior
             alignment_metrics = self._extract_alignment_metrics(filtered_df, allow_fallback)
 
-            # Generate coverage result
-            return CoverageResult(
-                filter_config={"sets": sets, "types": types, "period": period},
-                coverage_percentage=alignment_metrics["coverage_percentage"],
-                signatures_found=alignment_metrics["signatures_found"],
-                signatures_total=alignment_metrics["signatures_total"],
-                optimal_start_date=alignment_metrics["optimal_start_date"],
-                records_before_start=alignment_metrics["records_before_start"],
-                records_aligned=alignment_metrics["records_aligned"],
-                time_series_points=alignment_metrics["time_series_points"],
-                gap_fills_required=alignment_metrics["gap_fills_required"],
-                missing_signatures=alignment_metrics["missing_signatures"],
-                fallback_required=alignment_metrics["fallback_required"],
-                quality_score=alignment_metrics["quality_score"]
-            )
+            # Generate coverage result using factory
+            return CoverageResultFactory.create_from_metrics({"sets": sets, "types": types, "period": period}, alignment_metrics)
 
         except Exception as e:
             self.logger.error(f"Coverage analysis failed: {e}")
@@ -212,12 +191,9 @@ class CoverageAnalyzer:
                     estimated_records=coverage_result.records_aligned
                 ))
 
-        # Sort by coverage percentage descending, then by record count descending
+        # One-liner sort and rank update
         recommendations.sort(key=lambda x: (x.coverage_result.coverage_percentage, x.estimated_records), reverse=True)
-
-        # Update ranks after sorting
-        for i, rec in enumerate(recommendations, 1):
-            rec.rank = i
+        [setattr(rec, 'rank', i) for i, rec in enumerate(recommendations, 1)]
 
         self.logger.info(f"Found {len(recommendations)} viable configurations")
         return recommendations
@@ -290,6 +266,25 @@ class CoverageAnalyzer:
                         estimated_records=type_result.records_aligned
                     ))
 
+        # Strategy 0: If no alternatives found, use helper for default configs
+        if len(alternatives) == 0:
+            self.logger.info("No targeted alternatives found, providing default recommendations")
+            default_configs = FilterValidationHelper.get_default_configurations()
+
+            for i, config in enumerate(default_configs[:max_alternatives]):
+                default_result = self.analyze_filter_combination(
+                    config["sets"], config["types"], config["period"]
+                )
+                if default_result.coverage_percentage > 0:
+                    alternatives.append(RecommendationResult(
+                        rank=i + 1,
+                        filter_config={"sets": config["sets"], "types": config["types"], "period": config["period"]},
+                        coverage_result=default_result,
+                        description=config["description"],
+                        command_string=f'--sets "{config["sets"]}" --types "{config["types"]}" --period "{config["period"]}"',
+                        estimated_records=default_result.records_aligned
+                    ))
+
         return alternatives[:max_alternatives]
 
     def get_dataset_summary(self) -> Dict[str, any]:
@@ -310,7 +305,11 @@ class CoverageAnalyzer:
                 "max_possible_coverage": 0.0
             }
 
-        signatures = self._get_signature_set(df)
+        # Cache signatures if not already cached
+        if self._signature_cache is None:
+            self._signature_cache = self._get_signature_set(df)
+
+        signatures = self._signature_cache
 
         return {
             "total_records": len(df),
@@ -413,22 +412,13 @@ class CoverageAnalyzer:
         """
         combinations = []
 
-        # High-priority patterns (generation-based)
-        for generation in ['SV*', 'SWSH*']:
-            for type_pattern in ['Card', '*Box', 'Booster Box', 'Elite Trainer Box']:
-                combinations.append({
-                    "sets": generation,
-                    "types": type_pattern,
-                    "period": "3M"
-                })
+        # High-priority patterns (generation-based) - one-liner nested comprehension
+        combinations.extend([{"sets": gen, "types": typ, "period": "3M"}
+                           for gen in ['SV*', 'SWSH*']
+                           for typ in ['Card', '*Box', 'Booster Box', 'Elite Trainer Box']])
 
-        # Medium-priority patterns (individual sets)
-        for set_name in sorted(FilterValidator.VALID_SETS):
-            combinations.append({
-                "sets": set_name,
-                "types": "*",
-                "period": "3M"
-            })
+        # Medium-priority patterns (individual sets) - one-liner comprehension
+        combinations.extend([{"sets": s, "types": "*", "period": "3M"} for s in sorted(FilterValidator.VALID_SETS)])
 
         # Lower-priority patterns (broader combinations)
         combinations.extend([
@@ -440,20 +430,8 @@ class CoverageAnalyzer:
         return combinations
 
     def _generate_description(self, combo: Dict[str, str], result: CoverageResult) -> str:
-        """Generate human-readable description for a filter combination."""
-        set_desc = combo["sets"].replace("*", "").replace(",", "/") if combo["sets"] != "*" else "All"
-        type_desc = combo["types"].replace("*", "").replace(",", "/") if combo["types"] != "*" else "All Types"
-
-        if result.coverage_percentage == 1.0:
-            quality = "Complete"
-        elif result.coverage_percentage >= 0.95:
-            quality = "Excellent"
-        elif result.coverage_percentage >= 0.90:
-            quality = "High Quality"
-        else:
-            quality = "Good"
-
-        return f"{set_desc} {type_desc} ({quality})"
+        """One-liner description generation using helper."""
+        return FilterValidationHelper.generate_description(combo, result.coverage_percentage)
 
     def _get_signature_set(self, df: pd.DataFrame) -> Set[str]:
         """Generate set of unique signatures from DataFrame."""
@@ -462,21 +440,8 @@ class CoverageAnalyzer:
         return set(df.apply(lambda row: f"{row['set']}_{row['name']}_{row['type']}", axis=1))
 
     def _empty_coverage_result(self, filter_config: Dict[str, str]) -> CoverageResult:
-        """Generate empty coverage result for failed analysis."""
-        return CoverageResult(
-            filter_config=filter_config,
-            coverage_percentage=0.0,
-            signatures_found=0,
-            signatures_total=0,
-            optimal_start_date=None,
-            records_before_start=0,
-            records_aligned=0,
-            time_series_points=0,
-            gap_fills_required=0,
-            missing_signatures=[],
-            fallback_required=False,
-            quality_score=0.0
-        )
+        """One-liner empty coverage result generation using factory."""
+        return CoverageResultFactory.create_empty(filter_config)
 
     def clear_cache(self) -> None:
         """Clear internal dataset and signature caches."""
