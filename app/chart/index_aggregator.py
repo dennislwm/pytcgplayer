@@ -309,7 +309,7 @@ Available Periods: 3M
 
     parser.add_argument('input_csv', nargs='?', default='data/output.csv', help='Input CSV file (default: data/output.csv)')
     parser.add_argument('--name', required=True,
-                       help='Name for the time series (e.g., SV_Box). Used as column value and saved to data/{{name}}_time_series.csv')
+                       help='Name for the time series (e.g., SV_Box). Used as column value and saved to data/NAME_time_series.csv')
     parser.add_argument('--sets', default='*',
                        help='Sets filter (default: * for all sets)')
     parser.add_argument('--types', default='*',
@@ -319,7 +319,7 @@ Available Periods: 3M
     parser.add_argument('--verbose', action='store_true',
                        help='Enable verbose logging')
     parser.add_argument('--allow-fallback', action='store_true',
-                       help='Enable fallback mode: use date with maximum coverage when 100% not available')
+                       help='Enable fallback mode: use date with maximum coverage when 100%% not available')
 
     return parser
 

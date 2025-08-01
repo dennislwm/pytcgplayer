@@ -802,11 +802,9 @@ class TestCompleteDataFiltering:
             # Should have exactly one record per signature per date
             assert len(complete_subset) == expected_records
 
-        # Verify the original method excludes Card A (3 dates), complete method includes all
-        original_names = set(original_subset['name'].unique())
-        complete_names = set(complete_subset['name'].unique())
-        assert original_names == {'Card B', 'Card C'}  # Most common count signatures only
-        assert complete_names == {'Card A', 'Card B', 'Card C'}  # All signatures
+        # Both methods include all signatures after completeness-only alignment changes
+        expected_signatures = {'Card A', 'Card B', 'Card C'}
+        assert set(original_subset['name'].unique()) == set(complete_subset['name'].unique()) == expected_signatures
 
     def test_create_complete_subset_perfect_alignment(self, aggregator, aligned_test_data, create_test_csv):
         """Test create_complete_subset with perfectly aligned data"""
@@ -875,6 +873,7 @@ class TestIndexAggregatorIntegration:
                         main()
                     exit_code = 0
                 except SystemExit as e:
+                    # argparse --help exits with code 0, but other exits may have different codes
                     exit_code = e.code if e.code is not None else 0
                 except Exception as e:
                     stderr_capture.write(str(e))

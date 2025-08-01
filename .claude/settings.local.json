@@ -1,42 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh run list:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh workflow:*)",
-      "Bash(gh run watch:*)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_chart.py data/sealed_time_series.csv data/single_time_series.csv --dbs-period 7)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_chart.py --yfinance --dbs-period 7)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_chart_test.py::TestDataFrameHelper::test_flatten_yfinance_columns_multiindex -v -s)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_chart_test.py -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/ -v)",
-      "Bash(ls:*)",
-      "Bash(pipenv:*)",
-      "Bash(find:*)",
-      "Bash(grep:*)",
-      "Bash(cut:*)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_multiple_dates -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestTimeSeriesAlignment -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py -v --tb=short)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestCompleteDataFiltering::test_create_complete_subset_vs_create_subset -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py -q)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py data/output.csv --name test_debug --sets \"SV01,SV02\" --types \"Card\" --verbose)",
-      "Bash(cp:*)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregator::test_aggregate_time_series_basic -v)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_analysis --sets \"SV*\" --types \"Card\" --period \"3M\" --verbose data/output.csv)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_failure --sets \"SWSH*,SV*\" --types \"Card\" --period \"3M\" --verbose data/output.csv)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --name test_fallback --sets \"SWSH*,SV*\" --types \"Card\" --period \"3M\" --allow-fallback --verbose data/output.csv)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_coverage_analyzer_initialization_with_dependency_injection -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_analyze_filter_combination_with_valid_sv_card_filters -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_analyze_filter_combination_with_invalid_filter_patterns -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_analyze_filter_combination_with_empty_dataset -v)",
-      "Bash(PYTHONPATH=. pipenv run python -c \"\nfrom pathlib import Path\nfrom common.coverage_analyzer import CoverageAnalyzer\nanalyzer = CoverageAnalyzer(input_csv=Path(''test_data/nonexistent.csv''))\nresult = analyzer.analyze_filter_combination(sets=''SV*'', types=''Card'', period=''3M'')\nprint(f''Coverage: {result.coverage_percentage}'')\nprint(f''Signatures found: {result.signatures_found}'')\nprint(f''Quality score: {result.quality_score}'')\n\")",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_discover_viable_configurations_with_various_coverage_thresholds -v)",
-      "Bash(PYTHONPATH=. pipenv run python -c \"\nfrom common.coverage_analyzer import CoverageAnalyzer\nanalyzer = CoverageAnalyzer()\nrecommendations = analyzer.discover_viable_configurations(min_coverage=0.9, max_recommendations=3)\nprint(f''Found {len(recommendations)} recommendations with 90%+ coverage:'')\nfor i, rec in enumerate(recommendations):\n    print(f''{i+1}. {rec.description} - Coverage: {rec.coverage_result.coverage_percentage:.1%} - Records: {rec.estimated_records}'')\n\")",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/coverage_analyzer_test.py::TestCoverageAnalyzer::test_suggest_alternatives_for_failed_filter_combinations -v)",
-      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestCompleteDataFiltering::test_create_complete_subset_vs_create_subset -v -s)",
-      "Bash(PYTHONPATH=. pipenv run python chart/index_aggregator.py --help)"
+      "Bash(PYTHONPATH=. pipenv run pytest tests/index_aggregator_test.py::TestIndexAggregatorIntegration::test_main_help -v -s)"
     ],
     "deny": []
-  }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/remove-trailing-spaces.sh"
+          },
+          {
+            "type": "user-prompt-submit",
+            "prompt": "The previous action modified code files. Only if there has been significant changes, then ensure a cost-efficiency-reviewer agent is required to analyze the changes for token efficiency and engineering simplicity. Review the modified code for potential optimizations, overengineering patterns, and refactor the code or content to reduce token consumption while maintaining functionality. Do not ultra compact the code as to maintain readability."
+          }
+        ]
+      }
+    ]
+  },
+  "$schema": "https://json.schemastore.org/claude-code-settings.json"
 }
