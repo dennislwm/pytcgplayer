@@ -1,564 +1,86 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Python CLI for TCGPlayer price data processing with time series alignment and technical analysis.
 
 ## Project Overview
 
-This is a Python CLI application for processing TCGPlayer trading card price data. The application reads TCGPlayer URLs from CSV files, fetches price history data from those URLs, parses markdown price tables, and outputs normalized price data to CSV files in schema v2.0 format with numeric types for efficient analysis and time series charting.
+Processes TCGPlayer URLs → fetches price history → outputs normalized CSV (schema v2.0) with numeric types for analysis/charting.
 
-## Development Setup
+## Quick Start & Commands
 
-### Quick Start
-```bash
-make pipenv_new && make install_deps  # Setup environment
-make sample && make run_verbose       # Create test data and run
-make test                             # Run all tests
-make convert_schema                   # Convert v1.0 to v2.0 format
-```
+**Setup**: `make pipenv_new && make install_deps && make sample && make run_verbose && make test`
 
-### Key Commands
-```bash
-# Environment: pipenv_new, install_deps, pipenv_shell
-# Application: run, run_verbose, run_ci, sample, help_app
-# Testing: test, test_verbose
-# Schema: convert_schema
-# Charts: chart, chart_yfinance, chart_help
-# Utilities: pipenv_freeze, check_json, help
-```
+| Category | Commands |
+|----------|----------|
+| **Environment** | `pipenv_new`, `install_deps`, `pipenv_shell` |
+| **Application** | `run`, `run_verbose`, `run_ci`, `sample`, `help_app` |
+| **Testing** | `test`, `test_verbose` |
+| **Schema** | `convert_schema` |
+| **Charts** | `chart`, `chart_yfinance`, `chart_help` |
+| **Workbench** | `workbench_discover`, `workbench_analyze`, `workbench_save`, `workbench_list`, `workbench_run` |
 
-### Sample Usage and Output
+**Data Flow**: Input URLs → Price History → Schema v2.0 (numeric types: `holofoil_price`, `volume`)
 
-**Input CSV format (TCGPlayer URLs only):**
-```csv
-set,type,period,name,url
-SV08.5,Card,3M,Umbreon ex 161,https://r.jina.ai/https://www.tcgplayer.com/product/610516/pokemon-sv-prismatic-evolutions-umbreon-ex-161-131?page=1&Language=English
-```
+## Technical Analysis
 
-**Command execution:**
-```bash
-$ PYTHONPATH=. pipenv run python main.py data/input.csv data/output.csv --verbose
-# Processes 30 price history records, outputs to data/output.csv
-```
+**DBS System**: Dual oscillators, ratio analysis, 20-period ROC, Bull/Neutral/Bear alerts (±3.75 thresholds)
+**Charts**: `make chart` (CSV data), `make chart_yfinance` (stock comparison), outputs `_ChartC_0.1_TCG_DBS.png`
+**Helpers**: `DataFrameHelper`, `TechnicalAnalysisHelper`, `AlertHelper` for one-liner implementations
 
-**Output CSV format (Schema v2.0 - Normalized price history):**
-```csv
-set,type,period,name,period_start_date,period_end_date,timestamp,holofoil_price,volume
-SV08.5,Card,3M,Umbreon ex 161,2025-04-20,2025-04-22,2025-07-24 15:00:00,1451.66,0
-SV08.5,Card,3M,Umbreon ex 161,2025-04-23,2025-04-25,2025-07-24 15:00:00,1451.66,0
-SV08.5,Card,3M,Umbreon ex 161,2025-04-26,2025-04-28,2025-07-24 15:00:00,1451.66,0
-...
-```
+## Code Standards
 
-## Technical Analysis Charts
+**CRITICAL: Prioritize code size reduction and reusability**
+**Helpers**: Use `FileHelper`, `RetryHelper`, `DataProcessor` from `common/helpers.py`
+**Style**: One-liners, list comprehensions, `snake_case` files/functions, `PascalCase` classes
+**Achievement**: ~120 lines reduction (15%) through helper classes
 
-DBS (Defensive Bull/Bear Signal) technical analysis system for comparing TCGPlayer price data, based on pymonitor financial analysis tool.
+## Schema & Data
 
-### Chart Commands
-```bash
-make chart           # Compare CSV time series data
-make chart_yfinance  # Compare stock data (XLU vs VTI)
-make chart_help      # Show command options
-```
+**Input v1.0**: `set,type,period,name,url` (TCGPlayer URLs)
+**Output v2.0**: Adds `period_start_date,period_end_date,timestamp,holofoil_price,volume` (numeric types)
+**Migration**: `make convert_schema` - converts currency strings to decimals, dates to YYYY-MM-DD
+**Validation**: Auto-validation with error messages, tests in `tests/schema_test.py`
 
-### Features
-- **Dual Data Sources**: CSV (TCG data) and yfinance (stock data) with automatic format conversion
-- **Technical Indicators**: Ratio analysis, 20-period ROC, 4-point trading signals, 7-period DBS MA
-- **Chart Output**: `_ChartC_0.1_TCG_DBS.png` with dual oscillators and trend indicators
-- **Alert System**: Automated Bull/Neutral/Bear trend shift detection (±3.75 thresholds)
+## Development
 
-### Helper Classes
-- `DataFrameHelper`: Column conversion, OHLC creation, yfinance flattening
-- `TechnicalAnalysisHelper`: Ratio/ROC/signal calculations with one-liner implementations
-- `AlertHelper`: DBS status and alert generation utilities
+**Structure**: `app/` → `main.py`, `common/`, `tests/`, `demo/`, `data/`, `logs/`
+**Testing**: 165+ tests, 100% pass rate, pytest + AppLogger, `PYTHONPATH=.` required
+**Dependencies**: Core (`requests`, `pytest`, `typer`), Analysis (`numpy`, `pandas`), Charts (`pyfxgit`, `ta`, `yfinance`)
+**Windows**: Run from `app/` directory, use `PIPENV_VERBOSITY=-1` to suppress warnings
 
-## Code Quality Standards
+**Logging**: `AppLogger.get_logger(__name__)` - dual output to console + `logs/app.log`/`logs/test.log`
+**Tools**: `gh`, `python`, `pipenv`, `shellcheck` required
+**Automation**: Daily workflow 6AM UTC (`make run_ci`), manual trigger via `gh workflow run`
+**Demo**: `app/demo/` for extraction demos, `make sample` creates test data, idempotent processing
 
-**CRITICAL: Always prioritize code size reduction and reusability.**
+## Features
 
-Use existing helpers in `common/helpers.py`: `FileHelper`, `RetryHelper`, `DataProcessor`. Prefer one-liners, list comprehensions, and reusable classes. Achieved ~120 lines reduction (15%) through systematic refactoring.
+**Rate Limiting**: 5s base delay, exponential backoff (5s→20s→80s), 429 detection, 3 retries
+**Table Formats**: Auto-detects `| Date | Holofoil |` (cards) and `| Date | Normal |` (boxes) 
+**CSV Updates**: Updates existing records by fingerprint `(set,type,period,name,date)`, logs update/new counts
 
-## CSV Schema Management
+## Performance
 
-The application uses schema v2.0 format with numeric types for efficient analysis and time series charting:
+**Current**: ~1s per URL, sequential HTTP, suitable for manual runs
+**Optimizations**: ~120 lines reduced (15%) via helper classes and one-liners
+**Future**: Async HTTP, streaming CSV I/O, additional helper consolidation
 
-### Schema Files
-- `app/schema/input_v1.json` - Input CSV schema definition
-- `app/schema/output_v2.json` - Output CSV schema definition (v2.0 format)
+## Storage
 
-### Input Schema (v1.0)
-```csv
-set,type,period,name,url
-```
-- **set**: Trading card set identifier (e.g., SV01, SWSH06)
-- **type**: Card type classification
-- **period**: Time period for price data (e.g., 3M)
-- **name**: Card name and identifier
-- **url**: TCGPlayer URL via Jina.ai markdown service
+**Current**: CSV format, ~82 bytes/record, 10MB in ~22 years at current rate
+**Future**: SQLite migration when >100 records/day (40-60 bytes/record, indexed queries)
+**Alternatives**: Parquet (70-82% savings), CSV+gzip (66% savings)
 
-### Output Schema (v2.0) - Current Format
-```csv
-set,type,period,name,period_start_date,period_end_date,timestamp,holofoil_price,volume
-```
-- Inherits: set, type, period, name from input
-- **period_start_date**: Start date in YYYY-MM-DD format (e.g., "2025-04-20")
-- **period_end_date**: End date in YYYY-MM-DD format (e.g., "2025-04-22")
-- **timestamp**: Data collection timestamp in YYYY-MM-DD HH:MM:SS format
-- **holofoil_price**: Price as numeric decimal (e.g., 49.73) for calculations
-- **volume**: Trading volume as integer (e.g., 12) for aggregations
+## Interactive Workbench
 
-### Schema Migration
-```bash
-# Convert existing v1.0 data to v2.0 format
-make convert_schema
-```
-The schema converter automatically:
-- Parses date ranges ("4/20 to 4/22") into separate start/end dates
-- Converts currency strings ("$49.73") to numeric values (49.73)
-- Converts volume strings ("12") to integers (12)
-- Adds collection timestamps for data tracking
+**Status**: ✅ Production-ready (21/21 tests passing)
+**Purpose**: Transforms 15-30 min trial-and-error alignment → 2-5 min guided discovery
+**Core**: `CoverageAnalyzer` class with `discover`, `analyze`, `save`, `list`, `run` commands
+**Performance**: 544x caching speed improvement, 100% SV coverage, 4-strategy failure recovery
+**Architecture**: Zero-modification wrapper, dependency injection, comprehensive testing
 
-### Schema Validation
-- **Automatic validation**: Input files validated against schema on processing
-- **Error handling**: Processing fails with clear error message if schema invalid
-- **Change detection**: Logs warnings for schema mismatches (missing, extra, reordered headers)
-- **Version tracking**: Schema versions tracked in JSON with changelog
+## Reference
 
-### Testing Coverage
-- Schema validation tests in `tests/schema_test.py`
-- Tests cover valid schemas, missing headers, extra headers, wrong order
-- Integration tests with CsvProcessor validation
-
-## Development Patterns
-
-Based on analysis of similar projects in the workspace (`13pynlb`, `13pyledger`, `13pyviki`):
-
-### Project Structure
-```
-app/
-├── main.py                  # CLI entry point
-├── common/                  # Core modules (processor, web_client, csv_writer, etc.)
-├── tests/                   # Unit tests
-├── demo/                    # Demo scripts and sample files
-├── data/                    # Input/output CSV files
-└── logs/                    # Generated log files
-```
-
-### Testing Requirements
-- **Test Suite**: Comprehensive unit tests with 100% pass rate (165+ tests)
-- **Coverage**: All modules tested (CsvProcessor, WebClient, MarkdownParser, CsvWriter, IndexChart, Main CLI)
-- **Technical Analysis Tests**: Complete coverage of helper classes and chart functionality (`tests/index_chart_test.py`)
-- **Framework**: pytest with centralized logging via AppLogger
-- **Execution**: `PYTHONPATH=.` set for proper module imports
-- **Logging**: Test logs written to `logs/test.log` with DEBUG level
-- **Setup**: Each test class initializes logging in `setup_class()` method
-- **Mocking**: Uses `requests-mock` for HTTP request testing and pandas DataFrame mocking
-- **Data Format**: Tests updated to expect `volume` column with integer values instead of `additional_price` currency strings
-
-### Windows Testing Notes
-- **Directory Navigation**: Tests must run from `pytcgplayer/app` directory due to Windows path handling
-- **Command Execution**: Use `cd pytcgplayer/app && PYTHONPATH=. pipenv run pytest tests/` for manual test runs
-- **Pipenv Warnings**: Windows may show pipenv virtual environment warnings (can be suppressed with `PIPENV_VERBOSITY=-1`)
-- **Path Separators**: Test output shows Windows backslash paths (`tests\csv_processor_test.py`) which is normal
-- **Make Commands**: All `make test` commands work correctly on Windows when run from project root
-
-### Dependencies
-Current dependencies (automatically managed by pipenv):
-- `requests`, `pytest`, `requests-mock`, `typer` for core functionality
-- `numpy==2.0.2`, `pandas==2.3.1` for data analysis
-- `pyfxgit==0.1.1` for chart generation
-- `ruamel.yaml==0.16.12`, `ta==0.6.1`, `yfinance==0.2.65` for technical analysis
-
-**Installation**: Use `make install_deps` for complete setup with pinned versions
-
-### Helper Classes
-
-`common/helpers.py` includes: `FileHelper` (CSV I/O), `RetryHelper` (exponential backoff), `DataProcessor` (currency conversion, date parsing, key generation). Use `snake_case` for files/functions, `PascalCase` for classes.
-
-## Centralized Logging
-
-Singleton `AppLogger` class: dual output (console + file), logs to `logs/app.log` and `logs/test.log`. Use `AppLogger.get_logger(__name__)` in classes.
-
-## Environment & GitHub Integration
-
-Required tools: `gh`, `python`, `pipenv`, `shellcheck`. Daily workflow runs `make run_ci` at 6AM UTC for automated data collection. Use `gh workflow run "Daily TCG Data Collection"` for manual triggers.
-
-## Data & Demo
-
-`app/demo/` contains price extraction and idempotent demos. `data/input.csv` has TCGPlayer URLs (created via `make sample`), `data/output.csv` stores normalized price history with duplicate prevention. Safe for repeated processing.
-
-## Rate Limiting and Error Handling
-
-The application includes robust rate limiting and retry logic to handle API limitations:
-
-### **Flexible Table Format Support**
-
-**Multiple Table Format Detection:**
-- **Primary Format**: `| Date | Holofoil |` - Standard TCGPlayer format for individual cards
-- **Alternative Format**: `| Date | Normal |` - Format used for booster boxes and some products
-- **Automatic Fallback**: MarkdownParser tries Holofoil format first, then Normal format
-- **Consistent Processing**: Both formats parsed into identical v2.0 schema output
-
-**Detection Logic:**
-```python
-# Try original format first (Date | Holofoil)
-holofoil_pattern = r'\|\s*Date\s*\|\s*Holofoil\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
-# Fallback to alternative format (Date | Normal)
-normal_pattern = r'\|\s*Date\s*\|\s*Normal\s*\|.*?(?=\n\n|\n(?!\|)|\Z)'
-```
-
-**Logging Output:**
-```
-Found 'Date | Holofoil' format table    # Individual cards
-Found 'Date | Normal' format table      # Booster boxes
-```
-
-### **WebClient Rate Limiting Features**
-
-**Built-in Rate Limiting:**
-- **Base Delay**: 5-second delay between all requests to respect API limits
-- **429 Error Detection**: Automatically detects rate limiting responses
-- **Exponential Backoff**: Aggressive delays (5s → 20s → 80s) with random jitter
-- **Configurable Retries**: Default 3 attempts, customizable via constructor
-
-**Usage and Configuration:**
-```python
-# Default configuration (recommended)
-client = WebClient()  # 30s timeout, 3 retries, 5s base delay
-
-# Custom configuration for high-volume processing
-client = WebClient(
-    timeout=60,          # Longer timeout for slow responses
-    max_retries=5,       # More retry attempts
-    base_delay=10.0      # Even longer delay between requests
-)
-```
-
-**Retry Behavior:**
-- **Normal Request**: 5s delay → make request → return result
-- **429 Rate Limited**: 5s delay → 429 error → wait 20s+jitter → retry → wait 80s+jitter → retry → fail if still limited
-- **Network Errors**: Same exponential backoff for connection issues
-- **Other HTTP Errors**: Immediate failure (no retries for 404, 500, etc.)
-
-**Logging Output:**
-```
-2025-07-20 19:53:27 - common.web_client - WARNING - Rate limited (429), retrying... (attempt 1)
-2025-07-20 19:53:27 - common.web_client - INFO - Retrying in 2.3s (attempt 2/3)
-```
-
-### **CSV Writer Update Behavior**
-
-**Duplicate Handling Strategy:**
-- **Before**: Skip duplicate records entirely
-- **Now**: Update existing records with new price data
-- **Benefits**: Perfect for continuous price monitoring and data refreshing
-
-**Update Logic:**
-- Identifies duplicates using fingerprint: `(set, type, period, name, date)`
-- Updates only `holofoil_price` and `volume` fields
-- Preserves all metadata and historical structure
-- Logs both update count and new record count
-
-**Example Behavior:**
-```bash
-# First run
-Updated 0 existing records, adding 390 new records
-
-# Subsequent run with updated prices
-Updated 390 existing records, adding 0 new records
-
-# Mixed scenario (some new dates, some updated prices)
-Updated 350 existing records, adding 40 new records
-```
-
-## Performance Notes
-
-Current performance characteristics:
-- **Sequential HTTP**: ~1 second per URL with rate limiting
-- **Suitable for**: Manual runs, small-medium datasets
-- **Limitations**: Large batch processing
-- **Code Size**: ~120 lines reduced (15% reduction) through helper classes and one-liners
-
-**Code optimization achievements**:
-1. **FileHelper class**: Eliminated duplicate CSV operations across modules
-2. **RetryHelper decorator**: Consolidated retry logic with exponential backoff
-3. **DataProcessor mixin**: Shared common data processing methods
-4. **One-liner implementations**: Streamlined argument parsing and simple operations
-
-**Future optimization opportunities**:
-1. Async HTTP requests for concurrent processing
-2. Streaming CSV I/O for large datasets
-3. Further code consolidation through additional helper classes
-
-## Storage Scalability and Future Enhancements
-
-### Current Storage Analysis
-
-The application currently uses CSV format for data storage with the following characteristics:
-- **Current growth rate**: ~15.5 records/day (1,266 bytes/day)
-- **File size**: 115KB for 93 days of data (1,437 records)
-- **Record size**: ~82 bytes per record
-- **Projected growth**: 10MB in ~22.4 years at current rate
-
-### SQLite Migration for High-Volume Data
-
-**Target Scenario**: 300 records/day (19.4x current growth rate)
-- **Timeline to 10MB**: ~1.2 years (vs 22.4 years with CSV)
-- **Timeline to 100MB**: ~11.7 years (vs 226.5 years with CSV)
-
-**Recommended Enhancement: SQLite + Compression**
-
-**Benefits**:
-- **Storage efficiency**: 40-60 bytes/record (27-51% space savings vs CSV)
-- **Query performance**: Fast date range queries with indexed columns
-- **Data integrity**: ACID transactions and constraint validation
-- **Concurrent access**: Multiple readers, single writer support
-- **Built-in compression**: SQLite VACUUM and page compression
-- **No external dependencies**: Uses Python's built-in `sqlite3` module
-
-**Implementation Strategy**:
-```python
-# Database schema design
-CREATE TABLE price_history (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    set_name TEXT NOT NULL,
-    card_type TEXT NOT NULL,
-    period TEXT NOT NULL,
-    name TEXT NOT NULL,
-    period_start_date DATE NOT NULL,
-    period_end_date DATE NOT NULL,
-    timestamp DATETIME NOT NULL,
-    holofoil_price DECIMAL(10,2) NOT NULL,
-    volume INTEGER NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-# Indexes for fast queries
-CREATE INDEX idx_date_range ON price_history(period_start_date, period_end_date);
-CREATE INDEX idx_card_lookup ON price_history(set_name, name, period);
-CREATE INDEX idx_timestamp ON price_history(timestamp);
-```
-
-**Migration Path**:
-1. **Phase 1**: Add SQLite writer alongside CSV (dual output)
-2. **Phase 2**: Implement SQLite reader with backwards compatibility
-3. **Phase 3**: Migrate existing CSV data using conversion utility
-4. **Phase 4**: Deprecate CSV format, SQLite becomes primary storage
-
-**Alternative Storage Formats** (for higher volumes):
-- **Parquet**: 15-25 bytes/record, excellent for analytics (70-82% savings)
-- **CSV + gzip**: 28 bytes/record, minimal changes (66% savings)
-- **Time-series databases**: InfluxDB/TimescaleDB for enterprise scale
-
-**Trigger Conditions for Migration**:
-- Data collection exceeds 100 records/day consistently
-- File size approaches 5-10MB
-- Need for complex date range queries increases
-- Multiple concurrent data access patterns emerge
-
-This enhancement maintains the current CSV simplicity while providing a clear upgrade path for production workloads.
-
-## Interactive Alignment Workbench
-
-**Status: ✅ Building Phase Complete (21/21 unit tests implemented) + Code Refactoring Complete**
-
-Transforms the 15-30 minute trial-and-error TCGPlayer time series alignment workflow into a 2-5 minute guided discovery process through intelligent coverage analysis and recommendation engine.
-
-**Recent Enhancements**: Comprehensive code refactoring using one-liners and helper classes for enhanced readability and maintainability (~15% code reduction achieved).
-
-### Architecture Overview
-
-**Core Components**:
-- `common/coverage_analyzer.py` - Main analysis engine with CoverageAnalyzer class
-- `workbench/alignment_workbench.py` - Interactive CLI interface
-- `tests/coverage_analyzer_test.py` - Comprehensive TDD unit test suite
-
-**Data Structures**:
-```python
-@dataclass
-class CoverageResult:
-    filter_config: Dict[str, str]           # Original filter configuration
-    coverage_percentage: float              # Coverage achieved (0.0-1.0)
-    signatures_found: int                   # Number of signatures with coverage
-    signatures_total: int                   # Total signatures in filtered dataset
-    optimal_start_date: Optional[str]       # Best alignment start date
-    records_aligned: int                    # Records in final aligned dataset
-    quality_score: float                    # Overall alignment quality
-
-@dataclass
-class RecommendationResult:
-    rank: int                               # Recommendation ranking (1=best)
-    filter_config: Dict[str, str]           # Recommended filter configuration
-    coverage_result: CoverageResult         # Coverage analysis for this config
-    description: str                        # Human-readable description
-    command_string: str                     # Executable command string
-    estimated_records: int                  # Estimated final record count
-```
-
-### Core Functionality
-
-**CoverageAnalyzer Methods**:
-1. `analyze_filter_combination(sets, types, period)` - Analyze specific filter combinations
-2. `discover_viable_configurations(min_coverage=0.9)` - Find high-coverage configurations
-3. `suggest_alternatives(failed_config)` - Provide alternatives for failed filters
-4. `get_dataset_summary()` - Dataset statistics and metadata
-
-**CLI Commands**:
-```bash
-# Discover optimal configurations
-python workbench/alignment_workbench.py discover --min-coverage 0.9
-
-# Analyze specific combination
-python workbench/alignment_workbench.py analyze --sets "SV*" --types "Card" --period "3M"
-
-# Save successful configuration
-python workbench/alignment_workbench.py save --name "sv_cards_weekly"
-```
-
-### Test-Driven Development Results
-
-**✅ All Unit Tests Complete (10/10)**:
-- **Dataclasses**: CoverageResult and RecommendationResult validation (11 tests)
-- **Initialization**: Dependency injection and configuration (3 tests)
-- **Core Analysis**: Filter combinations, discovery, alternatives (4 tests)
-- **Edge Cases**: Invalid patterns, empty datasets, error handling (3 tests)
-- **Performance**: Dataset caching with 544x speed improvement (1 test)
-
-**Total: 21 comprehensive unit tests with 100% pass rate**
-
-**TDD Building Process**:
-- **Red-Green-Refactor cycles** with systematic test-first development
-- **Comprehensive coverage** of all core methods and edge cases
-- **Integration testing** with existing IndexAggregator and TimeSeriesAligner
-- **Performance validation** with real TCGPlayer dataset (3,783 records, 43 signatures)
-
-### Key Performance Results
-
-**Discovery Performance** (using real data):
-```bash
-Found 3 recommendations with 90%+ coverage:
-1. SV Box (Complete) - Coverage: 100.0% - Records: 1,274
-2. SV Card (Complete) - Coverage: 100.0% - Records: 1,222
-3. SV Booster Box (Complete) - Coverage: 100.0% - Records: 910
-```
-
-**Dataset Summary**:
-- **3,783 total records** from TCGPlayer price data
-- **43 unique signatures** (set+name+type combinations)
-- **23 available sets** (SV01-SV10, SWSH06-SWSH12.5, etc.)
-- **3 types**: Booster Box, Card, Elite Trainer Box
-- **Date range**: 2025-04-22 to 2025-07-30
-
-### Failure Recovery System
-
-**Smart Alternative Suggestions**:
-When filter combinations fail, the system provides high-quality alternatives:
-```python
-# Failed: {"sets": "INVALID*", "types": "NonExistent", "period": "3M"}
-# Returns: [
-#   "SV Cards (Recommended)" - 100% coverage, 1,222 records
-#   "SV Boxes (Alternative)" - 100% coverage, 1,274 records
-# ]
-```
-
-**Strategy-Based Recommendations**:
-1. **Strategy 1**: Enable fallback mode for original configuration
-2. **Strategy 2**: Reduce scope to individual generations (SV*, SWSH*)
-3. **Strategy 3**: Change type patterns (*Box, Card) for better coverage
-4. **Strategy 0**: High-quality defaults when all strategies fail
-
-### Helper Classes (Code Refactoring)
-
-**CoverageResultFactory** (`common/helpers.py`):
-- `create_empty(filter_config)` - One-liner empty result creation
-- `create_from_metrics(filter_config, metrics)` - Factory method for metrics-based results
-- **Benefits**: Eliminates duplicate CoverageResult constructor calls across modules
-
-**FilterValidationHelper** (`common/helpers.py`):
-- `is_valid_filter_combination(sets, types)` - One-liner validation check
-- `get_default_configurations()` - Standardized fallback recommendations
-- `generate_description(combo, coverage_percentage)` - Quality-based descriptions
-- **Benefits**: Consolidates filter logic and reduces code duplication
-
-**PerformanceHelper** (`common/helpers.py`):
-- `create_performance_decorator(method_name)` - Reusable performance logging
-- **Benefits**: Standardized timing measurements across analysis methods
-
-**Refactoring Achievements**:
-- **~15% code reduction** through helper classes and one-liner consolidations
-- **Enhanced readability** with list comprehensions and method chaining
-- **Improved maintainability** by centralizing common patterns
-- **Test fixtures centralized** - moved duplicate test data from inline code to conftest.py fixtures
-- **Zero breaking changes** - all 21 unit tests continue to pass
-
-**Test Data Refactoring** (`tests/conftest.py`):
-- **17 new fixtures** for Coverage Analyzer test data patterns
-- **Eliminated duplication** of filter configurations, coverage results, and recommendation data
-- **Improved test maintenance** - change test data in one place, affects all relevant tests
-- **Enhanced test readability** - tests focus on behavior, not data setup
-
-### Specialized Agents
-
-**Available Development Agents**:
-- **Building Agent** (`.claude/agents/building.md`) - TDD Red-Green-Refactor methodology
-- **Shaping Agent** (`.claude/agents/shaping.md`) - Three-phase iterative shaping process
-- **ShapeUp Agent** (`.claude/agents/shapeup.md`) - Pitch evaluation and project betting
-
-### Next Enhancement (Shaped)
-
-**Smart Alignment Automation - Batch Configuration Runner**:
-- **Problem**: Users want to automate successful configurations for recurring analysis
-- **Appetite**: 4 cups (1 shaping + 2 building + 1 cooldown)
-- **Solution**: Batch execution with result comparison and GitHub Actions integration
-- **User Value**: Operationalize discovered configurations with automated scheduling
-
-### ✅ Production-Ready Implementation
-
-**Completed Capabilities**:
-- **Discovery**: Find optimal configurations in 2-5 minutes (vs 15-30 minutes manual)
-- **Analysis**: Detailed coverage analysis with 100% SV generation coverage
-- **Alternatives**: Smart 4-strategy suggestion system for failed configurations
-- **Performance**: 544x caching speed improvement for repeated operations
-- **Robustness**: Handles invalid filters, empty datasets, and all edge cases
-
-**Architecture Excellence**:
-- **Zero-modification wrapper**: Preserves existing TimeSeriesAligner and IndexAggregator
-- **Dependency injection**: Clean testable architecture with comprehensive unit coverage
-- **Performance optimization**: Intelligent dataset and signature caching
-- **Production reliability**: 21 passing tests covering all functionality and edge cases
-
-## Codebase Analysis with llm CLI
-
-For analyzing large codebases that exceed context limits:
-
-```bash
-# Analyze architecture
-llm "Here is Python code: $(cat main.py common/processor.py | head -300)
-Summarize the architecture"
-
-# Review configuration
-llm "Here are config files: $(cat Makefile make.sh ../CLAUDE.md | head -100)
-Review the project setup"
-
-# Performance analysis
-llm "Here is the codebase: $(cat common/*.py | head -500)
-Identify performance bottlenecks"
-```
-
-## Git Commit Message Generation
-
-Generate conventional commit messages using llm CLI:
-
-```bash
-# Generate from unstaged changes
-llm "Generate a conventional commit message in one line for: $(git diff HEAD)"
-
-# Generate from staged changes
-llm "Generate a conventional commit message in one line for: $(git diff --cached)"
-```
-
-Standard format: `type: description` (fix, feat, docs, style, refactor, test, chore)
-
-**IMPORTANT**: When committing code changes, always mention code size reduction efforts in commit messages. Examples:
-- `refactor: consolidate CSV operations into FileHelper class (-50 lines)`
-- `feat: add retry decorator helper class for reusable retry logic`
-- `style: convert multi-line argument parser to one-liners (-15 lines)`
+**Codebase Analysis**: Use `llm` CLI for large codebases: `llm "Analyze: $(cat main.py | head -300)"`
+**Commit Messages**: `type: description` format, mention code size reductions (-X lines)
+**Examples**: `refactor: consolidate CSV operations into FileHelper class (-50 lines)`
